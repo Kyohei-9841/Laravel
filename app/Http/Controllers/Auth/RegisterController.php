@@ -8,6 +8,9 @@ use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Stripe\Stripe;
+use Stripe\Charge;
 
 class RegisterController extends Controller
 {
@@ -64,6 +67,16 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        Stripe::setApiKey(env('STRIPE_SECRET'));//シークレットキー
+        
+        \Log::debug(print_r('1', true));
+
+        $charge = Charge::create(array(
+            'amount' => 100,
+            'currency' => 'jpy',
+            'source'=> $data['stripeToken'],
+        ));
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],

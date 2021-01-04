@@ -9,6 +9,8 @@
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
+                    {{-- <form method="POST" action="{{ asset('pay') }}"> --}}
+
                         @csrf
 
                         <div class="form-group row">
@@ -61,13 +63,31 @@
                             </div>
                         </div>
 
-                        <div class="form-group row mb-0">
+                        <div>
+                            {{-- <form action="{{ asset('pay') }}" method="POST"> --}}
+                                {{ csrf_field() }}
+                                {{-- <input type="hidden" value={{ $id }}> --}}
+                                <script
+                                    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                    data-key="{{ env('STRIPE_KEY') }}"
+                                    data-amount="1000"
+                                    data-name="Stripe Demo"
+                                    data-label="決済をする"
+                                    data-description="Online course about integrating Stripe"
+                                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                                    data-locale="auto"
+                                    data-currency="JPY">
+                                </script>
+                            {{-- </form>         --}}
+                        </div>
+
+                        {{-- <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Register') }}
                                 </button>
                             </div>
-                        </div>
+                        </div> --}}
                     </form>
                 </div>
             </div>

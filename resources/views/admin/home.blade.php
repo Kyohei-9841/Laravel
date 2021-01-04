@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div style="text-align:center;">
-        <h1>ユーザー画面</h1>
+        <h1>管理者画面</h1>
     </div>
     <div class="row justify-content-center">
         <div class="col-md-8">
