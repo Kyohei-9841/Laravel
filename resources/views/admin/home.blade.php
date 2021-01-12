@@ -5,29 +5,29 @@
     <div style="text-align:center;">
         <h1>管理者画面</h1>
     </div>
+    <div>
+        <a href="{{ route('approval') }}" class="login-button">画像承認</a>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Dashboard') }}</div>
                 <div class="content">
-                    {{-- <form action="{{ asset('pay') }}" method="POST">
-                        {{ csrf_field() }}
-                        <input type="hidden" value={{ $id }}>
-                        <script
-                            src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                            data-key="{{ env('STRIPE_KEY') }}"
-                            data-amount="1000"
-                            data-name="Stripe Demo"
-                            data-label="決済をする"
-                            data-description="Online course about integrating Stripe"
-                            data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-                            data-locale="auto"
-                            data-currency="JPY">
-                        </script>
-                    </form> --}}
                 </div>
             </div>
         </div>
+    </div>
+    <div>
+        <form action="{{ route('user-search') }}" method="post">
+            @csrf
+            <select id="userSelecter" name="userSelecter">
+                <option value="0">全て</option>
+                @foreach ($all_user as $item)
+                    <option value="{{ $item->id }}" {{ $item->id == $user_id ? "selected" : "" }}>{{ $item->name }}</option>
+                @endforeach
+            </select>
+        </form>
     </div>
     @foreach ($fishing_results as $item)
         @php
@@ -36,6 +36,10 @@
         @endphp
         <div>
             <table border="2" style="margin: 10px 0px">
+                <tr>
+                    <th>名前</th>
+                    <td>{{print_r($item->name, true)}}</td>
+                </tr>
                 <tr>
                     <th>場所</th>
                     <td>{{print_r($item->position, true)}}</td>
@@ -53,11 +57,14 @@
                     <td><img src="{{asset('storage/upload/' . $dir)}}" width="192" height="130"></td>
                 </tr>
             </table>
-            <a href="{{route('delete', ['id' => $item->id])}}" class="login-button">削除</a>
+        </div>
+        <div>
+            @if ($item->approval_status == 0)
+                <span class="btn btn-danger">非承認</span>
+            @else
+                <span class="btn btn-success">承認</span>
+            @endif
         </div>
     @endforeach
-    <div>
-        <a href="{{route('upload', ['id' => Auth::user()->id])}}" class="login-button">アップロード</a>
-    </div>
 </div>
 @endsection

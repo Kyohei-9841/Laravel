@@ -5,6 +5,8 @@
  */
 
 require('./bootstrap');
+require('./pages/admin-home');
+require('./pages/approval');
 
 window.Vue = require('vue');
 
