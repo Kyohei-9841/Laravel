@@ -39,6 +39,8 @@ class UploadController extends Controller
 
         $now_date_ymd = date("Y_m_d");
         $now_date_his = date("H_i_s");
+        \Log::debug($request->pic);
+
         $img_url = $request->pic->storeAs('public/upload/' . $id . $now_date_ymd, $id . '_' . $now_date_his . '.jpg');
         \Log::debug($img_url);
 
@@ -50,7 +52,7 @@ class UploadController extends Controller
         $fishing_results->pic = $img_url;
         $fishing_results->save();
 
-        return redirect()->route('home', ['id' => $id]);
+        return redirect()->route('fishing-results', ['id' => $id]);
     }
 
     public function delete(Request $request)
@@ -77,7 +79,7 @@ class UploadController extends Controller
 
         $target_data->delete();
 
-        return redirect()->route('home', ['id' => $id]);
+        return redirect()->route('fishing-results', ['id' => $id]);
     }
 
 }

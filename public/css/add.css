@@ -10,3 +10,21 @@ footer {
 ul.footer-menu li {
     display: inline;
 }
+
+.border-radius {
+    border-radius:30px;
+}
+
+canvas, video{
+    border: 1px solid gray;
+}
+
+.round-frame{
+    border-radius: 50%;
+    width:  80px;
+    height: 80px;
+}
+
+.border-none{
+    border:none;
+}
