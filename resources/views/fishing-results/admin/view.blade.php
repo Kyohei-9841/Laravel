@@ -1,12 +1,31 @@
 @extends('layouts.app')
 
 @section('content')
+<footer class="fixed-bottom" style="background-color: transparent;">
+	<div class="row">
+		<div class="col-9"></div>
+		<div class="col-3" align="left">
+			<a href="{{route('approval')}}" class="btn btn-primary" style="box-shadow: 3px 3px 4px -2px black"><i class="now-ui-icons ui-2_like"></i></a>
+		</div>
+	</div>
+</footer>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('ランキング') }}</div>
+                <div class="card-header">{{ __('みんなの釣果') }}</div>
                 <div class="card-body">
+                    <div>
+                        <form action="{{ route('user-search') }}" method="post">
+                            @csrf
+                            <select id="userSelecter" name="userSelecter">
+                                <option value="0">全て</option>
+                                @foreach ($all_user as $item)
+                                    <option value="{{ $item->id }}" {{ $item->id == $user_id ? "selected" : "" }}>{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        </form>
+                    </div>
                     @foreach ($fishing_results as $item)
                         @php
                             $arr_file_dir = explode("/", $item->pic);
@@ -18,6 +37,11 @@
                                     <div class="col-3 text-left" style="padding: 5px;"><img class="round-frame-account" src="{{asset('images/images_4.png')}}" width="50" height="50"></div>
                                     <div class="col-5 text-center name-padding"><span style="font-weight: bold;">{{print_r($item->name, true)}}</span></div>
                                     <div class="col-4 text-right">
+                                        @if ($item->approval_status == 0)
+                                            <span class="btn btn-danger p-2" style="font-size:8px;width:70px">非承認</span>
+                                        @else
+                                            <span class="btn btn-success p-2" style="font-size:8px;width:70px">承認</span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -41,6 +65,13 @@
                                 </tr>
                             </table>
                         </div>
+                        {{-- <div>
+                            @if ($item->approval_status == 0)
+                                <span class="btn btn-danger">非承認</span>
+                            @else
+                                <span class="btn btn-success">承認</span>
+                            @endif
+                        </div> --}}
                     @endforeach                
                 </div>
             </div>

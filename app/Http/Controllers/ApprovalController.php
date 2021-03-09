@@ -14,6 +14,9 @@ class ApprovalController extends Controller
         $all_user = $user_obj->get();
         $unapproved_fishing_results = $this->get_unapproved_result_all();
         $approved_fishing_results = $this->get_approved_result_all();
+        \Log::debug(print_r($unapproved_fishing_results, true));
+        \Log::debug(print_r($approved_fishing_results, true));
+
         $user_id = 0;
         return view('approval/view')->with(compact('unapproved_fishing_results', 'approved_fishing_results', 'all_user', 'user_id'));
     }

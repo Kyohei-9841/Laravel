@@ -24,11 +24,17 @@ class UploadController extends Controller
     public function store(Request $request)
     {
         \Log::debug('アップロード：保存');
+        \Log::debug($request->input('id'));
+        \Log::debug($request->input('position'));
+        \Log::debug($request->input('fish_species'));
+        \Log::debug($request->input('size'));
+        \Log::debug($request->input('pic'));
 
         $id = $request->input('id');
         $position = $request->input('position');
         $fish_species = $request->input('fish_species');
         $size = $request->input('size');
+        \Log::debug('アップロード：1');
 
         $request->validate([
             'pic' => 'file|image|mimes:jpeg,png,jpg|max:2048',
@@ -36,6 +42,7 @@ class UploadController extends Controller
             'fish_species' => 'required|string|max:255',
             'size' => 'required|string|max:255'
         ]);
+        \Log::debug('アップロード：2');
 
         $now_date_ymd = date("Y_m_d");
         $now_date_his = date("H_i_s");
@@ -50,6 +57,7 @@ class UploadController extends Controller
         $fishing_results->fish_species = $fish_species;
         $fishing_results->size = $size;
         $fishing_results->pic = $img_url;
+        $fishing_results->approval_status = 0;
         $fishing_results->save();
 
         return redirect()->route('fishing-results', ['id' => $id]);

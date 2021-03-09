@@ -7,7 +7,7 @@
 // require('./bootstrap');
 require('./pages/admin-home');
 require('./pages/approval');
-// require('./pages/camera');
+require('./pages/camera');
 
 window.Vue = require('vue');
 

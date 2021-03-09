@@ -25,18 +25,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if (\Auth::user()->role == 0) {
-            $user_obj = new User();
-            $all_user = $user_obj->get();
-            \Log::debug(print_r($all_user, true));
-            $fishing_results = $this->get_result_all();
-            $user_id = 0;
-            return view('admin/home')->with(compact('fishing_results', 'all_user', 'user_id'));    
-        } else {
-            $fishing_results_data = new FishingResults();
-            $fishing_results = $fishing_results_data->where('user_id', \Auth::user()->id)->get();
-            return view('home')->with(compact('fishing_results'));    
-        }
+        $fishing_results = $this->get_result_all();
+        return view('home')->with(compact('fishing_results'));    
     }
 
     /**
@@ -44,12 +34,23 @@ class HomeController extends Controller
      */
     public function get_result_all()
     {
+        // $query_result = FishingResults::select(
+        //     \DB::raw('users.name as name'),
+        //     \DB::raw('fishing_results.*')
+        // )
+        // ->join('users', 'fishing_results.user_id', '=', 'users.id')
+        // ->where('fishing_results.approval_status', '=', 1)
+        // ->orderBy('fishing_results.size', 'desc')
+        // ->get();
+
         $query_result = \DB::table('fishing_results')
                 ->select(
                         \DB::raw('users.name as name'),
                         \DB::raw('fishing_results.*')
                 )
                 ->join('users', 'fishing_results.user_id', '=', 'users.id')
+                ->where('fishing_results.approval_status', '=', 1)
+                ->orderBy('fishing_results.size', 'desc')
                 ->get();
 
         return $query_result;

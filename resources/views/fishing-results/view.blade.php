@@ -1,11 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
+<footer class="fixed-bottom" style="background-color: transparent;">
+	<div class="row">
+		<div class="col-9"></div>
+		<div class="col-3" align="left">
+			<a href="{{route('upload', ['id' => Auth::user()->id])}}" class="btn btn-primary" style="box-shadow: 3px 3px 4px -2px black"><i class="now-ui-icons arrows-1_cloud-upload-94"></i></a>
+		</div>
+	</div>
+</footer>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('ランキング') }}</div>
+                <div class="card-header">
+                    <div class="container-fluid">
+                        <div class="row">{{ __('あなたの釣果一覧') }}</div>
+                    </div>
+                </div>
                 <div class="card-body">
                     @foreach ($fishing_results as $item)
                         @php
@@ -13,14 +25,6 @@
                             $dir = $arr_file_dir[2] . "/" . $arr_file_dir[3]
                         @endphp
                         <div class="div-border">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-3 text-left" style="padding: 5px;"><img class="round-frame-account" src="{{asset('images/images_4.png')}}" width="50" height="50"></div>
-                                    <div class="col-5 text-center name-padding"><span style="font-weight: bold;">{{print_r($item->name, true)}}</span></div>
-                                    <div class="col-4 text-right">
-                                    </div>
-                                </div>
-                            </div>
                             <table class="border-none" style="margin: 10px 0px">
                                 <tr class="border-none">
                                     <td class="border-none" rowspan="3" style="width:100px">
@@ -40,8 +44,11 @@
                                     <td class="border-none text-center">{{print_r($item->size, true)}}</td>
                                 </tr>
                             </table>
+                            <div class="text-right">
+                                <a href="{{route('delete', ['id' => $item->id])}}" class="btn btn-danger mr-3" style="font-size:10px;box-shadow: 3px 3px 4px -2px black;">削除</a>
+                            </div>
                         </div>
-                    @endforeach                
+                    @endforeach
                 </div>
             </div>
         </div>

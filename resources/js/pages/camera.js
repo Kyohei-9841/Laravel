@@ -1,82 +1,115 @@
-window.onload = () => {
-    var test_val = $('#testtesttest');
-    try {
-        console.log("カメラ処理の入り口！！とおるか確認");
-        const video  = $("#camera");
-        const canvas = $("#picture");
-        const se     = $('#se');
-        test_val.val("1");
-        console.log("1");
-
-        /** カメラ設定 */
-        const constraints = {
-            audio: false,
-            // video: true
-            video: {
-                width: 300,
-                height: 200,
-                // facingMode: "user"   // フロントカメラを利用する
-                facingMode: { exact: "environment" }  // リアカメラを利用する場合
+$(function() {
+    var file = null; // 選択されるファイル
+    var blob = null; // 画像(BLOBデータ)
+    const THUMBNAIL_WIDTH = 1200; // 画像リサイズ後の横の長さの最大値
+    const THUMBNAIL_HEIGHT = 1200; // 画像リサイズ後の縦の長さの最大値
+  
+    // ファイルが選択されたら
+    $('#pic').change(function() {
+  
+        // ファイルを取得
+        file = $(this).prop('files')[0];
+        // 選択されたファイルが画像かどうか判定
+        if (file.type != 'image/jpeg' && file.type != 'image/png') {
+            // 画像でない場合は終了
+            file = null;
+            blob = null;
+            return;
+        }
+    
+        // 画像をリサイズする
+        var image = new Image();
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var img_src = $('<img>').attr('src', reader.result);
+            $('#images-disp').html(img_src);
+    
+            image.onload = function() {
+            var width, height;
+            if(image.width > image.height){
+                // 横長の画像は横のサイズを指定値にあわせる
+                var ratio = image.height/image.width;
+                width = THUMBNAIL_WIDTH;
+                height = THUMBNAIL_WIDTH * ratio;
+            } else {
+                // 縦長の画像は縦のサイズを指定値にあわせる
+                var ratio = image.width/image.height;
+                width = THUMBNAIL_HEIGHT * ratio;
+                height = THUMBNAIL_HEIGHT;
             }
-        };
-        test_val.val("2");
-        console.log("2");
+            // サムネ描画用canvasのサイズを上で算出した値に変更
+            var canvas = $('#canvas')
+                        .attr('width', width)
+                        .attr('height', height);
+            var ctx = canvas[0].getContext('2d');
+            // canvasに既に描画されている画像をクリア
+            ctx.clearRect(0,0,width,height);
+            // canvasにサムネイルを描画
+            ctx.drawImage(image,0,0,image.width,image.height,0,0,width,height);
+    
+            // canvasからbase64画像データを取得
+            var base64 = canvas.get(0).toDataURL('image/jpeg');        
+            // base64からBlobデータを作成
+            var barr, bin, i, len;
+            bin = atob(base64.split('base64,')[1]);
+            len = bin.length;
+            barr = new Uint8Array(len);
+            i = 0;
+            while (i < len) {
+                barr[i] = bin.charCodeAt(i);
+                i++;
+            }
+            blob = new Blob([barr], {type: 'image/jpeg'});
+            console.log(blob);
+            }
+            image.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    });
+  
+    // アップロード開始ボタンがクリックされたら
+    $('#form-submit').click(function(){
 
-        var test = navigator.mediaDevices;
+        console.log("ここは１");
+  
+        // ファイルが指定されていなければ何も起こらない
+        if(!file || !blob) {
+            return;
+        }
+        console.log("ここは２");
 
-        test_val.val("2-1");
-        console.log("2-1");
+        var id = $('#id').val();
+        var position = $('#position').val();
+        var fish_species = $('#fish_species').val();
+        var size = $('#size').val();
 
-        /**
-         * カメラを<video>と同期
-         */
-        test.getUserMedia(constraints)
-        .then( (stream) => {
-            test_val.val("3");
-            console.log("3");
+        var name, fd = new FormData();
+        fd.append('id', id);
+        fd.append('position', position);
+        fd.append('fish_species', fish_species);
+        fd.append('size', size);
+        fd.append('pic', blob);
 
-            // document.getElementById('video').srcObject = stream;
-            video.srcObject = stream;
-            video.onloadedmetadata = (e) => {
-                video.play();
-            };
-        })
-        .catch( (err) => {
-            console.log("エラーが発生した！！" + err.name + ": " + err.message);
-            test_val.val("エラーが発生した！！" + err.name + ": " + err.message);
+        // fd.append('_token', "{{ csrf_token() }}");
+        $.ajaxSetup({ async: false });
+        $.ajax({
+            url: "/upload-submit", // 送信先
+            type: 'POST',
+            data: fd,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data, textStatus, jqXHR){
+                //通信が成功した場合の処理
+                console.log("送信成功");
+                location.href= "/fishing-results?id=" + id;
+            },
+            error: function(){
+                //通信が失敗した場合の処理
+                console.log("送信失敗");
+            }
         });
-        test_val.val("4");
-        console.log("4");
-
-        /**
-         * シャッターボタン
-        */
-        $("#shutter").addEventListener("click", () => {
-            const ctx = canvas.getContext("2d");
-        
-            // 演出的な目的で一度映像を止めてSEを再生する
-            video.pause();  // 映像を停止
-            se.play();      // シャッター音
-            setTimeout( () => {
-                video.play();    // 0.5秒後にカメラ再開
-            }, 500);
-      
-            // canvasに画像を貼り付ける
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        });    
-    } catch(e) {
-        test_val.val("大元のエラー" + e);
-    }
-};
-
-var takePicture = $("#take-picture");
-takePicture.onchange = function (event) {
-    // 撮影された写真または選択された画像への参照を取得
-    var files = event.target.files,
-        file;
-    if (files && files.length > 0) {
-        file = files[0];
-        console.log("テストテスト");
-        console.log(file.lastModifiedDate);
-    }
-};
+    });
+});

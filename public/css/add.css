@@ -25,6 +25,24 @@ canvas, video{
     height: 80px;
 }
 
+.round-frame-account{
+    border-radius: 50%;
+    width:  30px;
+    height: 30px;
+}
+
 .border-none{
     border:none;
+}
+
+.div-border{
+    border: 2px solid #D09B52;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    box-shadow: 3px 3px 4px -2px black;
+}
+
+.name-padding {
+    padding-top: 10px;
 }

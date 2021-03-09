@@ -5,7 +5,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     {{-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
 
@@ -52,19 +52,19 @@
                         <ul class="nav">
                             <li>
                                 <a href="{{ route('home') }}">
-                                    <i class="now-ui-icons design_app"></i>
-                                    <p>{{ __('Dashboard') }}</p>
+                                    <i class="now-ui-icons sport_user-run"></i>
+                                    <p>{{ __('ランキング') }}</p>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('fishing-results') }}">
-                                    <i class="now-ui-icons design_app"></i>
+                                    <i class="now-ui-icons design_bullet-list-67"></i>
                                     <p>{{ __('釣果一覧') }}</p>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{route('upload', ['id' => Auth::user()->id])}}">
-                                    <i class="now-ui-icons design_app"></i>
+                                    <i class="now-ui-icons arrows-1_cloud-upload-94"></i>
                                     <p>{{ __('アップロード') }}</p>
                                 </a>
                             </li>
@@ -75,19 +75,19 @@
                         <ul class="nav">
                             <li>
                                 <a href="{{ route('home') }}">
-                                    <i class="now-ui-icons design_app"></i>
-                                    <p>{{ __('Dashboard') }}</p>
+                                    <i class="now-ui-icons sport_user-run"></i>
+                                    <p>{{ __('ランキング') }}</p>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('admin-fishing-results') }}">
-                                    <i class="now-ui-icons design_app"></i>
+                                    <i class="now-ui-icons design_bullet-list-67"></i>
                                     <p>{{ __('釣果一覧') }}</p>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('approval') }}">
-                                    <i class="now-ui-icons design_app"></i>
+                                    <i class="now-ui-icons ui-2_like"></i>
                                     <p>{{ __('画像承認') }}</p>
                                 </a>
                             </li>
@@ -139,25 +139,14 @@
                                     </li>    
                                 @endif
                             @else
-                                @if (Auth::user()->role == 1)
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('home') }}">
-                                            <i class="now-ui-icons business_badge"></i>
-                                            <p>
-                                                <span class="d-lg-none d-md-block">{{ __('Dashboard') }}</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                @elseIf (Auth::user()->role == 0)
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('home') }}">
-                                            <i class="now-ui-icons business_badge"></i>
-                                            <p>
-                                                <span class="d-lg-none d-md-block">{{ __('Dashboard') }}</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                @endif
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('home') }}">
+                                        <i class="now-ui-icons sport_user-run"></i>
+                                        <p>
+                                            <span class="d-lg-none d-md-block">{{ __('ランキング') }}</span>
+                                        </p>
+                                    </a>
+                                </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="now-ui-icons location_world"></i>

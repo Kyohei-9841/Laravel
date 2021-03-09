@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\FishingResults;
 use App\User;
 
-class AdminHomeController extends Controller
+class AdminFishingResultsController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -30,7 +30,7 @@ class AdminHomeController extends Controller
         \Log::debug(print_r($all_user, true));
         $fishing_results = $this->get_result_all();
         $user_id = 0;
-        return view('admin/home')->with(compact('fishing_results', 'all_user', 'user_id'));
+        return view('fishing-results/admin/view')->with(compact('fishing_results', 'all_user', 'user_id'));
     }
 
     public function search(Request $request)
@@ -46,7 +46,7 @@ class AdminHomeController extends Controller
         } else {
             $fishing_results = $this->get_result_user($user_id);
         }        
-        return view('admin/home')->with(compact('fishing_results', 'all_user', 'user_id'));
+        return view('fishing-results/admin/view')->with(compact('fishing_results', 'all_user', 'user_id'));
     }
 
     /**
