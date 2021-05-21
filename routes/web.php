@@ -1,12 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UploadController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\FishingResultsController;
-use App\Http\Controllers\AdminFishingResultsController;
-use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UploadController;
+use App\Http\Controllers\EventManagementController;
+use App\Http\Controllers\EventRegistrationController;
+use App\Http\Controllers\EventSearchController;
+use App\Http\Controllers\EventInfoController;
+use App\Http\Controllers\EventEntry\EventEntryController;
+use App\Http\Controllers\EventEntry\Admin\EventEntryController as EventEntryAdminController;
+use App\Http\Controllers\ApprovalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,26 +23,32 @@ use App\Http\Controllers\HomeController;
 |
 */
 
-Route::get('/', function () {
-    return view('top/top');
-});
-// Route::get('/', function () {
-//     return view('test');
-// });
-
 Auth::routes();
 
+Route::get('/', [HomeController::class, 'index']);
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::get('/profile/{id}', [ProfileController::class, 'view'])->name('profile');
+Route::post('/profile-update/{id}', [ProfileController::class, 'update'])->name('profile-update');
+Route::post('/profile-update-image', [ProfileController::class, 'updateImage'])->name('profile-update-image');
+
 Route::get('/upload/{id}', [UploadController::class, 'view'])->name('upload');
 Route::post('/upload-submit', [UploadController::class, 'store'])->name('upload-submit');
-Route::post('/pay', [PaymentController::class, 'pay']);
-Route::get('/delete', [UploadController::class, 'delete'])->name('delete');
 
-Route::post('/user-search', [AdminFishingResultsController::class, 'search'])->name('user-search');
-Route::get('/approval', [ApprovalController::class, 'view'])->name('approval');
-Route::post('/approval-search', [ApprovalController::class, 'search'])->name('approval-search');
-Route::get('/approval-update', [ApprovalController::class, 'update'])->name('approval-update');
-Route::get('/approval-delete', [ApprovalController::class, 'delete'])->name('approval-delete');
+Route::get('/event-management/{id}', [EventManagementController::class, 'view'])->name('event-management');
 
-Route::get('/fishing-results', [FishingResultsController::class, 'index'])->name('fishing-results');
-Route::get('/admin-fishing-results', [AdminFishingResultsController::class, 'index'])->name('admin-fishing-results');
+Route::get('/event-registration/{id}', [EventRegistrationController::class, 'view'])->name('event-registration');
+Route::post('/event-submit', [EventRegistrationController::class, 'store'])->name('event-submit');
+
+Route::get('/event-search', [EventSearchController::class, 'view'])->name('event-search');
+Route::post('/event-search-submit', [EventSearchController::class, 'search'])->name('event-search-submit');
+
+Route::get('/event-info/{id}', [EventInfoController::class, 'view'])->name('event-info');
+
+Route::get('/event-entry/{id}', [EventEntryController::class, 'view'])->name('event-entry');
+Route::get('/event-entry-admin/{id}', [EventEntryAdminController::class, 'view'])->name('event-entry-admin');
+Route::get('/entry/{id}', [EventEntryController::class, 'entry'])->name('entry');
+
+Route::get('/approval/{id}', [ApprovalController::class, 'view'])->name('approval');
+Route::post('/approval-search/{id}', [ApprovalController::class, 'search'])->name('approval-search');
+Route::get('/approval-update/{id}', [ApprovalController::class, 'update'])->name('approval-update');

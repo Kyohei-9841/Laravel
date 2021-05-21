@@ -1,50 +1,68 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('ランキング') }}</div>
-                <div class="card-body">
-                    @foreach ($fishing_results as $item)
-                        @php
-                            $arr_file_dir = explode("/", $item->pic);
-                            $dir = $arr_file_dir[2] . "/" . $arr_file_dir[3]
-                        @endphp
-                        <div class="div-border">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-3 text-left" style="padding: 5px;"><img class="round-frame-account" src="{{asset('images/images_4.png')}}" width="50" height="50"></div>
-                                    <div class="col-5 text-center name-padding"><span style="font-weight: bold;">{{print_r($item->name, true)}}</span></div>
-                                    <div class="col-4 text-right">
-                                    </div>
-                                </div>
-                            </div>
-                            <table class="border-none" style="margin: 10px 0px">
-                                <tr class="border-none">
-                                    <td class="border-none" rowspan="3" style="width:100px">
-                                        <a href="{{asset('storage/upload/' . $dir)}}" target="_blank">
-                                            <img class="round-frame" src="{{asset('storage/upload/' . $dir)}}" width="192" height="130">
-                                        </a>
-                                    </td>
-                                    <td class="border-none text-center" style="width:100px">場所：</td>
-                                    <td class="border-none text-center" style="width:100px">{{print_r($item->position, true)}}</td>
-                                </tr>
-                                <tr class="border-none">
-                                    <td class="border-none text-center">魚種：</td>
-                                    <td class="border-none text-center">{{print_r($item->fish_species, true)}}</td>
-                                </tr>
-                                <tr class="border-none">
-                                    <td class="border-none text-center">サイズ：</td>
-                                    <td class="border-none text-center">{{print_r($item->size, true)}}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    @endforeach                
-                </div>
-            </div>
+    <div id="container">
+        <div id="inner-header">
+            <h1 id="logo">
+                {{-- <a href="index.html"> --}}
+                    <img src="{{ asset('images/main/logo.png')}}" alt="SAMPLE WEB SITE">
+                {{-- </a> --}}
+            </h1>
+            <!--スライドショー-->
+            <aside id="mainimg">
+                <img src="{{ asset('images/main/1.jpg')}}" alt="" class="slide0">
+                <img src="{{ asset('images/main/1.jpg')}}" alt="" class="slide1">
+                <img src="{{ asset('images/main/2.jpg')}}" alt="" class="slide2">
+                <img src="{{ asset('images/main/3.jpg')}}" alt="" class="slide3">
+            </aside>
         </div>
+        <div id="contents">
+            <div id="main">
+                <section id="new">
+                    <h2>コンテンツ説明</h2>
+                    <p>コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容<br>
+                        コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容</p>
+                </section>
+                <section>
+                    <h2>イベント一覧</h2>
+                </section>
+                <section>
+                    <h2>過去イベント一覧</h2>
+                </section>
+
+            </div>
+            <!--/#main-->
+            {{-- <div id="sub"> --}}
+                <!--PC用（801px以上端末）メニュー-->
+                {{-- <nav id="menubar">
+                    <h2>Contents</h2>
+                    <ul> --}}
+                        {{-- <li><a href="index.html">HOME</a></li>
+                        <li><a href="about.html">ABOUT</a></li>
+                        <li><a href="gallery.html">GALLERY</a></li>
+                        <li><a href="link.html">LINK</a></li> --}}
+                        {{-- <li>HOME</li>
+                        <li>ABOUT</li>
+                        <li>GALLERY</li>
+                        <li>LINK</li>
+                    </ul>
+                </nav>
+                <p><a href="#"><img src="{{ asset('images/main/banner1.jpg')}}" alt="採用情報" class="pc"></a>
+                <a href="#"><img src="{{ asset('images/main/banner1_sh.jpg')}}" alt="採用情報" class="sh"></a></p>
+                <p>上のバナー画像は、801px以上の端末と800px以下とで画像２種類が切り替わります。<br>
+                <a href="about.html#banner">詳しい説明はこちら。</a></p>
+            </div> --}}
+            <!--/#sub-->
+        </div>
+        <!--/#contents-->
     </div>
-</div>
+    <!--/#container-->
+
+    <footer>
+        <small>Copyright&copy; <a href="index.html">SAMPLE WEB SITE</a> All Rights Reserved.</small>
+        <span class="pr"><a href="http://template-party.com/" target="_blank">《Web Design:Template-Party》</a></span>
+    </footer>
+
+    <!--ページの上部に戻る「↑」ボタン-->
+    <p class="nav-fix-pos-pagetop"><a href="#">↑</a></p>
 @endsection

@@ -1,122 +1,100 @@
 @extends('layouts.app')
 
 @section('content')
-<footer class="fixed-bottom" style="background-color: transparent;">
-	<div class="row">
-		<div class="col-8"></div>
-		<div class="col-3" align="left">
-            {{-- <a href="{{route('approval')}}" class="btn btn-primary" style="box-shadow: 3px 3px 4px -2px black"><i class="now-ui-icons ui-2_like"></i></a> --}}
-            <div class="toggle-switch">
-                <input id="change_button" class="toggle-input" type='checkbox' />
-                <label for="toggle" class="toggle-label" />
-                <span></span>
-            </div> 
-        </div>
-        <div class="col-1"></div>
-	</div>
-</footer>
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <div class="container-fluid">
-                        <div class="row">{{ __('アップロード承認') }}</div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div>
-                        <form action="{{ route('approval-search') }}" method="post">
-                            @csrf
-                            <select id="approvalSelecter" name="approvalSelecter">
-                                <option value="0">全て</option>
-                                @foreach ($all_user as $item)
-                                    <option value="{{ $item->id }}" {{ $item->id == $user_id ? "selected" : "" }}>{{ $item->name }}</option>
-                                @endforeach
-                            </select>
-                        </form>
-                    </div>
-                    <div class="unapproved-table">
-                        @foreach ($unapproved_fishing_results as $item)
-                            @php
-                                $arr_file_dir = explode("/", $item->pic);
-                                $dir = $arr_file_dir[2] . "/" . $arr_file_dir[3]
-                            @endphp
-                            <div class="div-border">
-                                <div class="container-fluid">
-                                    <div class="row">
-                                        <div class="col-3 text-left" style="padding: 5px;"><img class="round-frame-account" src="{{asset('images/images_4.png')}}" width="50" height="50"></div>
-                                        <div class="col-5 text-center name-padding"><span style="font-weight: bold;">{{print_r($item->name, true)}}</span></div>
-                                        <div class="col-4 text-right"><span class="btn btn-danger p-2" style="font-size:8px;width:70px">非承認</span></div>
-                                    </div>
-                                </div>
-                                <table class="border-none" style="margin: 10px 0px">
-                                    <tr class="border-none">
-                                        <td class="border-none" rowspan="3" style="width:100px">
-                                            <a href="{{asset('storage/upload/' . $dir)}}" target="_blank">
-                                                <img class="round-frame" src="{{asset('storage/upload/' . $dir)}}">
-                                            </a>
-                                        </td>
-                                        <td class="border-none text-center" style="width:100px">場所：</td>
-                                        <td class="border-none text-center" style="width:100px">{{print_r($item->position, true)}}</td>
-                                    </tr>
-                                    <tr class="border-none">
-                                        <td class="border-none text-center">魚種：</td>
-                                        <td class="border-none text-center">{{print_r($item->fish_species, true)}}</td>
-                                    </tr>
-                                    <tr class="border-none">
-                                        <td class="border-none text-center">サイズ：</td>
-                                        <td class="border-none text-center">{{print_r($item->size, true)}}</td>
-                                    </tr>
-                                </table>
-                                <div class="text-right">
-                                    <a href="{{route('approval-update', ['id' => $item->id])}}" class="btn btn-success mr-3" style="font-size:10px;box-shadow: 3px 3px 4px -2px black;">承認する</a>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="approved-table">
-                        @foreach ($approved_fishing_results as $item)
-                            @php
-                                $arr_file_dir = explode("/", $item->pic);
-                                $dir = $arr_file_dir[2] . "/" . $arr_file_dir[3]
-                            @endphp
-                            <div class="div-border">
-                                <div class="container-fluid">
-                                    <div class="row">
-                                        <div class="col-3 text-left" style="padding: 5px;"><img class="round-frame-account" src="{{asset('images/images_4.png')}}" width="50" height="50"></div>
-                                        <div class="col-5 text-center name-padding"><span style="font-weight: bold;">{{print_r($item->name, true)}}</span></div>
-                                        <div class="col-4 text-right"><span class="btn btn-success p-2" style="font-size:8px;width:70px">承認</span></div>
-                                    </div>
-                                </div>
-                                <table class="border-none" style="margin: 10px 0px">
-                                    <tr class="border-none">
-                                        <td class="border-none" rowspan="3" style="width:100px">
-                                            <a href="{{asset('storage/upload/' . $dir)}}" target="_blank">
-                                                <img class="round-frame" src="{{asset('storage/upload/' . $dir)}}" width="192" height="130">
-                                            </a>
-                                        </td>
-                                        <td class="border-none text-center" style="width:100px">場所：</td>
-                                        <td class="border-none text-center" style="width:100px">{{print_r($item->position, true)}}</td>
-                                    </tr>
-                                    <tr class="border-none">
-                                        <td class="border-none text-center">魚種：</td>
-                                        <td class="border-none text-center">{{print_r($item->fish_species, true)}}</td>
-                                    </tr>
-                                    <tr class="border-none">
-                                        <td class="border-none text-center">サイズ：</td>
-                                        <td class="border-none text-center">{{print_r($item->size, true)}}</td>
-                                    </tr>
-                                </table>
-                                <div class="text-right">
-                                    <a href="{{route('approval-delete', ['id' => $item->id])}}" class="btn btn-danger mr-3" style="font-size:10px;box-shadow: 3px 3px 4px -2px black;">承認取り消し</a>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div>
+        <a href="{{ route('event-entry-admin', ['id' => $id]) }}">＜戻る</a>
     </div>
-</div>
+    <div id="container">
+        <div class="font-size-15">
+            <span>魚種：[{{ $event->fish_name }}]</span>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+            data-target="#mdl-fishing-results-search">検索条件/並び替え設定</button>
+            @include('approval.modal-fishing-results-search')
+        </div>
+        @if (count($fishing_results) > 0)
+            @foreach ($fishing_results as $item)
+                <div class="div-border mx-3">
+                    <table class="border-none" style="margin: 10px 0px">
+                        <tr class="border-none">
+                            @php
+                                $style = "";
+                                $approval = "";
+                                if ($item->approval_status == 0) {
+                                    $style = "bg-secondary";
+                                    $approval = "未承認";
+                                } else if ($item->approval_status == 1) {
+                                    $style = "bg-success";
+                                    $approval = "承認済";
+                                } else if ($item->approval_status == 2) {
+                                    $style = "bg-danger";
+                                    $approval = "非承認";
+                                }
+                            @endphp
+                            <td class="border-none" colspan="2" style="padding:5px 10px 10px 10px">
+                                <span class="{{ $style }} round-approval-table font-color-white">{{ print_r($approval, true) }}</span>
+                                <span class="ml-5">{{ print_r($item->user_name, true) }}</span>
+                            </td>
+                        </tr>
+                        <tr class="border-none">
+                            <td class="border-none text-center" rowspan="3" style="padding:0px 30px 0px 5px">
+                                @php
+                                    $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
+                                @endphp
+                                <a href="{{print_r($src, true)}}" target="_blank">
+                                    @if (!empty($item->enc_img) and !empty($item->imginfo))
+                                        <img class="round-frame" src="{{print_r($src, true)}}" width="192" height="130">
+                                    @endif
+                                </a>
+                            </td>
+                            <td class="border-none text-center">{{print_r(Carbon\Carbon::parse($item->created_at)->format('Y年m月d日'), true)}}</td>
+                        </tr>
+                        <tr class="border-none">
+                            <td class="border-none text-center">{{print_r(Carbon\Carbon::parse($item->created_at)->format('H:i'), true)}}</td>
+                        </tr>
+                        <tr class="border-none">
+                            <td class="border-none text-center">{{print_r($item->size, true)}}cm</td>
+                        </tr>
+                    </table>
+                    <div class="text-right mb-2">
+                        {{-- イベント終了時には承認操作不可 --}}
+                        @if ($event->event_status == 1)
+                            {{-- 承認のボタン表示 --}}
+                            @if ($item->approval_status == 1)
+                                <a href="{{route('approval-update', ['id' => $id, 'result_id' => $item->id, 'update_flg' => 0])}}" class="btn btn-warning mr-3" style="font-size:10px;box-shadow: 3px 3px 4px -2px black;">承認取消</a>
+                            {{-- 非承認のボタン表示 --}}
+                            @elseIf ($item->approval_status == 2)
+                                <a href="{{route('approval-update', ['id' => $id, 'result_id' => $item->id, 'update_flg' => 0])}}" class="btn btn-warning mr-3" style="font-size:10px;box-shadow: 3px 3px 4px -2px black;">未承認状態へ</a>
+                            {{-- 未承認のボタン表示 --}}
+                            @else
+                                <a href="{{route('approval-update', ['id' => $id, 'result_id' => $item->id, 'update_flg' => 2])}}" class="btn btn-danger mr-3" style="font-size:10px;box-shadow: 3px 3px 4px -2px black;">非承認</a>
+                                <a href="{{route('approval-update', ['id' => $id, 'result_id' => $item->id, 'update_flg' => 1])}}" class="btn btn-primary mr-3" style="font-size:10px;box-shadow: 3px 3px 4px -2px black;">承認</a>
+                            @endif
+                        {{-- イベント終了後でも未承認は操作可能 --}}
+                        @else
+                            {{-- 未承認のボタン表示 --}}
+                            @if ($item->approval_status == 0)
+                                <a href="{{route('approval-update', ['id' => $id, 'result_id' => $item->id, 'update_flg' => 2])}}" class="btn btn-danger mr-3" style="font-size:10px;box-shadow: 3px 3px 4px -2px black;">非承認</a>
+                                <a href="{{route('approval-update', ['id' => $id, 'result_id' => $item->id, 'update_flg' => 1])}}" class="btn btn-primary mr-3" style="font-size:10px;box-shadow: 3px 3px 4px -2px black;">承認</a>
+                            @endif
+                        @endif
+                    </div>
+                </div>
+            @endforeach
+        @else
+            <div class="text-center my-4">
+                <span class="font-size-10">対象のデータが存在しませんでした。</span>
+            </div>
+        @endif
+    </div>
+    <!--/#container-->
+
+    <footer>
+        <small>Copyright&copy; <a href="index.html">SAMPLE WEB SITE</a> All Rights Reserved.</small>
+        <span class="pr"><a href="http://template-party.com/" target="_blank">《Web Design:Template-Party》</a></span>
+    </footer>
+
+    <!--ページの上部に戻る「↑」ボタン-->
+    <p class="nav-fix-pos-pagetop"><a href="#">↑</a></p>
 @endsection

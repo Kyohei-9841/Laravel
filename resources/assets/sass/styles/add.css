@@ -1,0 +1,126 @@
+.round-frame-profile{
+    border-radius: 50%;
+    width:  150px;
+    height: 150px;
+}
+
+.round-frame-profile-sm{
+    border-radius: 50%;
+    width:  75px;
+    height: 75px;
+}
+
+.round-frame{
+    border-radius: 50%;
+    width:  70px;
+    height: 70px;
+}
+
+.round-frame-event{
+    width:  70px;
+    height: 70px;
+}
+
+.round-frame-account{
+    border-radius: 50%;
+    width:  30px;
+    height: 30px;
+}
+
+.round-frame-info{
+    width:  350px;
+    height: 200px;
+}
+
+.round-frame-rank{
+    border-radius: 50%;
+    width:  50px;
+    height: 50px;
+}
+
+.round-frame-rank-profile {
+    border-radius: 50%;
+    width:  50px;
+    height: 50px;
+}
+
+.round-approval-table{
+    border-radius: 5px;
+    /* width:  350px;
+    height: 200px; */
+    padding:5px 10px 5px 10px
+}
+
+.div-border{
+    border: 1px solid #259bd1;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    box-shadow: 3px 3px 4px -2px black;
+}
+
+.div-border-event{
+    border: 1px solid #259bd1;
+    border-radius: 5px;
+    margin: 5px;
+    box-shadow: 3px 3px 4px -2px black;
+}
+
+.view-cont-info {
+    border: 1px solid #b9b9b9;
+    border-radius: 5px;
+}
+
+.view-entry-ranking {
+    border: 1px solid #b9b9b9;
+    border-radius: 5px;
+}
+
+textarea {
+	width: 100%;  /* 横幅 */
+	height: 10em; /* 高さ */
+}
+
+.point-leader {
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.font-size-5 {font-size: 5px;}
+.font-size-6 {font-size: 6px;}
+.font-size-7 {font-size: 7px;}
+.font-size-8 {font-size: 8px;}
+.font-size-9 {font-size: 9px;}
+.font-size-10 {font-size: 10px;}
+.font-size-11 {font-size: 11px;}
+.font-size-12 {font-size: 12px;}
+.font-size-13 {font-size: 13px;}
+.font-size-14 {font-size: 14px;}
+.font-size-15 {font-size: 15px;}
+.font-size-20 {font-size: 20px;}
+.font-size-25 {font-size: 25px;}
+.font-size-30 {font-size: 30px;}
+
+.font-color-white {color: white;}
+.font-color-red {color: red;}
+.font-color-dodgerblue {color: dodgerblue;}
+
+.font-weight-bold {font-weight: bold;}
+.font-weight-lighter {font-weight: lighter;}
+.font-weight-normal {font-weight: normal;}
+.font-weight-100 {font-weight: 100;}
+.font-weight-200 {font-weight: 200;}
+.font-weight-300 {font-weight: 300;}
+.font-weight-400 {font-weight: 400;}
+.font-weight-500 {font-weight: 500;}
+.font-weight-600 {font-weight: 600;}
+.font-weight-700 {font-weight: 700;}
+.font-weight-800 {font-weight: 800;}
+.font-weight-900 {font-weight: 900;}
+
+.clear-decoration {
+    border: none;  /* 枠線を消す */
+    outline: none; /* クリックしたときに表示される枠線を消す */
+    background: transparent; /* 背景の灰色を消す */
+}
