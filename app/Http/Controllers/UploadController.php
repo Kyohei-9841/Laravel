@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\FishingResults;
 use App\Images;
 use App\Event;
@@ -17,6 +18,10 @@ class UploadController extends Controller
      */
     public function view(Request $request, $id)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
         \Log::debug('アップロード');
         \Log::debug($id);
         \Log::debug($request->input('event_id'));
@@ -34,6 +39,10 @@ class UploadController extends Controller
 
     public function store(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        
         \Log::debug('アップロード：保存');
         \Log::debug($request->input('id'));
         // \Log::debug($request->input('position'));

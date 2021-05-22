@@ -1,21 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
+    <div id="inner-header">
+        <h1 id="logo">
+            {{-- <a href="index.html"> --}}
+                <img src="{{ asset('images/main/logo.png')}}" alt="SAMPLE WEB SITE">
+            {{-- </a> --}}
+        </h1>
+        <!--スライドショー-->
+        <aside id="mainimg">
+            <img src="{{ asset('images/images_1.jpg')}}" alt="" class="slide0">
+            <img src="{{ asset('images/images_2.jpg')}}" alt="" class="slide1">
+            <img src="{{ asset('images/images_3.jpg')}}" alt="" class="slide2">
+        </aside>
+    </div>
+
     <div id="container">
-        <div id="inner-header">
-            <h1 id="logo">
-                {{-- <a href="index.html"> --}}
-                    <img src="{{ asset('images/main/logo.png')}}" alt="SAMPLE WEB SITE">
-                {{-- </a> --}}
-            </h1>
-            <!--スライドショー-->
-            <aside id="mainimg">
-                <img src="{{ asset('images/main/1.jpg')}}" alt="" class="slide0">
-                <img src="{{ asset('images/main/1.jpg')}}" alt="" class="slide1">
-                <img src="{{ asset('images/main/2.jpg')}}" alt="" class="slide2">
-                <img src="{{ asset('images/main/3.jpg')}}" alt="" class="slide3">
-            </aside>
-        </div>
         <div id="contents">
             <div id="main">
                 <section id="new">

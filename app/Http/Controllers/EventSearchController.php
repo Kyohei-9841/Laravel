@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Utils\Utility;
 use App\Event;
 use App\Images;
 use App\FishSpecies;
@@ -16,6 +18,10 @@ class EventSearchController extends Controller
      */
     public function view(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        
         \Log::debug('イベント検索');
 
         // 測定基準
@@ -38,11 +44,10 @@ class EventSearchController extends Controller
 
         $event_all_results = $this->search_event($params);
 
-        for ($i = 0; $i < count($event_all_results); $i++) {
-            $enc_img = base64_encode($event_all_results[$i]->image_data);
-            $event_all_results[$i]->enc_img = $enc_img;
-            $imginfo = getimagesize('data:application/octet-stream;base64,' . $enc_img);
-            $event_all_results[$i]->imginfo = $imginfo['mime'];            
+        if (count($event_all_results) != 0) {
+            foreach($event_all_results as $result) {
+                $result = Utility::isProcessingImages($result);
+            }
         }
 
         return view("event-search.view")->with(compact('event_all_results', 'evaluation_criteria_result', 'fish_species_result', 'params'));
@@ -54,6 +59,10 @@ class EventSearchController extends Controller
      */
     public function search(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        
         \Log::debug('イベント検索実行');
 
         $request_data = $request->all();
@@ -78,6 +87,12 @@ class EventSearchController extends Controller
 
         $event_all_results = $this->search_event($params);
 
+        if (count($event_all_results) != 0) {
+            foreach($event_all_results as $result) {
+                $result = Utility::isProcessingImages($result);
+            }
+        }
+
         // 測定基準
         $evaluation_criteria = new EvaluationCriteria();
         $evaluation_criteria_result = $evaluation_criteria->get();
@@ -85,15 +100,6 @@ class EventSearchController extends Controller
         // 魚種
         $fish_species = new FishSpecies();
         $fish_species_result = $fish_species->get();
-
-        if (count($event_all_results) != 0) {
-            for ($i = 0; $i < count($event_all_results); $i++) {
-                $enc_img = base64_encode($event_all_results[$i]->image_data);
-                $event_all_results[$i]->enc_img = $enc_img;
-                $imginfo = getimagesize('data:application/octet-stream;base64,' . $enc_img);
-                $event_all_results[$i]->imginfo = $imginfo['mime'];            
-            }    
-        }
 
         return view("event-search.view")->with(compact('event_all_results', 'evaluation_criteria_result', 'fish_species_result', 'params'));
     }
@@ -170,7 +176,7 @@ class EventSearchController extends Controller
             $query->where('event.fish_species', '=', $fish_species);
         }
 
-        $query_result = $query->orderBy('event.start_at')->get();
+        $query_result = $query->orderBy('event.start_at', 'desc')->get();
 
         return $query_result;
     }

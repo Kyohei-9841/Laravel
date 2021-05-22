@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\EvaluationCriteria;
 use App\FishSpecies;
 use App\Images;
@@ -16,6 +17,10 @@ class EventRegistrationController extends Controller
      */
     public function view(Request $request, $id)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+    
         \Log::debug('イベント管理');
         // $user = User::find($id);
 
@@ -32,6 +37,10 @@ class EventRegistrationController extends Controller
 
     public function store(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        
         \Log::debug('イベント：保存');
         \Log::debug($request->input('pic'));
 

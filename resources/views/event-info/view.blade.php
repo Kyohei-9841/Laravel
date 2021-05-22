@@ -7,7 +7,9 @@
     <div id="container">
         <div class="row">
             <div class="col-6">
-                <a href="{{ route('event-search') }}" class="btn btn-primary" style="padding:0px 5px 0px 5px !important"><span style="font-size:13px">参加者一覧</span></a>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mdl-event-info" style="padding:0px 5px 0px 5px !important">
+                    <span style="font-size:13px">参加者一覧</span>
+                </button>
             </div>
             <div class="col-6">
                 @if ($admin_flg)
@@ -104,12 +106,13 @@
                 <label>★イベント説明</label>
             </div>
             <div class="p-2 view-cont-info">
-                <span>{{print_r($event_info->note, true)}}</span>
+                <span>{!! nl2br(e($event_info->note)) !!}</span>
             </div>
             {{-- <div class="my-1 ml-1">
                 <span class="font-size-11 font-color-red">測定の方法です。<br>釣果をアップロードする際は測定基準にそった画像をアップロードしてください。</span>
             </div> --}}
         </div>
+        @include('event-info.modal-event-info')
     </div>
     <!--/#container-->
 

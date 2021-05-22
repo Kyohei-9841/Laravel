@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\EventEntry;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Utils\Utility;
 use App\EntryList;
 use App\Http\Controllers\Controller;
 
@@ -14,6 +16,10 @@ class EventEntryController extends Controller
      */
     public function view(Request $request, $id)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        
         \Log::debug('エントリー');
         \Log::debug($id);
 
@@ -23,35 +29,25 @@ class EventEntryController extends Controller
 
         $event_info = $this->get_event($id);
 
-        $enc_img = base64_encode($event_info->image_data);
-        $event_info->enc_img = $enc_img;
-        $imginfo = getimagesize('data:application/octet-stream;base64,' . $enc_img);
-        $event_info->imginfo = $imginfo['mime'];
-
+        $event_info = Utility::isProcessingImages($event_info);
 
         $fishing_results = $this->get_fishing_results($id);
 
-        foreach($fishing_results as $result) {
-            if (!empty($result->image_data)) {
-                $enc_img = base64_encode($result->image_data);
-                $result->enc_img = $enc_img;
-                $imginfo = getimagesize('data:application/octet-stream;base64,' . $enc_img);
-                $result->imginfo = $imginfo['mime'];
+        if (count($fishing_results) != 0) {
+            foreach($fishing_results as $result) {
+                $result = Utility::isProcessingImages($result);
             }
         }
 
         $ranking = $this->get_ranking($id);
 
         $rank = 0;
-        foreach($ranking as $ranking_data) {
-            if ($ranking_data->user_id == \Auth::user()->id) {
-                $rank = $ranking_data->rank;
-            }
-            if (!empty($ranking_data->image_data)) {
-                $result_enc_img = base64_encode($ranking_data->image_data);
-                $ranking_data->enc_img = $result_enc_img;
-                $result_imginfo = getimagesize('data:application/octet-stream;base64,' . $result_enc_img);
-                $ranking_data->imginfo = $result_imginfo['mime'];
+        if (count($ranking) != 0) {
+            foreach($ranking as $ranking_data) {
+                if ($ranking_data->user_id == \Auth::user()->id) {
+                    $rank = $ranking_data->rank;
+                }
+                $ranking_data = Utility::isProcessingImages($ranking_data);
             }
         }
 
@@ -65,6 +61,10 @@ class EventEntryController extends Controller
      */
     public function entry(Request $request, $id)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        
         \Log::debug('エントリー');
         \Log::debug($id);
 

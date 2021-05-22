@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Utils\Utility;
 use App\FishingResults;
 
 class ApprovalController extends Controller
 {
     public function view(Request $request, $id)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        
         $params = array(
             'entry_user'=> 0,
             'approval'=> 0
@@ -18,12 +24,9 @@ class ApprovalController extends Controller
         $event = $this->get_event($id);
         $fishing_results = $this->search_fishing_results($params, $id);
 
-        foreach($fishing_results as $result) {
-            if (!empty($result->image_data)) {
-                $result_enc_img = base64_encode($result->image_data);
-                $result->enc_img = $result_enc_img;
-                $result_imginfo = getimagesize('data:application/octet-stream;base64,' . $result_enc_img);
-                $result->imginfo = $result_imginfo['mime'];
+        if (count($fishing_results) != 0) {
+            foreach($fishing_results as $result) {
+                $result = Utility::isProcessingImages($result);
             }
         }
 
@@ -32,6 +35,10 @@ class ApprovalController extends Controller
 
     public function search(Request $request, $id)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        
         $params = array(
             'entry_user'=>$request->input('entry-user'),
             'approval'=>$request->input('approval')
@@ -41,12 +48,9 @@ class ApprovalController extends Controller
         $event = $this->get_event($id);
         $fishing_results = $this->search_fishing_results($params, $id);
 
-        foreach($fishing_results as $result) {
-            if (!empty($result->image_data)) {
-                $result_enc_img = base64_encode($result->image_data);
-                $result->enc_img = $result_enc_img;
-                $result_imginfo = getimagesize('data:application/octet-stream;base64,' . $result_enc_img);
-                $result->imginfo = $result_imginfo['mime'];
+        if (count($fishing_results) != 0) {
+            foreach($fishing_results as $result) {
+                $result = Utility::isProcessingImages($result);
             }
         }
 
@@ -55,6 +59,10 @@ class ApprovalController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        
         $params = array(
             'entry_user'=> 0,
             'approval'=> 0
@@ -67,25 +75,16 @@ class ApprovalController extends Controller
         $fishing_results->approval_status = $update_flg;
         $fishing_results->save();
 
-        $entry_list = $this->get_entry_data($id);
-        $event = $this->get_event($id);
-        $fishing_results = $this->search_fishing_results($params, $id);
-
-        foreach($fishing_results as $result) {
-            if (!empty($result->image_data)) {
-                $result_enc_img = base64_encode($result->image_data);
-                $result->enc_img = $result_enc_img;
-                $result_imginfo = getimagesize('data:application/octet-stream;base64,' . $result_enc_img);
-                $result->imginfo = $result_imginfo['mime'];
-            }
-        }
-
-        return view('approval.view')->with(compact('fishing_results', 'entry_list', 'params', 'id', 'event'));
+        return redirect()->route('approval', ['id' => $id]);
     }
 
-    public function delete(Request $request)
+    public function delete(Request $request, $id)
     {
-        return view('approval.view')->with(compact('unapproved_fishing_results', 'approved_fishing_results', 'all_user', 'user_id'));
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        
+        return redirect()->route('approval', ['id' => $id]);
     }
 
     /**

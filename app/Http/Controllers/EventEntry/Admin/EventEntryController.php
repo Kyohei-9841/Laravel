@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\EventEntry\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Utils\Utility;
 use App\EntryList;
 use App\Http\Controllers\Controller;
 
@@ -14,51 +16,24 @@ class EventEntryController extends Controller
      */
     public function view(Request $request, $id)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        
         \Log::debug('エントリー');
         \Log::debug($id);
 
         $entry_list = $this->get_entry_list($id);
-        \Log::debug($entry_list);
 
         $ranking = $this->get_ranking($id);
 
-        \Log::debug(count($ranking));
-
-
-        foreach($ranking as $ranking_data) {
-            \Log::debug('画像のところ１');
-
-            if (!empty($ranking_data->image_data)) {
-                \Log::debug('画像のところ');
-
-                $result_enc_img = base64_encode($ranking_data->image_data);
-                $ranking_data->enc_img = $result_enc_img;
-                $result_imginfo = getimagesize('data:application/octet-stream;base64,' . $result_enc_img);
-                $ranking_data->imginfo = $result_imginfo['mime'];
+        if (count($ranking) != 0) {
+            foreach($ranking as $result) {
+                $result = Utility::isProcessingImages($result);
             }
         }
 
         return view("event-entry.admin.view")->with(compact('id', 'ranking'));
-    }
-
-    /**
-     * エントリー
-     * @return \Illuminate\Http\Response
-     */
-    public function entry(Request $request, $id)
-    {
-        \Log::debug('エントリー');
-        \Log::debug($id);
-
-        // エントリー
-        $event_list_model = new EntryList();
-        $event_list_model->user_id = \Auth::user()->id;
-        $event_list_model->event_id = $id;
-        $event_list_model->cancel_flg = 0;
-        $event_list_model->cancel_date = null;
-        $event_list_model->save();
-
-        return redirect()->route('event-entry', ['id' => $id, 'admin_flg' => false]);
     }
 
     /**

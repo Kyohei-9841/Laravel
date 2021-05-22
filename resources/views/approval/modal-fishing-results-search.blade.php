@@ -5,7 +5,7 @@
                 <h4 class="modal-title">検索</h4>
                 <button type="button" class="close" data-dismiss="modal">×</button>
             </div> --}}
-            <form method="post" action="{{ route('approval-search', ['id' => Auth::user()->id]) }}">
+            <form method="post" action="{{ route('approval-search', ['id' => $id]) }}">
                 @method('POST')
                 @csrf
                 <div class="modal-body">

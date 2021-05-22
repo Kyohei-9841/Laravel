@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Utils\Utility;
+use Illuminate\Support\Facades\Auth;
 use App\Event;
 use App\Images;
 use App\FishSpecies;
@@ -16,15 +18,16 @@ class EventInfoController extends Controller
      */
     public function view(Request $request, $id)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+        
         \Log::debug('イベント詳細');
         \Log::debug($id);
 
         $event_info = $this->get_event($id);
 
-        $enc_img = base64_encode($event_info->image_data);
-        $event_info->enc_img = $enc_img;
-        $imginfo = getimagesize('data:application/octet-stream;base64,' . $enc_img);
-        $event_info->imginfo = $imginfo['mime'];
+        $event_info = Utility::isProcessingImages($event_info);
 
         $admin_flg = false;
 
@@ -34,13 +37,20 @@ class EventInfoController extends Controller
 
         $entry_status = $this->get_entry_status($id);
 
+        $entry_list = $this->get_entry_list($id);
+
+        if (count($entry_list) != 0) {
+            foreach($entry_list as $result) {
+                $result = Utility::isProcessingImages($result);
+            }
+        }
+
         // $user_enc_img = base64_encode($event_info->user_image_data);
         // $event_info->user_enc_img = $user_enc_img;
         // $user_imginfo = getimagesize('data:application/octet-stream;base64,' . $user_enc_img);
         // $event_info->user_imginfo = $user_imginfo['mime'];
 
-
-        return view("event-info.view")->with(compact('event_info', 'admin_flg', 'entry_status'));
+        return view("event-info.view")->with(compact('id', 'event_info', 'admin_flg', 'entry_status', 'entry_list'));
     }
 
     /**
@@ -75,7 +85,7 @@ class EventInfoController extends Controller
     }
 
     /**
-     * イベントを取得する
+     * エントリーしてるかのステータスを取得する
      */
     public function get_entry_status($id)
     {
@@ -87,6 +97,30 @@ class EventInfoController extends Controller
                 ->where('entry_list.user_id', '=', \Auth::user()->id)
                 ->get()
                 ->first();
+
+        return $query_result;
+    }
+
+    /**
+     * エントリーリストを取得する
+     */
+    public function get_entry_list($id)
+    {
+        $query_result = \DB::table('entry_list')
+                ->select(
+                        \DB::raw('entry_list.*'),
+                        \DB::raw('users.name as user_name'),
+                        \DB::raw('images.image_data as image_data'),
+                )
+                ->join('event', 'entry_list.event_id', '=', 'event.id')
+                ->join('users', 'entry_list.user_id', '=', 'users.id')
+                ->leftJoin('images', function ($join) {
+                    $join->on('users.image_id', '=', 'images.id')
+                        ->whereRaw('images.registration_flg = 3');
+                })
+                ->where('event.id', '=', $id)
+                ->where('entry_list.cancel_flg', '=', 0)
+                ->get();
 
         return $query_result;
     }

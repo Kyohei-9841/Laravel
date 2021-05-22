@@ -22,11 +22,11 @@
                                 $src = "data:" . $user->imginfo . ";base64," . $user->enc_img;
                             @endphp
                                 <button type="button" class="clear-decoration" data-toggle="modal" data-target="#mdl-profile-image">
-                                    <img class="round-frame" src="{{print_r($src, true)}}">
+                                    <img class="round-frame-profile" src="{{print_r($src, true)}}">
                                 </button>
                         @else
                             <button type="button" class="clear-decoration" data-toggle="modal" data-target="#mdl-profile-image">
-                                <img class="round-frame" src="{{ asset('images/images_4.png')}}">
+                                <img class="round-frame-profile" src="{{ asset('images/images_4.png')}}">
                             </button>
                         @endif
                     @else
@@ -35,10 +35,10 @@
                                 $src = "data:" . $user->imginfo . ";base64," . $user->enc_img;
                             @endphp
                             <a href="{{print_r($src, true)}}" target="_blank">
-                                <img class="round-frame" src="{{print_r($src, true)}}">
+                                <img class="round-frame-profile" src="{{print_r($src, true)}}">
                             </a>
                         @else
-                            <img class="round-frame" src="{{ asset('images/images_4.png')}}">
+                            <img class="round-frame-profile" src="{{ asset('images/images_4.png')}}">
                         @endif
                     @endif
                 </div>
@@ -62,11 +62,11 @@
                             <span style="font-size:15px">{{ config("const.pref.{$user->prefectures}") }}</span>
                         </div>
                         <div class="col-12">
-                            <span style="font-size:17px">{{ $user->profile }}</span>
+                            <span style="font-size:17px">{!! nl2br(e($user->profile)) !!}</span>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 mt-2">
+                {{-- <div class="col-12 mt-2">
                     <div class="row">
                         <div class="col-6">
                             <a href="{{ url('/') }}" style="padding:0px 5px 0px 5px"><span style="font-size:13px">参加中のイベント</span></a>
@@ -75,12 +75,12 @@
                             <a href="{{ url('/') }}" style="padding:0px 5px 0px 5px"><span style="font-size:13px">過去参加イベント</span></a>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
         <div class="sm-display-none md-display-none lg-display-none xl-display-none xxl-display-none">
             <div class="row">
-                <div class="col-4">
+                <div class="col-5">
                     {{-- 本人場合 --}}
                     @if ($user->id == Auth::user()->id)
                         @if (!empty($user->imginfo) && !empty($user->enc_img))
@@ -88,11 +88,11 @@
                                 $src = "data:" . $user->imginfo . ";base64," . $user->enc_img;
                             @endphp
                                 <button type="button" class="clear-decoration" data-toggle="modal" data-target="#mdl-profile-image">
-                                    <img class="round-frame" src="{{print_r($src, true)}}">
+                                    <img class="round-frame-profile" src="{{print_r($src, true)}}">
                                 </button>
                         @else
                             <button type="button" class="clear-decoration" data-toggle="modal" data-target="#mdl-profile-image">
-                                <img class="round-frame" src="{{ asset('images/images_4.png')}}">
+                                <img class="round-frame-profile" src="{{ asset('images/images_4.png')}}">
                             </button>
                         @endif
                     @else
@@ -101,14 +101,14 @@
                                 $src = "data:" . $user->imginfo . ";base64," . $user->enc_img;
                             @endphp
                             <a href="{{print_r($src, true)}}" target="_blank">
-                                <img class="round-frame" src="{{print_r($src, true)}}">
+                                <img class="round-frame-profile" src="{{print_r($src, true)}}">
                             </a>
                         @else
-                            <img class="round-frame" src="{{ asset('images/images_4.png')}}">
+                            <img class="round-frame-profile" src="{{ asset('images/images_4.png')}}">
                         @endif
                     @endif
                 </div>
-                <div class="col-8">
+                <div class="col-7">
                     <div class="row">
                         <div class="col-12">
                             <span style="font-size:20px">{{$user->name}}</span>
@@ -128,9 +128,9 @@
                     </div>
                 </div>
                 <div class="col-12 mt-2">
-                    <span style="font-size:17px">{{ $user->profile }}</span>
+                    <span style="font-size:17px">{!! nl2br(e($user->profile)) !!}</span>
                 </div>
-                <div class="col-12 mt-2">
+                {{-- <div class="col-12 mt-2">
                     <div class="row">
                         <div class="col-6">
                             <a href="{{ url('/') }}" style="padding:0px 5px 0px 5px"><span style="font-size:13px">参加中のイベント</span></a>
@@ -139,12 +139,32 @@
                             <a href="{{ url('/') }}" style="padding:0px 5px 0px 5px"><span style="font-size:13px">過去参加イベント</span></a>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
         <div class="mt-2">
             <div class="card">
-                <div class="card-header">{{ __('釣果一覧') }}</div>
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-4">{{ __('釣果一覧') }}</div>
+                        <div class="col-8">
+                            <form method="post">
+                                @method('POST')
+                                @csrf
+                                <input hidden class="form-input" type="text" id="pull_id" name="pull_id" value='{{ $user->id }}'>
+                                <input hidden class="form-input" type="text" id="event_id" name="event_id" value='{{ $event_id }}'>
+                                <input hidden class="form-input" type="text" id="admin_flg" name="admin_flg" value='{{ $admin_flg }}'>
+                                <input hidden class="form-input" type="text" id="back_btn_flg" name="back_btn_flg" value='{{ $back_btn_flg }}'>
+                                <select class="width-130" id="selected_id" name="selected_id" placeholder="イベント" autocomplete="no">
+                                    <option value="0" {{ $params['selected_id'] == 0 ? 'selected' : '' }}>全釣果</option>
+                                    @foreach($event_list as $event_list_data)
+                                        <option value="{{ $event_list_data->id }}" {{ $params['selected_id'] == $event_list_data->id ? 'selected' : '' }}>{{$event_list_data->event_name}}</option>
+                                    @endforeach
+                                </select>    
+                            </form>
+                        </div>    
+                    </div>
+                </div>
                 <div class="card-body" style="padding:5px !important">
                     @if (count($fishing_results) > 0)
                         @foreach ($fishing_results as $item)
@@ -161,22 +181,26 @@
                                                 @endif
                                             </a>
                                         </td>
-                                        <td class="border-none text-center">{{print_r(Carbon\Carbon::parse($item->created_at)->format('Y年m月d日'), true)}}</td>
+                                        <td class="border-none">
+                                            <div class="point-leader-150">
+                                                {{print_r($item->event_name, true)}}
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr class="border-none">
-                                        <td class="border-none text-center">{{print_r($item->fish_name, true)}}</td>
+                                        <td class="border-none">{{print_r(Carbon\Carbon::parse($item->created_at)->format('Y年m月d日'), true)}}</td>
                                     </tr>
                                     <tr class="border-none">
+                                        <td class="border-none">{{print_r($item->fish_name, true)}}&nbsp;&nbsp;<span class="font-size-14">{{print_r($item->size, true)}}</span>cm</td>
+                                    </tr>
+                                    {{-- <tr class="border-none">
                                         <td class="border-none text-center">{{print_r($item->size, true)}}cm</td>
-                                    </tr>
+                                    </tr> --}}
                                 </table>
                             </div>
                         @endforeach
                     @else
-                        <div><p>あなたの釣果はまだありません。<br>イベントに参加し、釣果をアップロードしよう！</p></div>
-                        <div>
-                            <a href="{{route('event-search')}}"><p>{{ __('イベント検索') }}</p></a>
-                        </div>
+                        <div class="my-4 text-center"><span>釣果は登録されておりません</span></div>
                     @endif
                 </div>
             </div>

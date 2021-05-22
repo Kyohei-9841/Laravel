@@ -24,47 +24,43 @@
                 <div>
                     @if (count($ranking) > 0)
                         <div class="mx-3">
-                            <table class="border-none" style="margin: 10px 0px">
-                                <tr class="border-none">
-                                    @foreach ($ranking as $item)
-                                        <td class="border-none" rowspan="3" style="padding:0px 30px 0px 5px">
-                                            <div>
-                                                <span>{{ $item->rank }}位</span>
-                                            </div>
-                                            @if (!empty($item->imginfo) && !empty($item->enc_img))
-                                                @php
-                                                    $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
-                                                @endphp
-                                                <a href="{{print_r($src, true)}}" target="_blank">
-                                                    <img class="round-frame-rank" src="{{print_r($src, true)}}">
-                                                </a>
-                                            @else
-                                                <img class="round-frame-rank" src="{{ asset('images/images_4.png')}}">
+                            <table class="border-none" style="margin: 10px auto">
+                                @php
+                                    $number_of_loops = ceil(count($ranking)/3);
+                                    $count = 0;
+                                @endphp
+                                @for ($i = 0; $i < $number_of_loops; $i++)
+                                    <tr class="border-none">
+                                        @for ($j = 1; $j <= 3; $j++)
+                                            @if (!empty($ranking[$count]))
+                                                <td class="border-none">
+                                                    <div class="point-leader-90">
+                                                        <span>{{ $ranking[$count]->rank }}位</span>&nbsp;<span class="font-size-10">{{ $ranking[$count]->user_name }}</span>
+                                                    </div>
+                                                    <a href="{{ route('profile', [
+                                                        'id' => $ranking[$count]->user_id // ユーザーID
+                                                        , 'event_id' => $id // イベントID
+                                                        , 'selected_id' => $id // 釣果一覧のプルダウン用
+                                                        , 'admin_flg' => 0 // イベント作成者かのフラグ(プロフィール画面の戻るボタンに使用) 0:一般 1:管理者
+                                                        , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
+                                                        ]) }}">
+                                                        @if (!empty($ranking[$count]->imginfo) && !empty($ranking[$count]->enc_img))
+                                                            @php
+                                                                $src = "data:" . $ranking[$count]->imginfo . ";base64," . $ranking[$count]->enc_img;
+                                                            @endphp
+                                                            <img class="round-frame-rank" src="{{print_r($src, true)}}">
+                                                        @else
+                                                            <img class="round-frame-rank" src="{{ asset('images/images_4.png')}}">
+                                                        @endif
+                                                    </a>
+                                                </td>
                                             @endif
-                                            <div>
-                                                @if ($item->user_id == Auth::user()->id)
-                                                    <a href="{{ route('profile', [
-                                                        'id' => $item->user_id // ユーザーID
-                                                        , 'event_id' => $id // イベントID
-                                                        , 'admin_flg' => 0 // イベント作成者かのフラグ(プロフィール画面の戻るボタンに使用) 0:一般 1:管理者
-                                                        , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
-                                                        ]) }}">
-                                                        <span class="font-size-10">{{ $item->user_name }}</span>
-                                                    </a>
-                                                @else
-                                                    <a href="{{ route('profile', [
-                                                        'id' => $item->user_id // ユーザーID
-                                                        , 'event_id' => $id // イベントID
-                                                        , 'admin_flg' => 0 // イベント作成者かのフラグ(プロフィール画面の戻るボタンに使用) 0:一般 1:管理者
-                                                        , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
-                                                        ]) }}">
-                                                        <span class="font-size-10">{{ $item->user_name }}</span>
-                                                    </a>
-                                                @endif
-                                            </div>
-                                        </td>
-                                    @endforeach
-                                </tr>
+                                            @php
+                                                $count++;
+                                            @endphp
+                                        @endfor
+                                    </tr>
+                                @endfor
                             </table>
                         </div>
                     @else
