@@ -69,78 +69,102 @@ $(function() {
   
     // アップロード開始ボタンがクリックされたら
     $('#form-submit').click(async function(){
-        console.log("サブミット");
-        // ファイルが指定されていなければ何も起こらない
-        if(!file || !blob) {
-            return;
-        }
+        try {
+            console.log("サブミット");
+            // ファイルが指定されていなければ何も起こらない
+            if(!file || !blob) {
+                alert("画像データなし");
 
-        // 現在地を取得
-        await navigator.geolocation.getCurrentPosition(
-            // 取得成功した場合
-            async function(position) {
-                var latitude = position.coords.latitude;
-                var longitude = position.coords.longitude;
-                console.log("緯度:"+position.coords.latitude+",経度"+position.coords.longitude);
-
-                var id = $('#id').val();
-                var event_id = $('#event-id').val();
-                // var position = $('#position').val();
-                var fish_species = $('#fish-species').val();
-                var size = $('#size').val();
-
-                var name, fd = new FormData();
-                fd.append('id', id);
-                fd.append('event_id', event_id);
-                // fd.append('position', position);
-                fd.append('fish_species', fish_species);
-                fd.append('size', size);
-                fd.append('pic', blob);
-                fd.append('latitude', latitude);
-                fd.append('longitude', longitude);
-        
-                // fd.append('_token', "{{ csrf_token() }}");
-                $.ajaxSetup({ async: false });
-                $.ajax({
-                    url: "/upload-submit", // 送信先
-                    type: 'POST',
-                    data: fd,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(data, textStatus, jqXHR){
-                        //通信が成功した場合の処理
-                        console.log("送信成功");
-                        location.href= "/event-entry/" + event_id;
-                    },
-                    error: function(error){
-                        //通信が失敗した場合の処理
-                        console.log(error);
-                        console.log("送信失敗");
-
-                    }
-                });        
-            },
-            // 取得失敗した場合
-            async function(error) {
-                switch(error.code) {
-                case 1: //PERMISSION_DENIED
-                    console.log("位置情報の利用が許可されていません");
-                    break;
-                case 2: //POSITION_UNAVAILABLE
-                    console.log("現在位置が取得できませんでした");
-                    break;
-                case 3: //TIMEOUT
-                    console.log("タイムアウトになりました");
-                    break;
-                default:
-                    console.log("その他のエラー(エラーコード:"+error.code+")");
-                    break;
-                }
+                return;
             }
-        );
+
+            var wOptions = {
+                "enableHighAccuracy": true,                       // true : 高精度
+                "timeout": 10000,                                 // タイムアウト : ミリ秒
+                "maximumAge": 0,                                  // データをキャッシュ時間 : ミリ秒
+            };
+
+            // 現在地を取得
+            await navigator.geolocation.getCurrentPosition(
+                // 取得成功した場合
+                async function(position) {
+                    alert("取得OK");
+
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+                    console.log("緯度:"+position.coords.latitude+",経度"+position.coords.longitude);
+                    alert("緯度:"+position.coords.latitude+",経度"+position.coords.longitude);
+
+                    var id = $('#id').val();
+                    var event_id = $('#event-id').val();
+                    // var position = $('#position').val();
+                    var fish_species = $('#fish-species').val();
+                    var size = $('#size').val();
+    
+                    var name, fd = new FormData();
+                    fd.append('id', id);
+                    fd.append('event_id', event_id);
+                    // fd.append('position', position);
+                    fd.append('fish_species', fish_species);
+                    fd.append('size', size);
+                    fd.append('pic', blob);
+                    fd.append('latitude', latitude);
+                    fd.append('longitude', longitude);
+            
+                    // fd.append('_token', "{{ csrf_token() }}");
+                    $.ajaxSetup({ async: false });
+                    $.ajax({
+                        url: "/upload-submit", // 送信先
+                        type: 'POST',
+                        data: fd,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(data, textStatus, jqXHR){
+                            //通信が成功した場合の処理
+                            console.log("送信成功");
+                            location.href= "/event-entry/" + event_id;
+                        },
+                        error: function(error){
+                            //通信が失敗した場合の処理
+                            console.log(error);
+                            console.log("送信失敗");
+    
+                        }
+                    });        
+                },
+                // 取得失敗した場合
+                async function(error) {
+                    switch(error.code) {
+                    case 1: //PERMISSION_DENIED
+                        alert("位置情報の利用が許可されていません");
+
+                        console.log("位置情報の利用が許可されていません");
+                        break;
+                    case 2: //POSITION_UNAVAILABLE
+                        alert("現在位置が取得できませんでした");
+
+                        console.log("現在位置が取得できませんでした");
+                        break;
+                    case 3: //TIMEOUT
+                        alert("タイムアウトになりました");
+
+                        console.log("タイムアウトになりました");
+                        break;
+                    default:
+                        alert("その他のエラー(エラーコード:"+error.code+")");
+
+                        console.log("その他のエラー(エラーコード:"+error.code+")");
+                        break;
+                    }
+                },
+                wOptions
+            );    
+        } catch(e) {
+            alert(e);
+        }
     });
 
     // イベント登録のサブミット

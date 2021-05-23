@@ -51623,21 +51623,33 @@ $(function () {
   }); // アップロード開始ボタンがクリックされたら
 
   $('#form-submit').click( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+    var wOptions;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
+            _context3.prev = 0;
             console.log("サブミット"); // ファイルが指定されていなければ何も起こらない
 
             if (!(!file || !blob)) {
-              _context3.next = 3;
+              _context3.next = 5;
               break;
             }
 
+            alert("画像データなし");
             return _context3.abrupt("return");
 
-          case 3:
-            _context3.next = 5;
+          case 5:
+            wOptions = {
+              "enableHighAccuracy": true,
+              // true : 高精度
+              "timeout": 10000,
+              // タイムアウト : ミリ秒
+              "maximumAge": 0 // データをキャッシュ時間 : ミリ秒
+
+            }; // 現在地を取得
+
+            _context3.next = 8;
             return navigator.geolocation.getCurrentPosition(
             /*#__PURE__*/
             // 取得成功した場合
@@ -51648,9 +51660,11 @@ $(function () {
                   while (1) {
                     switch (_context.prev = _context.next) {
                       case 0:
+                        alert("取得OK");
                         latitude = position.coords.latitude;
                         longitude = position.coords.longitude;
                         console.log("緯度:" + position.coords.latitude + ",経度" + position.coords.longitude);
+                        alert("緯度:" + position.coords.latitude + ",経度" + position.coords.longitude);
                         id = $('#id').val();
                         event_id = $('#event-id').val(); // var position = $('#position').val();
 
@@ -51691,7 +51705,7 @@ $(function () {
                           }
                         });
 
-                      case 17:
+                      case 19:
                       case "end":
                         return _context.stop();
                     }
@@ -51712,29 +51726,33 @@ $(function () {
                     switch (_context2.prev = _context2.next) {
                       case 0:
                         _context2.t0 = error.code;
-                        _context2.next = _context2.t0 === 1 ? 3 : _context2.t0 === 2 ? 5 : _context2.t0 === 3 ? 7 : 9;
+                        _context2.next = _context2.t0 === 1 ? 3 : _context2.t0 === 2 ? 6 : _context2.t0 === 3 ? 9 : 12;
                         break;
 
                       case 3:
                         //PERMISSION_DENIED
+                        alert("位置情報の利用が許可されていません");
                         console.log("位置情報の利用が許可されていません");
-                        return _context2.abrupt("break", 11);
+                        return _context2.abrupt("break", 15);
 
-                      case 5:
+                      case 6:
                         //POSITION_UNAVAILABLE
+                        alert("現在位置が取得できませんでした");
                         console.log("現在位置が取得できませんでした");
-                        return _context2.abrupt("break", 11);
-
-                      case 7:
-                        //TIMEOUT
-                        console.log("タイムアウトになりました");
-                        return _context2.abrupt("break", 11);
+                        return _context2.abrupt("break", 15);
 
                       case 9:
-                        console.log("その他のエラー(エラーコード:" + error.code + ")");
-                        return _context2.abrupt("break", 11);
+                        //TIMEOUT
+                        alert("タイムアウトになりました");
+                        console.log("タイムアウトになりました");
+                        return _context2.abrupt("break", 15);
 
-                      case 11:
+                      case 12:
+                        alert("その他のエラー(エラーコード:" + error.code + ")");
+                        console.log("その他のエラー(エラーコード:" + error.code + ")");
+                        return _context2.abrupt("break", 15);
+
+                      case 15:
                       case "end":
                         return _context2.stop();
                     }
@@ -51745,14 +51763,23 @@ $(function () {
               return function (_x2) {
                 return _ref3.apply(this, arguments);
               };
-            }());
+            }(), wOptions);
 
-          case 5:
+          case 8:
+            _context3.next = 13;
+            break;
+
+          case 10:
+            _context3.prev = 10;
+            _context3.t0 = _context3["catch"](0);
+            alert(_context3.t0);
+
+          case 13:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3);
+    }, _callee3, null, [[0, 10]]);
   }))); // イベント登録のサブミット
 
   $('#event-form-submit').click(function () {

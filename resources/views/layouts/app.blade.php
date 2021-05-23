@@ -11,7 +11,7 @@
 		<link rel="stylesheet" href="{{ asset('css/app.css') }}">
 		<script src="{{ asset('js/app.js') }}" defer></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
+        <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
 		{{-- <script src="js/fixmenu_pagetop.js"></script> --}}
 		<!--[if lt IE 9]>
 		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
