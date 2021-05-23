@@ -29,7 +29,7 @@
                                 <table class="border-none" style="margin: 10px 0px">
                                     <tr class="border-none">
                                         <td colspan="2">
-                                            <div class="ml-1" style="width:79px; background-color:lawngreen;">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d'), true)}}</div>
+                                            <div class="ml-1 background-color-lightgreen round-frame-event-day text-center">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d'), true)}}</div>
                                         </td>
                                     </tr>
                                     <tr class="border-none">
@@ -75,7 +75,7 @@
                                 <table class="border-none" style="margin: 10px 0px">
                                     <tr class="border-none">
                                         <td colspan="2">
-                                            <div class="ml-1" style="width:79px; background-color:grey;">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d'), true)}}</div>
+                                            <div class="ml-1 background-color-lightslategray round-frame-event-day text-center">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d'), true)}}</div>
                                         </td>
                                     </tr>
                                     <tr class="border-none">
@@ -120,7 +120,7 @@
                                 <table class="border-none" style="margin: 10px 0px">
                                     <tr class="border-none">
                                         <td colspan="2">
-                                            <div class="ml-1" style="width:79px; background-color:lawngreen;">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d'), true)}}</div>
+                                            <div class="ml-1 background-color-lightgreen round-frame-event-day text-center">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d'), true)}}</div>
                                         </td>
                                     </tr>
                                     <tr class="border-none">
@@ -166,7 +166,7 @@
                                 <table class="border-none" style="margin: 10px 0px">
                                     <tr class="border-none">
                                         <td colspan="2">
-                                            <div class="ml-1" style="width:79px; background-color:grey;">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d'), true)}}</div>
+                                            <div class="ml-1 background-color-lightslategray round-frame-event-day text-center">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d'), true)}}</div>
                                         </td>
                                     </tr>
                                     <tr class="border-none">

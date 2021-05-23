@@ -1746,7 +1746,7 @@ a:hover {
 ---------------------------------------------------------------------------*/
 #container {
 	overflow: hidden;
-	max-width: 1200px;		/*最大幅の制限。これ以上広がらない。*/
+	max-width: 800px;		/*最大幅の制限。これ以上広がらない。*/
 	margin: 30px auto 0;
 	box-shadow: 0px 0px 10px rgba(0,0,0,0.2);	/*ボックスの影。右へ、下へ、ぼかし幅。0,0,0は黒の事で0.2は色が20%ついた状態の事。*/
 	border-radius: 30px;	/*角丸のサイズ*/
@@ -1759,11 +1759,14 @@ a:hover {
 /*headerブロック*/
 #inner-header {
 	position: relative;
+	width: 100%;
+	height: 500px;
+	background-color: #3490dc;
 }
 /*header内のロゴ*/
 #inner-header #logo {
 	position: absolute;
-	z-index: 1;
+	z-index: 2;
 	left: 5%;	/*headerの左から5%の場所に配置*/
 	top: 18%;	/*headerの上から18%の場所に配置*/
 	width: 20%;	/*画像の幅*/
@@ -2030,7 +2033,7 @@ p.check a {color: #fff;}
 /*container。サイト全体を囲むブロック
 ---------------------------------------------------------------------------*/
 #container {
-	margin: 20px 3%;	/*containerの外側にとるスペース*/
+	margin: 20px auto;	/*containerの外側にとるスペース*/
 }
 
 }
@@ -2070,7 +2073,7 @@ p.check a {color: #fff;}
 /*スマホ用メニューブロック*/
 #menubar-s {
 	display: block;overflow: hidden;
-	position: absolute;z-index: 2;
+	position: absolute;z-index: 3;
 	top: 0px;
 	left: 0px;
 	width: 100%;
@@ -2103,7 +2106,7 @@ p.check a {color: #fff;}
 ---------------------------------------------------------------------------*/
 /*３本バーブロック*/
 #menubar_hdr {
-	display: block;position: absolute;z-index: 3;
+	display: block;position: absolute;z-index: 4;
 	top: 5px;	/*上からの配置場所*/
 	right: 1%;	/*右からの配置場所*/
 }
@@ -2270,6 +2273,18 @@ img.fr,img.fl {float: none;margin: 0;width: 100%;}
        object-fit:cover;
 }
 
+.round-frame-event-day {
+    border-radius: 5%;
+    width:100px;
+}
+
+.round-frame-top-event {
+    width:  100px;
+    height: 100px;
+    -o-object-fit:cover;
+       object-fit:cover;
+}
+
 .round-frame-rank-profile {
     border-radius: 50%;
     width:  50px;
@@ -2385,12 +2400,53 @@ textarea {
 
 .background-color-lightcoral {background-color: lightcoral;}
 .background-color-lightgreen {background-color: lightgreen;}
+.background-color-lightslategray {background-color: lightslategray;}
 
 .clear-decoration {
     border: none;  /* 枠線を消す */
     outline: none; /* クリックしたときに表示される枠線を消す */
     background: transparent; /* 背景の灰色を消す */
-}@charset "UTF-8";
+}
+
+#loading{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -25px;
+    margin-left: -25px;
+    z-index: 1;
+}
+      
+#loader-bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    background: #fff;
+    z-index: 1;
+}
+
+#main-title {
+    padding: 80px 0px 40px 0px;
+}
+
+#main-title h1 {
+    font-size: 50px;
+}
+
+#sub-title h2 {
+    font-size: 20px;
+}
+
+#container h2 {
+    margin: 50px 0px 10px 0px;
+}
+
+.top-table-span {
+    margin-left: 10%;
+}
+@charset "UTF-8";
 
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)

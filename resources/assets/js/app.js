@@ -9,6 +9,7 @@ require('./pages/fixmenu_pagetop');
 require('./pages/openclose');
 require('./pages/camera');
 require('./pages/other');
+require('./pages/loader');
 require('jquery-ui');
 
 window.Vue = require('vue');

@@ -43,7 +43,7 @@ a:hover {
 ---------------------------------------------------------------------------*/
 #container {
 	overflow: hidden;
-	max-width: 1200px;		/*最大幅の制限。これ以上広がらない。*/
+	max-width: 800px;		/*最大幅の制限。これ以上広がらない。*/
 	margin: 30px auto 0;
 	box-shadow: 0px 0px 10px rgba(0,0,0,0.2);	/*ボックスの影。右へ、下へ、ぼかし幅。0,0,0は黒の事で0.2は色が20%ついた状態の事。*/
 	border-radius: 30px;	/*角丸のサイズ*/
@@ -56,11 +56,14 @@ a:hover {
 /*headerブロック*/
 #inner-header {
 	position: relative;
+	width: 100%;
+	height: 500px;
+	background-color: #3490dc;
 }
 /*header内のロゴ*/
 #inner-header #logo {
 	position: absolute;
-	z-index: 1;
+	z-index: 2;
 	left: 5%;	/*headerの左から5%の場所に配置*/
 	top: 18%;	/*headerの上から18%の場所に配置*/
 	width: 20%;	/*画像の幅*/
@@ -323,7 +326,7 @@ p.check a {color: #fff;}
 /*container。サイト全体を囲むブロック
 ---------------------------------------------------------------------------*/
 #container {
-	margin: 20px 3%;	/*containerの外側にとるスペース*/
+	margin: 20px auto;	/*containerの外側にとるスペース*/
 }
 
 }
@@ -359,7 +362,7 @@ p.check a {color: #fff;}
 /*スマホ用メニューブロック*/
 #menubar-s {
 	display: block;overflow: hidden;
-	position: absolute;z-index: 2;
+	position: absolute;z-index: 3;
 	top: 0px;
 	left: 0px;
 	width: 100%;
@@ -389,7 +392,7 @@ p.check a {color: #fff;}
 ---------------------------------------------------------------------------*/
 /*３本バーブロック*/
 #menubar_hdr {
-	display: block;position: absolute;z-index: 3;
+	display: block;position: absolute;z-index: 4;
 	top: 5px;	/*上からの配置場所*/
 	right: 1%;	/*右からの配置場所*/
 }

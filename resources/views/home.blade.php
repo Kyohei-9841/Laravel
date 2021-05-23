@@ -1,60 +1,105 @@
 @extends('layouts.app')
 
 @section('content')
-    <div id="inner-header">
-        <h1 id="logo">
-            {{-- <a href="index.html"> --}}
-                <img src="{{ asset('images/main/logo.png')}}" alt="SAMPLE WEB SITE">
-            {{-- </a> --}}
-        </h1>
-        <!--スライドショー-->
-        <aside id="mainimg">
-            <img src="{{ asset('images/images_1.jpg')}}" alt="" class="slide0">
-            <img src="{{ asset('images/images_2.jpg')}}" alt="" class="slide1">
-            <img src="{{ asset('images/images_3.jpg')}}" alt="" class="slide2">
-        </aside>
+    <div id="inner-header" class="text-center font-color-white">
+        <div id="main-title">
+            <h1>Fishingment</h1>
+            <p>全国どこでも誰でも釣りイベント</p>
+        </div>
+        <div id="sub-title">
+            <h2>Enjoy your fishing life.</h2>
+        </div>
     </div>
 
     <div id="container">
-        <div id="contents">
-            <div id="main">
-                <section id="new">
-                    <h2>コンテンツ説明</h2>
-                    <p>コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容<br>
-                        コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容コンテンツ説明内容</p>
-                </section>
-                <section>
-                    <h2>イベント一覧</h2>
-                </section>
-                <section>
-                    <h2>過去イベント一覧</h2>
-                </section>
-
+        <h2>Fishingmentとは？</h2>
+        <p class="ml-2">コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明</p>
+        <h2>開催中のイベント</h2>
+            @if (count($event_all) > 0)
+                @foreach ($event_all as $item)
+                    <hr>
+                    <div class="ml-2">
+                        <table style="width:100%">
+                            <tr colspan="2">
+                                <div class="my-1">
+                                    <a href="{{ route('event-info', ['id' => $item->id]) }}">{{print_r($item->event_name, true)}}</a>
+                                </div>
+                            </tr>
+                            <tr>
+                                <td rowspan="4" style="width:100px">
+                                    @if (!empty($item->enc_img) and !empty($item->imginfo))
+                                        @php
+                                            $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
+                                        @endphp
+                                        <a href="{{print_r($src, true)}}" target="_blank">
+                                            <img class="round-frame-top-event" src="{{print_r($src, true)}}" width="192" height="130">
+                                        </a>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="top-table-span">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d H:i'), true)}}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-size-11"><div class="top-table-span">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;〜{{print_r(Carbon\Carbon::parse($item->end_at)->format('Y/m/d H:i'), true)}}</div></td>
+                            </tr>
+                            <tr>
+                                <td class="font-size-14"><div class="top-table-span">🐟&nbsp;&nbsp;{{print_r($item->fish_name, true)}}</div></td>
+                            </tr>
+                            <tr>
+                                <td class="font-size-14"><div class="top-table-span">{{print_r($item->note, true)}}</div></td>
+                            </tr>
+                        </table>
+                    </div>
+                @endforeach
+            @else
+                <div class="my-2 text-center">
+                    <span class="font-size-10">まだイベントありません。</span>
+                </div>
+            @endif
+        <h2>過去のイベント</h2>
+        @if (count($event_finish) > 0)
+            @foreach ($event_finish as $item)
+                <hr>
+                <div class="ml-2">
+                    <table style="width:100%">
+                        <tr colspan="2">
+                            <div class="my-1">
+                                <a href="{{ route('event-info', ['id' => $item->id]) }}">{{print_r($item->event_name, true)}}</a>
+                            </div>
+                        </tr>
+                        <tr>
+                            <td rowspan="4" style="width:100px">
+                                @if (!empty($item->enc_img) and !empty($item->imginfo))
+                                    @php
+                                        $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
+                                    @endphp
+                                    <a href="{{print_r($src, true)}}" target="_blank">
+                                        <img class="round-frame-top-event" src="{{print_r($src, true)}}" width="192" height="130">
+                                    </a>
+                                @endif
+                            </td>
+                            <td>
+                                <div class="top-table-span">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d H:i'), true)}}</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-size-11"><div class="top-table-span">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;〜{{print_r(Carbon\Carbon::parse($item->end_at)->format('Y/m/d H:i'), true)}}</div></td>
+                        </tr>
+                        <tr>
+                            <td class="font-size-14"><div class="top-table-span">🐟&nbsp;&nbsp;{{print_r($item->fish_name, true)}}</div></td>
+                        </tr>
+                        <tr>
+                            <td class="font-size-14"><div class="top-table-span">{{print_r($item->note, true)}}</div></td>
+                        </tr>
+                    </table>
+                </div>
+            @endforeach
+        @else
+            <div class="my-2 text-center">
+                <span class="font-size-10">まだイベントありません。</span>
             </div>
-            <!--/#main-->
-            {{-- <div id="sub"> --}}
-                <!--PC用（801px以上端末）メニュー-->
-                {{-- <nav id="menubar">
-                    <h2>Contents</h2>
-                    <ul> --}}
-                        {{-- <li><a href="index.html">HOME</a></li>
-                        <li><a href="about.html">ABOUT</a></li>
-                        <li><a href="gallery.html">GALLERY</a></li>
-                        <li><a href="link.html">LINK</a></li> --}}
-                        {{-- <li>HOME</li>
-                        <li>ABOUT</li>
-                        <li>GALLERY</li>
-                        <li>LINK</li>
-                    </ul>
-                </nav>
-                <p><a href="#"><img src="{{ asset('images/main/banner1.jpg')}}" alt="採用情報" class="pc"></a>
-                <a href="#"><img src="{{ asset('images/main/banner1_sh.jpg')}}" alt="採用情報" class="sh"></a></p>
-                <p>上のバナー画像は、801px以上の端末と800px以下とで画像２種類が切り替わります。<br>
-                <a href="about.html#banner">詳しい説明はこちら。</a></p>
-            </div> --}}
-            <!--/#sub-->
-        </div>
-        <!--/#contents-->
+        @endif
     </div>
     <!--/#container-->
 

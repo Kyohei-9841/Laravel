@@ -67,8 +67,8 @@ class UploadController extends Controller
             // 'position' => 'required|string|max:255',
             'fish_species' => 'required|string|max:255',
             'size' => 'required|string|max:255',
-            'latitude' => 'required|string|max:255',
-            'longitude' => 'required|string|max:255',
+            // 'latitude' => 'required|string|max:255',
+            // 'longitude' => 'required|string|max:255',
 
         ]);
         \Log::debug('アップロード：2');
@@ -99,8 +99,10 @@ class UploadController extends Controller
         $fishing_results->pic = $img_url;
         $fishing_results->image_id = $image_id;
         $fishing_results->approval_status = 0;
-        $fishing_results->latitude = $latitude;
-        $fishing_results->longitude = $longitude;
+        // $fishing_results->latitude = $latitude;
+        // $fishing_results->longitude = $longitude;
+        $fishing_results->latitude = null;
+        $fishing_results->longitude = null;
 
         $fishing_results->save();
 

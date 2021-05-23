@@ -97,6 +97,15 @@
             </div>
         </nav>
         <div id="app">
+            <!--ロード画面の記述-->
+            <div id="loader-bg">
+                <div id="loading" class="text-center">
+                    <img src="{{ asset('images/gif/Spinner-3.gif')}}">
+                    <p id="loader-text" class="font-size-10"></p>
+                </div>
+            </div>
+            <!--ロード画面の記述ここまで-->
+
             @yield('content')
         </div>
 	</body>

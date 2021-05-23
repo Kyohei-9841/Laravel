@@ -1,16 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <div>
-        @if ($back_btn_flg == 1)
-            {{-- 管理者フラグ 0:一般 1:管理者 --}}
-            @if ($admin_flg == 1)
-                <a href="{{ route('event-entry-admin', ['id' => $event_id]) }}">＜戻る</a>
-            @else
-                <a href="{{ route('event-entry', ['id' => $event_id]) }}">＜戻る</a>
-            @endif
+    @if ($back_btn_flg == 1)
+        {{-- 管理者フラグ 0:一般 1:管理者 --}}
+        @if ($admin_flg == 1)
+            <a href="{{ route('event-entry-admin', ['id' => $event_id]) }}">＜戻る</a>
+        @else
+            <a href="{{ route('event-entry', ['id' => $event_id]) }}">＜戻る</a>
         @endif
-    </div>
+    @endif
     <div id="container">
         <div class="xs-display-none">
             <div class="row">
