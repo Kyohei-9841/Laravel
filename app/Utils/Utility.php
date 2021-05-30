@@ -34,12 +34,8 @@ class Utility
      * フォルダの有無判定
      */
     public static function isPresenceOrAbsenceOfFolder() {
-        $dir = '../storage/app/public/upload/' . \Auth::user()->id;
+        $dir = \Config::get('app.base_dir') . 'storage/app/public/upload/' . \Auth::user()->id;
         \Log::debug(print_r('しれくとりの確認のところ！！', true));
-
-        \Log::debug(print_r(file_exists('~/Laravel/storage/app/public/upload'), true));
-        \Log::debug(print_r(file_exists('./storage/app/public/upload'), true));
-        \Log::debug(print_r(file_exists('storage/app/public/upload'), true));
 
         if (!file_exists($dir)) {
             mkdir($dir);
@@ -80,7 +76,7 @@ class Utility
     
             $img_url = 'upload/' . \Auth::user()->id . '/' . $now_date . rand() . '.jpg';
     
-            file_put_contents('../storage/app/public/' . $img_url, base64_decode($base64_encode_data));
+            file_put_contents(\Config::get('app.base_dir') . 'storage/app/public/' . $img_url, base64_decode($base64_encode_data));
     
             $data->img_url = $img_url;
         }
@@ -105,7 +101,7 @@ class Utility
 
                 $img_url = 'upload/' . \Auth::user()->id . '/' . $now_date . '_' . $i . '_' . rand() . '.jpg';
     
-                file_put_contents('../storage/app/public/' . $img_url, base64_decode($base64_encode_data));
+                file_put_contents(\Config::get('app.base_dir') . 'storage/app/public/' . $img_url, base64_decode($base64_encode_data));
     
                 $data[$i]->img_url = $img_url;
     
