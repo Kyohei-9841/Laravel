@@ -35,6 +35,10 @@ class Utility
      */
     public static function isPresenceOrAbsenceOfFolder() {
         $dir = '../storage/app/public/upload/' . \Auth::user()->id;
+        \Log::debug(print_r('しれくとりの確認のところ！！', true));
+
+        \Log::debug(print_r(file_exists('../storage/app/public/upload'), true));
+        \Log::debug(print_r(file_exists('./storage/app/public/upload'), true));
 
         if (!file_exists($dir)) {
             mkdir($dir);
