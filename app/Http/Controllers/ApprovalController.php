@@ -25,9 +25,7 @@ class ApprovalController extends Controller
         $fishing_results = $this->search_fishing_results($params, $id);
 
         if (count($fishing_results) != 0) {
-            foreach($fishing_results as $result) {
-                $result = Utility::isProcessingImages($result);
-            }
+            $fishing_results = Utility::isProcessingImagesArr($fishing_results);
         }
 
         return view('approval.view')->with(compact('fishing_results', 'entry_list', 'params', 'id', 'event'));
@@ -49,9 +47,7 @@ class ApprovalController extends Controller
         $fishing_results = $this->search_fishing_results($params, $id);
 
         if (count($fishing_results) != 0) {
-            foreach($fishing_results as $result) {
-                $result = Utility::isProcessingImages($result);
-            }
+            $fishing_results = Utility::isProcessingImagesArr($fishing_results);
         }
 
         return view('approval.view')->with(compact('fishing_results', 'entry_list', 'params', 'id', 'event'));
@@ -97,11 +93,18 @@ class ApprovalController extends Controller
                         \DB::raw('images.image_data as image_data'),
                         \DB::raw('fish_species.fish_name as fish_name'),
                         \DB::raw('fishing_results.*'),
+                        \DB::raw('event.measurement as measurement'),
+                        \DB::raw('case
+                        when event.measurement = 1 then fishing_results.size
+                        when event.measurement = 2 then fishing_results.amount
+                        when event.measurement = 3 then fishing_results.weight
+                        end as measurement_result'),
                         \DB::raw('users.name as user_name'),
                 )
                 ->join('images', 'fishing_results.image_id', '=', 'images.id')
                 ->join('fish_species', 'fishing_results.fish_species', '=', 'fish_species.id')
                 ->join('users', 'fishing_results.user_id', '=', 'users.id')
+                ->join('event', 'fishing_results.event_id', '=', 'event.id')
                 ->where('fishing_results.event_id', '=', $id);
 
         if ($params['entry_user'] != 0) {

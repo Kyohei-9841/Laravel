@@ -2,7 +2,7 @@
 
 @section('content')
     <div>
-        <a href="{{ route('event-management', ['id' => Auth::user()->id]) }}">＜戻る</a>
+        <a href="{{ url('/') }}">＜戻る</a>
     </div>
     <div id="container">
         <div class="mb-2">
@@ -14,35 +14,14 @@
             @else
                 <img class="round-frame-user-image" src="{{ asset('images/images_4.png')}}">
             @endif
-            <a href="{{ route('profile', [
-                'id' => $event_info->user_id // ユーザーID
-                , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
-                ]) }}">
-                <span class="font-size-12">{{ $event_info->user_name }}</span>
-            </a>
-        </div>
+            <span class="font-size-12">{{ $event_info->user_name }}</span>
+        </div>    
         <div class="row">
             <div class="col-6">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mdl-event-info" style="padding:0px 5px 0px 5px !important">
-                    <span style="font-size:13px">参加者一覧</span>
-                </button>
+                <a href="{{ route('login') }}" class="btn btn-primary font-size-10">ログイン</a>
             </div>
             <div class="col-6">
-                @if ($admin_flg)
-                    <a href="{{ route('event-entry-admin', ['id' => $event_info->id]) }}" class="btn btn-primary" style="padding:0px 5px 0px 5px !important"><span style="font-size:13px">管理画面</span></a>
-                @else
-                    <a href="{{ route('event-entry', ['id' => $event_info->id]) }}" class="btn btn-primary" style="padding:0px 5px 0px 5px !important">
-                        @if ($event_info->event_status == 2)
-                            <span style="font-size:13px">結果</span>
-                        @else
-                            @if ($entry_status->entry_status == 1)
-                                <span style="font-size:13px">参加中</span>
-                            @else
-                                <span style="font-size:13px">エントリー</span>
-                            @endif
-                        @endif
-                    </a>
-                @endif
+                <a href="{{ route('register') }}" class="btn btn-primary font-size-10">会員登録</a>
             </div>
         </div>
         <div>
@@ -126,7 +105,6 @@
                 <span class="font-size-11 font-color-red">測定の方法です。<br>釣果をアップロードする際は測定基準にそった画像をアップロードしてください。</span>
             </div> --}}
         </div>
-        @include('event-info.modal-event-info')
     </div>
     <!--/#container-->
 

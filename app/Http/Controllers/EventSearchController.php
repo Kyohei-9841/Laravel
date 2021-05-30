@@ -28,7 +28,7 @@ class EventSearchController extends Controller
         $evaluation_criteria = new EvaluationCriteria();
         $evaluation_criteria_result = $evaluation_criteria->get();
 
-        // 魚種
+        // 対象魚
         $fish_species = new FishSpecies();
         $fish_species_result = $fish_species->get();
 
@@ -46,7 +46,7 @@ class EventSearchController extends Controller
 
         if (count($event_all_results) != 0) {
             foreach($event_all_results as $result) {
-                $result = Utility::isProcessingImages($result);
+                $result = Utility::isDirectDisplayImages($result);
             }
         }
 
@@ -89,7 +89,7 @@ class EventSearchController extends Controller
 
         if (count($event_all_results) != 0) {
             foreach($event_all_results as $result) {
-                $result = Utility::isProcessingImages($result);
+                $result = Utility::isDirectDisplayImages($result);
             }
         }
 
@@ -97,7 +97,7 @@ class EventSearchController extends Controller
         $evaluation_criteria = new EvaluationCriteria();
         $evaluation_criteria_result = $evaluation_criteria->get();
 
-        // 魚種
+        // 対象魚
         $fish_species = new FishSpecies();
         $fish_species_result = $fish_species->get();
 
@@ -145,6 +145,8 @@ class EventSearchController extends Controller
                         \DB::raw('images.image_data as image_data'),
                         \DB::raw('fish_species.fish_name as fish_name'),
                         \DB::raw('evaluation_criteria.criteria_name as criteria_name'),
+                        \DB::raw('user_images.image_data as user_image_data'),
+                        \DB::raw('users.name as user_name'),
                         \DB::raw('case
                             when event.start_at > NOW() then 0
                             when event.start_at <= NOW() and NOW() <= event.end_at then 1
@@ -153,7 +155,9 @@ class EventSearchController extends Controller
                 )
                 ->join('images', 'event.image_id', '=', 'images.id')
                 ->join('fish_species', 'event.fish_species', '=', 'fish_species.id')
-                ->join('evaluation_criteria', 'event.measurement', '=', 'evaluation_criteria.id');
+                ->join('evaluation_criteria', 'event.measurement', '=', 'evaluation_criteria.id')
+                ->join('users', 'event.user_id', '=', 'users.id')
+                ->join('images as user_images', 'users.image_id', '=', 'user_images.id');
 
         if (!empty($event_name)) {
             $query->where('event.event_name', 'like', $event_name_search);

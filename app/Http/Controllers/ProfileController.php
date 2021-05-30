@@ -25,14 +25,13 @@ class ProfileController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
-        $event_id = $request->input('event_id');
+
+        Utility::isPresenceOrAbsenceOfFolder();
+
         $selected_id = $request->input('selected_id');
-        $admin_flg = $request->input('admin_flg');
         $back_btn_flg = $request->input('back_btn_flg');
         \Log::debug(print_r("イベントID", true));
-        \Log::debug(print_r($event_id, true));
         \Log::debug(print_r($selected_id, true));
-        \Log::debug(print_r($admin_flg, true));
         \Log::debug(print_r($back_btn_flg, true));
 
         $user = $this->get_user($id);
@@ -46,14 +45,12 @@ class ProfileController extends Controller
         $fishing_results = $this->get_result_all($id, $params);
 
         if (count($fishing_results) != 0) {
-            foreach($fishing_results as $result) {
-                $result = Utility::isProcessingImages($result);
-            }
+            $fishing_results = Utility::isProcessingImagesArr($fishing_results);
         }
 
         $event_list =  $this->get_event_all($id);
 
-        return view("profile.view")->with(compact('user', 'fishing_results', 'event_id', 'admin_flg', 'back_btn_flg', 'params', 'event_list'));
+        return view("profile.view")->with(compact('user', 'fishing_results', 'back_btn_flg', 'params', 'event_list'));
     }
 
     public function update(Request $request, $id)
@@ -127,12 +124,10 @@ class ProfileController extends Controller
             return redirect()->route('login');
         }
         
-        $event_id = $request->input('event_id');
         $selected_id = $request->input('selected_id');
-        $admin_flg = $request->input('admin_flg');
         $back_btn_flg = $request->input('back_btn_flg');
 
-        return redirect()->route('profile', ['id' => $id, 'event_id' => $event_id, 'selected_id' => $selected_id, 'admin_flg' => $admin_flg, 'back_btn_flg' => $back_btn_flg]);
+        return redirect()->route('profile', ['id' => $id, 'selected_id' => $selected_id, 'back_btn_flg' => $back_btn_flg]);
     }
 
     public function updateImage(Request $request)
@@ -199,6 +194,12 @@ class ProfileController extends Controller
                         \DB::raw('images.image_data as image_data'),
                         \DB::raw('fish_species.fish_name as fish_name'),
                         \DB::raw('event.event_name as event_name'),
+                        \DB::raw('event.measurement as measurement'),
+                        \DB::raw('case
+                        when event.measurement = 1 then fishing_results.size
+                        when event.measurement = 2 then fishing_results.amount
+                        when event.measurement = 3 then fishing_results.weight
+                        end as measurement_result'),
                         \DB::raw('fishing_results.*')
                 )
                 ->join('images', function ($join) {

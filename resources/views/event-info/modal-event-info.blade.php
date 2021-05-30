@@ -15,9 +15,7 @@
                                         @php
                                             $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
                                         @endphp
-                                        <a href="{{print_r($src, true)}}" target="_blank">
-                                            <img class="round-frame" src="{{print_r($src, true)}}">
-                                        </a>
+                                        <img class="round-frame" src="{{print_r($src, true)}}">
                                     @else
                                         <img class="round-frame" src="{{ asset('images/images_4.png')}}">
                                     @endif
@@ -26,9 +24,7 @@
                                     @if ($item->user_id == Auth::user()->id)
                                         <a href="{{ route('profile', [
                                             'id' => $item->user_id // ユーザーID
-                                            , 'event_id' => $id // イベントID
                                             , 'selected_id' => $id // イベントID
-                                            , 'admin_flg' => 0 // イベント作成者かのフラグ(プロフィール画面の戻るボタンに使用) 0:一般 1:管理者
                                             , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
                                             ]) }}">
                                             <span>{{ $item->user_name }}</span>
@@ -36,9 +32,7 @@
                                     @else
                                         <a href="{{ route('profile', [
                                             'id' => $item->user_id // ユーザーID
-                                            , 'event_id' => $id // イベントID
                                             , 'selected_id' => $id // イベントID
-                                            , 'admin_flg' => 0 // イベント作成者かのフラグ(プロフィール画面の戻るボタンに使用) 0:一般 1:管理者
                                             , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
                                             ]) }}">
                                             <span>{{ $item->user_name }}</span>

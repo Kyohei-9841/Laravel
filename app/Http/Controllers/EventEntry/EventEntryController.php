@@ -23,23 +23,23 @@ class EventEntryController extends Controller
         \Log::debug('エントリー');
         \Log::debug($id);
 
+        Utility::isPresenceOrAbsenceOfFolder();
+
         $entry_data = $this->get_entry_data($id);
         $entry_list = $entry_data['entry_list'];
         $entry_flg = $entry_data['entry_flg'];
 
         $event_info = $this->get_event($id);
 
-        $event_info = Utility::isProcessingImages($event_info);
-
         $fishing_results = $this->get_fishing_results($id);
 
         if (count($fishing_results) != 0) {
-            foreach($fishing_results as $result) {
-                $result = Utility::isProcessingImages($result);
-            }
+            $fishing_results = Utility::isProcessingImagesArr($fishing_results);
         }
 
-        $ranking = $this->get_ranking($id);
+        $measurement_flg = $event_info->measurement;
+
+        $ranking = $this->get_ranking($id, $measurement_flg);
 
         $rank = 0;
         if (count($ranking) != 0) {
@@ -47,13 +47,12 @@ class EventEntryController extends Controller
                 if ($ranking_data->user_id == \Auth::user()->id) {
                     $rank = $ranking_data->rank;
                 }
-                $ranking_data = Utility::isProcessingImages($ranking_data);
+                $ranking_data = Utility::isDirectDisplayImages($ranking_data);
             }
         }
 
-        return view("event-entry.view")->with(compact('id', 'entry_flg', 'event_info', 'fishing_results', 'ranking', 'entry_list', 'rank'));
+        return view("event-entry.view")->with(compact('id', 'entry_flg', 'event_info', 'fishing_results', 'ranking', 'entry_list', 'rank', 'measurement_flg'));
     }
-
 
     /**
      * エントリー
@@ -152,6 +151,12 @@ class EventEntryController extends Controller
                 ->select(
                         \DB::raw('images.image_data as image_data'),
                         \DB::raw('fish_species.fish_name as fish_name'),
+                        \DB::raw('event.measurement as measurement'),
+                        \DB::raw('case
+                        when event.measurement = 1 then fishing_results.size
+                        when event.measurement = 2 then fishing_results.amount
+                        when event.measurement = 3 then fishing_results.weight
+                        end as measurement_result'),
                         \DB::raw('fishing_results.*')
                 )
                 ->join('images', 'fishing_results.image_id', '=', 'images.id')
@@ -167,12 +172,23 @@ class EventEntryController extends Controller
     /**
      * 順位を取得する
      */
-    public function get_ranking($id)
+    public function get_ranking($id, $measurement)
     {
+        $column_name = "";
+        if ($measurement == 1) {
+            $column_name = "size";
+            $distinct = "max";
+        } else if ($measurement == 2) {
+            $column_name = "amount";
+            $distinct = "sum";
+        } else {
+            $column_name = "weight";
+            $distinct = "max";
+        }
 
         $aggregate_query = \DB::table(\DB::raw('fishing_results as max_ft'))
                 ->select(
-                    \DB::raw('max(max_ft.size) as size'),
+                    \DB::raw($distinct . '(max_ft.' . $column_name . ') as measurement_result'),
                     \DB::raw('max_ft.user_id as user_id'),
                 )
                 ->whereRaw('max_ft.approval_status = 1')
@@ -182,7 +198,7 @@ class EventEntryController extends Controller
 
         $rank_sub_query = \DB::table(\DB::raw('fishing_results as fr_sub_sub'))
                 ->select(
-                    \DB::raw('DISTINCT max(fr_sub_sub.size) as size'),
+                    \DB::raw('DISTINCT ' . $distinct . '(fr_sub_sub.' . $column_name . ') as measurement_result'),
                 )
                 ->whereRaw('fr_sub_sub.approval_status = 1')
                 ->where('fr_sub_sub.event_id', '=', ':event_id_2')
@@ -194,7 +210,7 @@ class EventEntryController extends Controller
                 ->select(
                     \DB::raw('COUNT(*) + 1'),
                 )
-                ->whereRaw('fr_sub.size > ft.size')
+                ->whereRaw('fr_sub.measurement_result > ft.measurement_result')
                 ->toSql();
 
 
@@ -210,7 +226,7 @@ class EventEntryController extends Controller
                     $join->on('users.id', '=', 'images.user_id')
                         ->whereRaw('images.registration_flg = 3');
                 })
-                ->orderBy('ft.size', 'desc')
+                ->orderBy('ft.measurement_result', 'desc')
                 ->setBindings([':event_id'=>$id, ':event_id_2'=>$id])
                 ->get();
 

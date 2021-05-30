@@ -64,13 +64,13 @@
                     </div>
                     <div class="col-sm-12 col-md-4 my-3">
                         <div>
-                            <label>魚種</label>
+                            <label>対象魚</label>
                         </div>
                         <div>
-                            <span class="font-size-11">※対象魚種を選択してください</span>
+                            <span class="font-size-11">※対象対象魚を選択してください</span>
                         </div>
                         <div>
-                            <select id="fish-species" name="fish-species" placeholder="魚種" autocomplete="no">
+                            <select id="fish-species" name="fish-species" placeholder="対象魚" autocomplete="no">
                                 @foreach($fish_species_result as $fish_species_data)
                                     <option value="{{ $fish_species_data->id }}">{{$fish_species_data->fish_name}}</option>
                                 @endforeach

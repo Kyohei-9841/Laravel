@@ -2250,6 +2250,14 @@ img.fr,img.fl {float: none;margin: 0;width: 100%;}
        object-fit:cover;
 }
 
+.round-frame-user-image{
+    border-radius: 50%;
+    width:  18px;
+    height: 18px;
+    -o-object-fit:cover;
+       object-fit:cover;
+}
+
 .round-frame-account{
     border-radius: 50%;
     width:  30px;

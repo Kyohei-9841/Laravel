@@ -27,7 +27,7 @@ class EventInfoController extends Controller
 
         $event_info = $this->get_event($id);
 
-        $event_info = Utility::isProcessingImages($event_info);
+        $event_info = Utility::isDirectDisplayImages($event_info);
 
         $admin_flg = false;
 
@@ -41,7 +41,7 @@ class EventInfoController extends Controller
 
         if (count($entry_list) != 0) {
             foreach($entry_list as $result) {
-                $result = Utility::isProcessingImages($result);
+                $result = Utility::isDirectDisplayImages($result);
             }
         }
 
@@ -51,6 +51,22 @@ class EventInfoController extends Controller
         // $event_info->user_imginfo = $user_imginfo['mime'];
 
         return view("event-info.view")->with(compact('id', 'event_info', 'admin_flg', 'entry_status', 'entry_list'));
+    }
+
+    /**
+     * 一般向けのイベント登録画面表示
+     * @return \Illuminate\Http\Response
+     */
+    public function viewGeneral(Request $request, $id)
+    {        
+        \Log::debug('イベント詳細');
+        \Log::debug($id);
+
+        $event_info = $this->get_event($id);
+
+        $event_info = Utility::isDirectDisplayImages($event_info);
+
+        return view("event-info.general-page.view")->with(compact('event_info'));
     }
 
     /**
@@ -64,8 +80,8 @@ class EventInfoController extends Controller
                         \DB::raw('images.image_data as image_data'),
                         \DB::raw('fish_species.fish_name as fish_name'),
                         \DB::raw('evaluation_criteria.criteria_name as criteria_name'),
+                        \DB::raw('user_images.image_data as user_image_data'),
                         \DB::raw('users.name as user_name'),
-                        // \DB::raw('im2.image_data as user_image_data'),
                         \DB::raw('case
                             when event.start_at > NOW() then 0
                             when event.start_at <= NOW() and NOW() <= event.end_at then 1
@@ -76,7 +92,7 @@ class EventInfoController extends Controller
                 ->join('fish_species', 'event.fish_species', '=', 'fish_species.id')
                 ->join('evaluation_criteria', 'event.measurement', '=', 'evaluation_criteria.id')
                 ->join('users', 'event.user_id', '=', 'users.id')
-                // ->join('images as im2', 'users.image_id', '=', 'im2.id')
+                ->join('images as user_images', 'users.image_id', '=', 'user_images.id')
                 ->where('event.id', '=', $id)
                 ->get()
                 ->first();

@@ -79,16 +79,16 @@ $(function() {
 
             var id = $('#id').val();
             var event_id = $('#event-id').val();
-            // var position = $('#position').val();
+            var measurement = $('#measurement').val();
             var fish_species = $('#fish-species').val();
-            var size = $('#size').val();
+            var measurement_result = $('#measurement_result').val();
 
             var name, fd = new FormData();
             fd.append('id', id);
             fd.append('event_id', event_id);
-            // fd.append('position', position);
+            fd.append('measurement', measurement);
             fd.append('fish_species', fish_species);
-            fd.append('size', size);
+            fd.append('measurement_result', measurement_result);
             fd.append('pic', blob);
             // fd.append('latitude', latitude);
             // fd.append('longitude', longitude);

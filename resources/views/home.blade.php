@@ -19,26 +19,50 @@
                 @foreach ($event_all as $item)
                     <hr>
                     <div class="ml-2">
+                        <div class="my-1">
+                            @if (Auth::check())
+                                <a href="{{ route('event-info', ['id' => $item->id]) }}">{{print_r($item->event_name, true)}}</a>
+                            @else
+                                <a href="{{ route('event-info-general', ['id' => $item->id]) }}">{{print_r($item->event_name, true)}}</a>
+                            @endif
+                        </div>
                         <table style="width:100%">
-                            <tr colspan="2">
-                                <div class="my-1">
-                                    <a href="{{ route('event-info', ['id' => $item->id]) }}">{{print_r($item->event_name, true)}}</a>
-                                </div>
-                            </tr>
                             <tr>
                                 <td rowspan="4" style="width:100px">
                                     @if (!empty($item->enc_img) and !empty($item->imginfo))
                                         @php
                                             $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
                                         @endphp
-                                        <a href="{{print_r($src, true)}}" target="_blank">
+                                        <a href="{{ route('event-info-general', ['id' => $item->id]) }}">
                                             <img class="round-frame-top-event" src="{{print_r($src, true)}}" width="192" height="130">
                                         </a>
                                     @endif
                                 </td>
                                 <td>
-                                    <div class="top-table-span">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d H:i'), true)}}</div>
+                                    <div class="top-table-span">
+                                        @if (!empty($item->user_enc_img) and !empty($item->user_imginfo))
+                                            @php
+                                                $src = "data:" . $item->user_imginfo . ";base64," . $item->user_enc_img;
+                                            @endphp
+                                            <img class="round-frame-user-image" src="{{print_r($src, true)}}" width="192" height="130">
+                                        @else
+                                            <img class="round-frame-user-image" src="{{ asset('images/images_4.png')}}">
+                                        @endif
+                                        @if (Auth::check())
+                                            <a href="{{ route('profile', [
+                                                'id' => $item->user_id // ユーザーID
+                                                , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
+                                                ]) }}">
+                                                <span class="font-size-12">{{ $item->user_name }}</span>
+                                            </a>
+                                        @else
+                                            <span class="font-size-12">{{ $item->user_name }}</span>
+                                        @endif
+                                    </div>
                                 </td>
+                            </tr>
+                            <tr>
+                                <td><div class="top-table-span">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d H:i'), true)}}</div></td>
                             </tr>
                             <tr>
                                 <td class="font-size-11"><div class="top-table-span">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;〜{{print_r(Carbon\Carbon::parse($item->end_at)->format('Y/m/d H:i'), true)}}</div></td>
@@ -47,7 +71,7 @@
                                 <td class="font-size-14"><div class="top-table-span">🐟&nbsp;&nbsp;{{print_r($item->fish_name, true)}}</div></td>
                             </tr>
                             <tr>
-                                <td class="font-size-14"><div class="top-table-span">{{print_r($item->note, true)}}</div></td>
+                                <td colspan="2" class="font-size-14">{{print_r($item->note, true)}}</td>
                             </tr>
                         </table>
                     </div>
@@ -62,27 +86,52 @@
             @foreach ($event_finish as $item)
                 <hr>
                 <div class="ml-2">
+                    <div class="my-1">
+                        @if (Auth::check())
+                            <a href="{{ route('event-info', ['id' => $item->id]) }}">{{print_r($item->event_name, true)}}</a>
+                        @else
+                            <a href="{{ route('event-info-general', ['id' => $item->id]) }}">{{print_r($item->event_name, true)}}</a>
+                        @endif
+                    </div>
                     <table style="width:100%">
-                        <tr colspan="2">
-                            <div class="my-1">
-                                <a href="{{ route('event-info', ['id' => $item->id]) }}">{{print_r($item->event_name, true)}}</a>
-                            </div>
-                        </tr>
                         <tr>
                             <td rowspan="4" style="width:100px">
                                 @if (!empty($item->enc_img) and !empty($item->imginfo))
                                     @php
                                         $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
                                     @endphp
-                                    <a href="{{print_r($src, true)}}" target="_blank">
+                                    <a href="{{ route('event-info-general', ['id' => $item->id]) }}">
                                         <img class="round-frame-top-event" src="{{print_r($src, true)}}" width="192" height="130">
                                     </a>
                                 @endif
                             </td>
                             <td>
-                                <div class="top-table-span">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d H:i'), true)}}</div>
+                                <div class="top-table-span">
+                                    @if (!empty($item->user_enc_img) and !empty($item->user_imginfo))
+                                        @php
+                                            $src = "data:" . $item->user_imginfo . ";base64," . $item->user_enc_img;
+                                        @endphp
+                                        <img class="round-frame-user-image" src="{{print_r($src, true)}}" width="192" height="130">
+                                    @else
+                                        <img class="round-frame-user-image" src="{{ asset('images/images_4.png')}}">
+                                    @endif
+                                    @if (Auth::check())
+                                        <a href="{{ route('profile', [
+                                            'id' => $item->user_id // ユーザーID
+                                            , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
+                                            ]) }}">
+                                            <span class="font-size-12">{{ $item->user_name }}</span>
+                                        </a>
+                                    @else
+                                        <span class="font-size-12">{{ $item->user_name }}</span>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
+                        <tr>
+                            <td><div class="top-table-span">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d H:i'), true)}}</div></td>
+                        </tr>
+
                         <tr>
                             <td class="font-size-11"><div class="top-table-span">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;〜{{print_r(Carbon\Carbon::parse($item->end_at)->format('Y/m/d H:i'), true)}}</div></td>
                         </tr>
@@ -90,7 +139,7 @@
                             <td class="font-size-14"><div class="top-table-span">🐟&nbsp;&nbsp;{{print_r($item->fish_name, true)}}</div></td>
                         </tr>
                         <tr>
-                            <td class="font-size-14"><div class="top-table-span">{{print_r($item->note, true)}}</div></td>
+                            <td colspan="2" class="font-size-14">{{print_r($item->note, true)}}</td>
                         </tr>
                     </table>
                 </div>

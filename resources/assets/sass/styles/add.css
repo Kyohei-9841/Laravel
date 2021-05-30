@@ -18,6 +18,13 @@
     object-fit:cover;
 }
 
+.round-frame-user-image{
+    border-radius: 50%;
+    width:  18px;
+    height: 18px;
+    object-fit:cover;
+}
+
 .round-frame-account{
     border-radius: 50%;
     width:  30px;

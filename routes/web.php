@@ -33,7 +33,7 @@ Route::post('/profile-search-pull/{id}', [ProfileController::class, 'searchPull'
 Route::post('/profile-update/{id}', [ProfileController::class, 'update'])->name('profile-update');
 Route::post('/profile-update-image', [ProfileController::class, 'updateImage'])->name('profile-update-image');
 
-Route::get('/upload/{id}', [UploadController::class, 'view'])->name('upload');
+Route::get('/upload-top/{id}', [UploadController::class, 'view'])->name('upload-top');
 Route::post('/upload-submit', [UploadController::class, 'store'])->name('upload-submit');
 
 Route::get('/event-management/{id}', [EventManagementController::class, 'view'])->name('event-management');
@@ -45,6 +45,7 @@ Route::get('/event-search', [EventSearchController::class, 'view'])->name('event
 Route::post('/event-search-submit', [EventSearchController::class, 'search'])->name('event-search-submit');
 
 Route::get('/event-info/{id}', [EventInfoController::class, 'view'])->name('event-info');
+Route::get('/event-info-general/{id}', [EventInfoController::class, 'viewGeneral'])->name('event-info-general');
 
 Route::get('/event-entry/{id}', [EventEntryController::class, 'view'])->name('event-entry');
 Route::get('/event-entry-admin/{id}', [EventEntryAdminController::class, 'view'])->name('event-entry-admin');

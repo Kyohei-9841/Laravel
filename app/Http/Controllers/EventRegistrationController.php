@@ -28,7 +28,7 @@ class EventRegistrationController extends Controller
         $evaluation_criteria = new EvaluationCriteria();
         $evaluation_criteria_result = $evaluation_criteria->get();
 
-        // 魚種
+        // 対象魚
         $fish_species = new FishSpecies();
         $fish_species_result = $fish_species->get();
 
@@ -82,16 +82,16 @@ class EventRegistrationController extends Controller
         \Log::debug($start_at_datetime);
         \Log::debug($end_at_datetime);
 
-        // $request->validate([
-        //     'pic' => 'file|image|mimes:jpeg,png,jpg|max:2048',
-        //     'event_name' => 'required|string|max:255',
-        //     'start_at' => 'required|string|max:255',
-        //     'end_at' => 'required|string|max:255',
-        //     'entry_fee_flg' => 'required|string|max:255',
-        //     'note' => 'required|string|max:255',
-        //     'evaluation_criteria' => 'required|string|max:255',
-        //     'fish_species' => 'required|string|max:255',
-        // ]);
+        $request->validate([
+            'pic' => 'file|image|mimes:jpeg,png,jpg|max:2048',
+            'event_name' => 'required|string|max:255',
+            // 'start_at' => 'required|string|max:255',
+            // 'end_at' => 'required|string|max:255',
+            // 'entry_fee_flg' => 'required|string|max:255',
+            // 'note' => 'required|string|max:255',
+            // 'evaluation_criteria' => 'required|string|max:255',
+            // 'fish_species' => 'required|string|max:255',
+        ]);
         \Log::debug('アップロード：2');
 
         // $now_date_ymd = date("Y_m_d");

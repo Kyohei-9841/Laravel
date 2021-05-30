@@ -47,15 +47,15 @@ class UploadController extends Controller
         $now_date_his = date("H_i_s");
         \Log::debug($request->pic);
 
-        $img_url = $request->pic->storeAs('public/upload/' . $id . $now_date_ymd, $id . '_' . $now_date_his . '.jpg');
-        \Log::debug($img_url);
+        // $img_url = $request->pic->storeAs('public/upload/' . $id . $now_date_ymd, $id . '_' . $now_date_his . '.jpg');
+        // \Log::debug($img_url);
 
         $fishing_results = new FishingResults();
         $fishing_results->user_id = $id;
         $fishing_results->position = $position;
         $fishing_results->fish_species = $fish_species;
         $fishing_results->size = $size;
-        $fishing_results->pic = $img_url;
+        // $fishing_results->pic = $img_url;
         $fishing_results->approval_status = 0;
         $fishing_results->save();
 

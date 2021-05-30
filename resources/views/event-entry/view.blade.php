@@ -6,12 +6,27 @@
     </div>
     <div id="container">
         @if ($entry_flg)
+            @php
+                $measurement = "";
+                if ($measurement_flg == 1) {
+                    $measurement = "cm";
+                } else if ($measurement_flg == 2) {
+                    $measurement = "匹";
+                } else if ($measurement_flg == 3) {
+                    $measurement = "Kg";
+                }
+            @endphp
+
             <div class="view-entry-ranking mb-4 mr-4 ml-4 text-center">
                 <div>
                     <span>現順位</span>
                 </div>
                 <div>
-                    <span class="font-color-dodgerblue font-weight-bold font-size-25">{{ $rank }}/{{ count($entry_list) }}</span>
+                    @if ($rank)
+                        <span class="font-color-dodgerblue font-weight-bold font-size-25">{{ $rank }}位 ({{ $rank }}/{{ count($entry_list) }})</span>
+                    @else
+                        <span class="font-size-15">{{ count($entry_list) }}名エントリー中<br>釣果を投稿しよう</span>
+                    @endif
                 </div>
             </div>
             <div>
@@ -35,13 +50,11 @@
                                             @if (!empty($ranking[$count]))
                                                 <td class="border-none">
                                                     <div class="point-leader-90">
-                                                        <span>{{ $ranking[$count]->rank }}位</span>&nbsp;<span class="font-size-10">{{ $ranking[$count]->user_name }}</span>
+                                                        <span>{{ $ranking[$count]->rank }}位</span>&nbsp;<span class="font-size-10">{{ $ranking[$count]->measurement_result }}{{ $measurement }}</span>
                                                     </div>
                                                     <a href="{{ route('profile', [
                                                         'id' => $ranking[$count]->user_id // ユーザーID
-                                                        , 'event_id' => $id // イベントID
                                                         , 'selected_id' => $id // 釣果一覧のプルダウン用
-                                                        , 'admin_flg' => 0 // イベント作成者かのフラグ(プロフィール画面の戻るボタンに使用) 0:一般 1:管理者
                                                         , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
                                                         ]) }}">
                                                         @if (!empty($ranking[$count]->imginfo) && !empty($ranking[$count]->enc_img))
@@ -53,6 +66,9 @@
                                                             <img class="round-frame-rank" src="{{ asset('images/images_4.png')}}">
                                                         @endif
                                                     </a>
+                                                    <div>
+                                                        <span class="font-size-10">{{ $ranking[$count]->user_name }}</span>
+                                                    </div>
                                                 </td>
                                             @endif
                                             @php
@@ -80,8 +96,8 @@
                         {{-- アップロードボタンはイベント中のみ表示 --}}
                         @if ($event_info->event_status == 1)
                             <div class="text-center my-2">
-                                <a class="btn btn-primary" href="{{route('upload', ['id' => Auth::user()->id, 'event_id' => $id])}}">{{ __('アップロード') }}</a>
-                            </div>     
+                                <a class="btn btn-primary" href="{{ route('upload-top', ['id' => Auth::user()->id, 'event_id' => $id, 'measurement' => $event_info->measurement]) }}">{{ __('アップロード') }}</a>
+                            </div>
                         @endif
                         @if (count($fishing_results) > 0)
                             @foreach ($fishing_results as $item)
@@ -112,14 +128,11 @@
                                         </tr>            
                                         <tr class="border-none">
                                             <td class="border-none text-center" rowspan="3" style="padding:0px 30px 0px 5px">
-                                                @php
-                                                    $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
-                                                @endphp
-                                                <a href="{{print_r($src, true)}}" target="_blank">
-                                                    @if (!empty($item->enc_img) and !empty($item->imginfo))
-                                                        <img class="round-frame" src="{{print_r($src, true)}}" width="192" height="130">
-                                                    @endif
-                                                </a>
+                                                @if (!empty($item->img_url))
+                                                    <a href="{{ asset('storage/' . $item->img_url)}}" target="_blank">
+                                                        <img class="round-frame-rank" src="{{ asset('storage/' . $item->img_url)}}">
+                                                    </a>
+                                                @endif
                                             </td>
                                             <td class="border-none text-center">{{print_r(Carbon\Carbon::parse($item->created_at)->format('Y年m月d日'), true)}}</td>
                                         </tr>
@@ -127,7 +140,7 @@
                                             <td class="border-none text-center">{{print_r($item->fish_name, true)}}</td>
                                         </tr>
                                         <tr class="border-none">
-                                            <td class="border-none text-center">{{print_r($item->size, true)}}cm</td>
+                                            <td class="border-none text-center">{{print_r($item->measurement_result, true)}}{{ $measurement }}</td>
                                         </tr>
                                     </table>
                                     {{-- <div class="text-right">

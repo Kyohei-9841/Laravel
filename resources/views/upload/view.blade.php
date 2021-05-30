@@ -4,20 +4,31 @@
     <div id="container">
 
         <div class="mb-4">
+            @php
+                $measurement_name = "";
+                if ($measurement == 1) {
+                    $measurement_name = "サイズ";
+                } else if ($measurement == 2) {
+                    $measurement_name = "匹数";
+                } else if ($measurement == 3) {
+                    $measurement_name = "重さ";
+                }
+            @endphp
             <form id="uplord-form" autocomplete="off">
                 <div id="focus"></div>
                 <input hidden class="form-input" type="text" id="id" name="id" value='{{ Auth::user()->id }}'>
                 <input hidden class="form-input" type="text" id="event-id" name="event-id" value='{{ $event_id }}'>
+                <input hidden class="form-input" type="text" id="measurement" name="measurement" value='{{ $measurement }}'>
                 <div class="row">
                     <div class="col-sm-12 col-md-4 my-3">
                         <div>
-                            <label>★魚種</label>
+                            <label>★対象魚</label>
                         </div>
                         <div>
-                            <span class="font-size-11">※対象魚種を選択してください</span>
+                            <span class="font-size-11">※対象対象魚を選択してください</span>
                         </div>
                         <div>
-                            <select id="fish-species" name="fish-species" placeholder="魚種" autocomplete="no" disabled>
+                            <select id="fish-species" name="fish-species" placeholder="対象魚" autocomplete="no" disabled>
                                 @foreach($fish_species_data as $fish_species)
                                     <option value="{{ $fish_species->id }}" {{$fish_species->id == $event_data->fish_species ? 'selected' : ''}}>{{$fish_species->fish_name}}</option>
                                 @endforeach
@@ -26,13 +37,13 @@
                     </div>
                     <div class="col-sm-12 col-md-4 my-3">
                         <div>
-                            <label>★サイズ</label>
+                            <label>★{{ $measurement_name }}</label>
                         </div>
                         <div>
                             <span class="font-size-11">※アップロードした画像と同じサイズを詳細に記載してください。</span>
                         </div>
                         <div>
-                            <input class="form-input" type="text" id="size" name="size" placeholder="サイズ" autocomplete="no" style="width:100%;">
+                            <input class="form-input" type="text" id="measurement_result" name="measurement_result" placeholder="{{ $measurement_name }}" autocomplete="no" style="width:100%;">
                         </div>
                     </div>
                 </div>
@@ -54,13 +65,13 @@
                     </div>
                     <div class="col-sm-12 col-md-4 my-3">
                         <div>
-                            <label>魚種</label>
+                            <label>対象魚</label>
                         </div>
                         <div>
-                            <span class="font-size-11">※対象魚種を選択してください</span>
+                            <span class="font-size-11">※対象対象魚を選択してください</span>
                         </div>
                         <div>
-                            <select id="fish-species" name="fish-species" placeholder="魚種" autocomplete="no">
+                            <select id="fish-species" name="fish-species" placeholder="対象魚" autocomplete="no">
                                 @foreach($fish_species_result as $fish_species_data)
                                     <option value="{{ $fish_species_data->id }}">{{$fish_species_data->fish_name}}</option>
                                 @endforeach
@@ -102,7 +113,7 @@
                             <input class="form-input" type="file" id="pic" name="pic" accept="image/*" capture="environment">
                         </div>
                         <div>
-                            <span class="font-size-11 font-color-red">・端末に保存されている画像はアップロードできません。<br>・アップロードする際にはサイズと魚種がはっきり判明できるよう撮影をお願いいたします。<br>・鮮明な画像でない場合画像が承認されない可能性がありますのでご注意ください。</span>
+                            <span class="font-size-11 font-color-red">・端末に保存されている画像はアップロードできません。<br>・アップロードする際にはサイズと対象魚がはっきり判明できるよう撮影をお願いいたします。<br>・鮮明な画像でない場合画像が承認されない可能性がありますのでご注意ください。</span>
                         </div>
                     </div>
                     <div class="col-12">
@@ -131,7 +142,7 @@
                                 <input class="form-input" type="text" id="position" name="position" placeholder="場所" autocomplete="no">
                             </div>
                             <div class="upload-form-item">
-                                <input class="form-input" type="text" id="fish_species" name="fish_species" placeholder="魚種" autocomplete="no">
+                                <input class="form-input" type="text" id="fish_species" name="fish_species" placeholder="対象魚" autocomplete="no">
                             </div>
                             <div class="upload-form-item">
                                 <input class="form-input" type="text" id="size" name="size" placeholder="サイズ" autocomplete="no">

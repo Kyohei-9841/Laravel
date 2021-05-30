@@ -51625,7 +51625,7 @@ $(function () {
   }); // アップロード開始ボタンがクリックされたら
 
   $('#form-submit').click( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-    var id, event_id, fish_species, size, name, fd;
+    var id, event_id, measurement, fish_species, measurement_result, name, fd;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -51642,16 +51642,16 @@ $(function () {
 
           case 4:
             id = $('#id').val();
-            event_id = $('#event-id').val(); // var position = $('#position').val();
-
+            event_id = $('#event-id').val();
+            measurement = $('#measurement').val();
             fish_species = $('#fish-species').val();
-            size = $('#size').val();
+            measurement_result = $('#measurement_result').val();
             fd = new FormData();
             fd.append('id', id);
-            fd.append('event_id', event_id); // fd.append('position', position);
-
+            fd.append('event_id', event_id);
+            fd.append('measurement', measurement);
             fd.append('fish_species', fish_species);
-            fd.append('size', size);
+            fd.append('measurement_result', measurement_result);
             fd.append('pic', blob); // fd.append('latitude', latitude);
             // fd.append('longitude', longitude);
             // fd.append('_token', "{{ csrf_token() }}");
@@ -51756,21 +51756,21 @@ $(function () {
             //     wOptions
             // );    
 
-            _context.next = 22;
+            _context.next = 24;
             break;
 
-          case 18:
-            _context.prev = 18;
+          case 20:
+            _context.prev = 20;
             _context.t0 = _context["catch"](0);
             func_loard_hide();
             alert(_context.t0);
 
-          case 22:
+          case 24:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 18]]);
+    }, _callee, null, [[0, 20]]);
   }))); // イベント登録のサブミット
 
   $('#event-form-submit').click(function () {
@@ -52165,13 +52165,11 @@ $(function () {
     console.log("プロフィールのイベント変更");
     var id = $('#pull_id').val();
     var event_id = $('#event_id').val();
-    var admin_flg = $('#admin_flg').val();
     var back_btn_flg = $('#back_btn_flg').val();
     var selected_id = $('#selected_id').val();
     var name,
         fd = new FormData();
     fd.append('event_id', event_id);
-    fd.append('admin_flg', admin_flg);
     fd.append('back_btn_flg', back_btn_flg);
     fd.append('selected_id', selected_id); // fd.append('_token', "{{ csrf_token() }}");
 
@@ -52191,7 +52189,7 @@ $(function () {
       success: function success(data, textStatus, jqXHR) {
         //通信が成功した場合の処理
         console.log("送信成功");
-        location.href = "/profile/" + id + "?event_id=" + event_id + "&selected_id=" + selected_id + "&admin_flg=" + admin_flg + "&back_btn_flg=" + back_btn_flg;
+        location.href = "/profile/" + id + "?selected_id=" + selected_id + "&back_btn_flg=" + back_btn_flg;
       },
       error: function error() {
         //通信が失敗した場合の処理

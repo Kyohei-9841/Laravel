@@ -6,7 +6,7 @@
     </div>
     <div id="container">
         <div class="font-size-15">
-            <span>魚種：[{{ $event->fish_name }}]</span>
+            <span>対象魚：[{{ $event->fish_name }}]</span>
         </div>
         <div>
             <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
@@ -31,6 +31,14 @@
                                     $style = "bg-danger";
                                     $approval = "非承認";
                                 }
+                                $measurement = "";
+                                if ($item->measurement == 1) {
+                                    $measurement = "cm";
+                                } else if ($item->measurement == 2) {
+                                    $measurement = "匹";
+                                } else if ($item->measurement == 3) {
+                                    $measurement = "Kg";
+                                }
                             @endphp
                             <td class="border-none" colspan="2" style="padding:5px 10px 10px 10px">
                                 <span class="{{ $style }} round-approval-table font-color-white">{{ print_r($approval, true) }}</span>
@@ -39,14 +47,11 @@
                         </tr>
                         <tr class="border-none">
                             <td class="border-none text-center" rowspan="3" style="padding:0px 30px 0px 5px">
-                                @php
-                                    $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
-                                @endphp
-                                <a href="{{print_r($src, true)}}" target="_blank">
-                                    @if (!empty($item->enc_img) and !empty($item->imginfo))
-                                        <img class="round-frame" src="{{print_r($src, true)}}" width="192" height="130">
-                                    @endif
-                                </a>
+                                @if (!empty($item->img_url))
+                                    <a href="{{ asset('storage/' . $item->img_url)}}" target="_blank">
+                                        <img class="round-frame" src="{{ asset('storage/' . $item->img_url)}}" width="192" height="130">
+                                    </a>
+                                @endif
                             </td>
                             <td class="border-none text-center">{{print_r(Carbon\Carbon::parse($item->created_at)->format('Y年m月d日'), true)}}</td>
                         </tr>
@@ -54,7 +59,7 @@
                             <td class="border-none text-center">{{print_r(Carbon\Carbon::parse($item->created_at)->format('H:i'), true)}}</td>
                         </tr>
                         <tr class="border-none">
-                            <td class="border-none text-center">{{print_r($item->size, true)}}cm</td>
+                            <td class="border-none text-center">{{print_r($item->measurement_result, true)}}{{ $measurement }}</td>
                         </tr>
                     </table>
                     <div class="text-right mb-2">

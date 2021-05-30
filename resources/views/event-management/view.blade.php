@@ -40,23 +40,41 @@
                                         </td>
                                     </tr>
                                     <tr class="border-none">
-                                        <td class="border-none text-center" rowspan="3" style="padding:0px 30px 0px 5px">
+                                        <td class="border-none text-center" rowspan="4" style="padding:0px 30px 0px 5px">
                                             @if (!empty($item->enc_img) and !empty($item->imginfo))
                                                 @php
                                                     $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
                                                 @endphp
-                                                <a href="{{print_r($src, true)}}" target="_blank">
-                                                        <img class="round-frame-event" src="{{print_r($src, true)}}" width="192" height="130">
+                                                <a href="{{ route('event-info', ['id' => $item->id]) }}">
+                                                    <img class="round-frame-event" src="{{print_r($src, true)}}" width="192" height="130">
                                                 </a>
                                             @endif
                                         </td>
+                                        <td class="border-none font-size-14">
+                                            @if (!empty($item->user_enc_img) and !empty($item->user_imginfo))
+                                                @php
+                                                    $src = "data:" . $item->user_imginfo . ";base64," . $item->user_enc_img;
+                                                @endphp
+                                                <img class="round-frame-user-image" src="{{print_r($src, true)}}" width="192" height="130">
+                                            @else
+                                                <img class="round-frame-user-image" src="{{ asset('images/images_4.png')}}">
+                                            @endif
+                                            <a href="{{ route('profile', [
+                                                'id' => $item->user_id // ユーザーID
+                                                , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
+                                                ]) }}">
+                                                <span class="font-size-12">{{ $item->user_name }}</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-none">
                                         <td class="border-none font-size-14">開始時刻：{{print_r(Carbon\Carbon::parse($item->start_at)->format('H:i'), true)}}</td>
                                     </tr>
                                     <tr class="border-none">
                                         <td class="border-none font-size-11">〜{{print_r(Carbon\Carbon::parse($item->end_at)->format('Y/m/d H:i'), true)}}</td>
                                     </tr>
                                     <tr class="border-none">
-                                        <td class="border-none font-size-14">魚種：{{print_r($item->fish_name, true)}}</td>
+                                        <td class="border-none font-size-14">対象魚：{{print_r($item->fish_name, true)}}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -86,23 +104,41 @@
                                         </td>
                                     </tr>
                                     <tr class="border-none">
-                                        <td class="border-none text-center" rowspan="3" style="padding:0px 30px 0px 5px">
+                                        <td class="border-none text-center" rowspan="4" style="padding:0px 30px 0px 5px">
                                             @if (!empty($item->enc_img) and !empty($item->imginfo))
                                                 @php
                                                     $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
                                                 @endphp
-                                                <a href="{{print_r($src, true)}}" target="_blank">
-                                                        <img class="round-frame-event" src="{{print_r($src, true)}}" width="192" height="130">
+                                                <a href="{{ route('event-info', ['id' => $item->id]) }}">
+                                                    <img class="round-frame-event" src="{{print_r($src, true)}}" width="192" height="130">
                                                 </a>
                                             @endif
                                         </td>
+                                        <td class="border-none font-size-14">
+                                            @if (!empty($item->user_enc_img) and !empty($item->user_imginfo))
+                                                @php
+                                                    $src = "data:" . $item->user_imginfo . ";base64," . $item->user_enc_img;
+                                                @endphp
+                                                <img class="round-frame-user-image" src="{{print_r($src, true)}}" width="192" height="130">
+                                            @else
+                                                <img class="round-frame-user-image" src="{{ asset('images/images_4.png')}}">
+                                            @endif
+                                            <a href="{{ route('profile', [
+                                                'id' => $item->user_id // ユーザーID
+                                                , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
+                                                ]) }}">
+                                                <span class="font-size-12">{{ $item->user_name }}</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-none">
                                         <td class="border-none font-size-14">開始時刻：{{print_r(Carbon\Carbon::parse($item->start_at)->format('H:i'), true)}}</td>
                                     </tr>
                                     <tr class="border-none">
                                         <td class="border-none font-size-11">〜{{print_r(Carbon\Carbon::parse($item->end_at)->format('Y/m/d H:i'), true)}}</td>
                                     </tr>
                                     <tr class="border-none">
-                                        <td class="border-none font-size-14">魚種：{{print_r($item->fish_name, true)}}</td>
+                                        <td class="border-none font-size-14">対象魚：{{print_r($item->fish_name, true)}}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -131,23 +167,41 @@
                                         </td>
                                     </tr>
                                     <tr class="border-none">
-                                        <td class="border-none text-center" rowspan="3" style="padding:0px 30px 0px 5px">
+                                        <td class="border-none text-center" rowspan="4" style="padding:0px 30px 0px 5px">
                                             @if (!empty($item->enc_img) and !empty($item->imginfo))
                                                 @php
                                                     $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
                                                 @endphp
-                                                <a href="{{print_r($src, true)}}" target="_blank">
-                                                        <img class="round-frame-event" src="{{print_r($src, true)}}" width="192" height="130">
+                                                <a href="{{ route('event-info', ['id' => $item->id]) }}">
+                                                    <img class="round-frame-event" src="{{print_r($src, true)}}" width="192" height="130">
                                                 </a>
                                             @endif
                                         </td>
+                                        <td class="border-none font-size-14">
+                                            @if (!empty($item->user_enc_img) and !empty($item->user_imginfo))
+                                                @php
+                                                    $src = "data:" . $item->user_imginfo . ";base64," . $item->user_enc_img;
+                                                @endphp
+                                                <img class="round-frame-user-image" src="{{print_r($src, true)}}" width="192" height="130">
+                                            @else
+                                                <img class="round-frame-user-image" src="{{ asset('images/images_4.png')}}">
+                                            @endif
+                                            <a href="{{ route('profile', [
+                                                'id' => $item->user_id // ユーザーID
+                                                , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
+                                                ]) }}">
+                                                <span class="font-size-12">{{ $item->user_name }}</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-none">
                                         <td class="border-none font-size-14">開始時刻：{{print_r(Carbon\Carbon::parse($item->start_at)->format('H:i'), true)}}</td>
                                     </tr>
                                     <tr class="border-none">
                                         <td class="border-none font-size-11">〜{{print_r(Carbon\Carbon::parse($item->end_at)->format('Y/m/d H:i'), true)}}</td>
                                     </tr>
                                     <tr class="border-none">
-                                        <td class="border-none font-size-14">魚種：{{print_r($item->fish_name, true)}}</td>
+                                        <td class="border-none font-size-14">対象魚：{{print_r($item->fish_name, true)}}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -177,23 +231,41 @@
                                         </td>
                                     </tr>
                                     <tr class="border-none">
-                                        <td class="border-none text-center" rowspan="3" style="padding:0px 30px 0px 5px">
+                                        <td class="border-none text-center" rowspan="4" style="padding:0px 30px 0px 5px">
                                             @if (!empty($item->enc_img) and !empty($item->imginfo))
                                                 @php
                                                     $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
                                                 @endphp
-                                                <a href="{{print_r($src, true)}}" target="_blank">
-                                                        <img class="round-frame-event" src="{{print_r($src, true)}}" width="192" height="130">
+                                                <a href="{{ route('event-info', ['id' => $item->id]) }}">
+                                                    <img class="round-frame-event" src="{{print_r($src, true)}}" width="192" height="130">
                                                 </a>
                                             @endif
                                         </td>
+                                        <td class="border-none font-size-14">
+                                            @if (!empty($item->user_enc_img) and !empty($item->user_imginfo))
+                                                @php
+                                                    $src = "data:" . $item->user_imginfo . ";base64," . $item->user_enc_img;
+                                                @endphp
+                                                <img class="round-frame-user-image" src="{{print_r($src, true)}}" width="192" height="130">
+                                            @else
+                                                <img class="round-frame-user-image" src="{{ asset('images/images_4.png')}}">
+                                            @endif
+                                            <a href="{{ route('profile', [
+                                                'id' => $item->user_id // ユーザーID
+                                                , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
+                                                ]) }}">
+                                                <span class="font-size-12">{{ $item->user_name }}</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-none">
                                         <td class="border-none font-size-14">開始時刻：{{print_r(Carbon\Carbon::parse($item->start_at)->format('H:i'), true)}}</td>
                                     </tr>
                                     <tr class="border-none">
                                         <td class="border-none font-size-11">〜{{print_r(Carbon\Carbon::parse($item->end_at)->format('Y/m/d H:i'), true)}}</td>
                                     </tr>
                                     <tr class="border-none">
-                                        <td class="border-none font-size-14">魚種：{{print_r($item->fish_name, true)}}</td>
+                                        <td class="border-none font-size-14">対象魚：{{print_r($item->fish_name, true)}}</td>
                                     </tr>
                                 </table>
                             </div>

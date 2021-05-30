@@ -33,9 +33,7 @@
                                                 </div>
                                                 <a href="{{ route('profile', [
                                                     'id' => $ranking[$count]->user_id // ユーザーID
-                                                    , 'event_id' => $id // イベントID
                                                     , 'selected_id' => $id // 釣果一覧のプルダウン用
-                                                    , 'admin_flg' => 1 // イベント作成者かのフラグ(プロフィール画面の戻るボタンに使用) 0:一般 1:管理者
                                                     , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
                                                     ]) }}">
                                                     @if (!empty($ranking[$count]->imginfo) && !empty($ranking[$count]->enc_img))

@@ -2,12 +2,7 @@
 
 @section('content')
     @if ($back_btn_flg == 1)
-        {{-- 管理者フラグ 0:一般 1:管理者 --}}
-        @if ($admin_flg == 1)
-            <a href="{{ route('event-entry-admin', ['id' => $event_id]) }}">＜戻る</a>
-        @else
-            <a href="{{ route('event-entry', ['id' => $event_id]) }}">＜戻る</a>
-        @endif
+        <a href="{{ url()->previous() }}">＜戻る</a>
     @endif
     <div id="container">
         <div class="xs-display-none">
@@ -15,25 +10,19 @@
                 <div class="col-4">
                     {{-- 本人場合 --}}
                     @if ($user->id == Auth::user()->id)
-                        @if (!empty($user->imginfo) && !empty($user->enc_img))
-                            @php
-                                $src = "data:" . $user->imginfo . ";base64," . $user->enc_img;
-                            @endphp
-                                <button type="button" class="clear-decoration" data-toggle="modal" data-target="#mdl-profile-image">
-                                    <img class="round-frame-profile" src="{{print_r($src, true)}}">
-                                </button>
+                        @if (!empty($user->img_url))
+                            <button type="button" class="clear-decoration" data-toggle="modal" data-target="#mdl-profile-image">
+                                <img class="round-frame-profile" src="{{ asset('storage/' . $user->img_url)}}">
+                            </button>
                         @else
                             <button type="button" class="clear-decoration" data-toggle="modal" data-target="#mdl-profile-image">
                                 <img class="round-frame-profile" src="{{ asset('images/images_4.png')}}">
                             </button>
                         @endif
                     @else
-                        @if (!empty($user->imginfo) && !empty($user->enc_img))
-                            @php
-                                $src = "data:" . $user->imginfo . ";base64," . $user->enc_img;
-                            @endphp
-                            <a href="{{print_r($src, true)}}" target="_blank">
-                                <img class="round-frame-profile" src="{{print_r($src, true)}}">
+                        @if (!empty($user->img_url))
+                            <a href="{{ asset('storage/' . $user->img_url)}}" target="_blank">
+                                <img class="round-frame-profile" src="{{ asset('storage/' . $user->img_url)}}">
                             </a>
                         @else
                             <img class="round-frame-profile" src="{{ asset('images/images_4.png')}}">
@@ -81,30 +70,24 @@
                 <div class="col-5">
                     {{-- 本人場合 --}}
                     @if ($user->id == Auth::user()->id)
-                        @if (!empty($user->imginfo) && !empty($user->enc_img))
-                            @php
-                                $src = "data:" . $user->imginfo . ";base64," . $user->enc_img;
-                            @endphp
-                                <button type="button" class="clear-decoration" data-toggle="modal" data-target="#mdl-profile-image">
-                                    <img class="round-frame-profile" src="{{print_r($src, true)}}">
-                                </button>
-                        @else
-                            <button type="button" class="clear-decoration" data-toggle="modal" data-target="#mdl-profile-image">
-                                <img class="round-frame-profile" src="{{ asset('images/images_4.png')}}">
-                            </button>
-                        @endif
+                        @if (!empty($user->img_url))
+                        <button type="button" class="clear-decoration" data-toggle="modal" data-target="#mdl-profile-image">
+                            <img class="round-frame-profile" src="{{ asset('storage/' . $user->img_url)}}">
+                        </button>
                     @else
-                        @if (!empty($user->imginfo) && !empty($user->enc_img))
-                            @php
-                                $src = "data:" . $user->imginfo . ";base64," . $user->enc_img;
-                            @endphp
-                            <a href="{{print_r($src, true)}}" target="_blank">
-                                <img class="round-frame-profile" src="{{print_r($src, true)}}">
-                            </a>
-                        @else
+                        <button type="button" class="clear-decoration" data-toggle="modal" data-target="#mdl-profile-image">
                             <img class="round-frame-profile" src="{{ asset('images/images_4.png')}}">
-                        @endif
+                        </button>
                     @endif
+                @else
+                    @if (!empty($user->img_url))
+                        <a href="{{ asset('storage/' . $user->img_url)}}" target="_blank">
+                            <img class="round-frame-profile" src="{{ asset('storage/' . $user->img_url)}}">
+                        </a>
+                    @else
+                        <img class="round-frame-profile" src="{{ asset('images/images_4.png')}}">
+                    @endif
+                @endif
                 </div>
                 <div class="col-7">
                     <div class="row">
@@ -150,8 +133,6 @@
                                 @method('POST')
                                 @csrf
                                 <input hidden class="form-input" type="text" id="pull_id" name="pull_id" value='{{ $user->id }}'>
-                                <input hidden class="form-input" type="text" id="event_id" name="event_id" value='{{ $event_id }}'>
-                                <input hidden class="form-input" type="text" id="admin_flg" name="admin_flg" value='{{ $admin_flg }}'>
                                 <input hidden class="form-input" type="text" id="back_btn_flg" name="back_btn_flg" value='{{ $back_btn_flg }}'>
                                 <select class="width-130" id="selected_id" name="selected_id" placeholder="イベント" autocomplete="no">
                                     <option value="0" {{ $params['selected_id'] == 0 ? 'selected' : '' }}>全釣果</option>
@@ -166,18 +147,25 @@
                 <div class="card-body" style="padding:5px !important">
                     @if (count($fishing_results) > 0)
                         @foreach ($fishing_results as $item)
+                            @php
+                                $measurement = "";
+                                if ($item->measurement == 1) {
+                                    $measurement = "cm";
+                                } else if ($item->measurement == 2) {
+                                    $measurement = "匹";
+                                } else if ($item->measurement == 3) {
+                                    $measurement = "Kg";
+                                }
+                            @endphp
                             <div class="div-border">
                                 <table class="border-none" style="margin: 10px 0px">
                                     <tr class="border-none">
                                         <td class="border-none text-center" rowspan="3" style="padding:0px 30px 0px 5px">
-                                            @php
-                                                $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
-                                            @endphp
-                                            <a href="{{print_r($src, true)}}" target="_blank">
-                                                @if (!empty($item->enc_img) and !empty($item->imginfo))
-                                                    <img class="round-frame" src="{{print_r($src, true)}}" width="192" height="130">
-                                                @endif
-                                            </a>
+                                            @if (!empty($item->img_url))
+                                                <a href="{{ asset('storage/' . $item->img_url)}}" target="_blank">
+                                                    <img class="round-frame-rank" src="{{ asset('storage/' . $item->img_url)}}">
+                                                </a>
+                                            @endif
                                         </td>
                                         <td class="border-none">
                                             <div class="point-leader-150">
@@ -189,7 +177,7 @@
                                         <td class="border-none">{{print_r(Carbon\Carbon::parse($item->created_at)->format('Y年m月d日'), true)}}</td>
                                     </tr>
                                     <tr class="border-none">
-                                        <td class="border-none">{{print_r($item->fish_name, true)}}&nbsp;&nbsp;<span class="font-size-14">{{print_r($item->size, true)}}</span>cm</td>
+                                        <td class="border-none">{{print_r($item->fish_name, true)}}&nbsp;&nbsp;<span class="font-size-14">{{print_r($item->measurement_result, true)}}</span>{{ $measurement }}</td>
                                     </tr>
                                     {{-- <tr class="border-none">
                                         <td class="border-none text-center">{{print_r($item->size, true)}}cm</td>
