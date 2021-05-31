@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Utils\Utility;
 use App\EntryList;
+use App\Images;
 use App\Http\Controllers\Controller;
 
 class EventEntryController extends Controller
@@ -54,6 +55,11 @@ class EventEntryController extends Controller
 
         $fishing_results_model = new FishingResults();
         $fishing_results = $fishing_results_model->find($id);
+
+        $images_model = new Images();
+        $images = $images_model->find($fishing_results->image_id);
+        $images->delete();
+
         $fishing_results->delete();
 
         return redirect()->route('event-entry-admin', ['id' => $event_id]);
