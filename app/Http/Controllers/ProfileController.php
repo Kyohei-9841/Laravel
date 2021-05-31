@@ -214,7 +214,7 @@ class ProfileController extends Controller
             $query->where('fishing_results.event_id', '=', $selected_id);
         }
         
-        $query_result = $query->orderBy('fishing_results.size', 'desc')->get();
+        $query_result = $query->orderBy('fishing_results.size', 'desc')->paginate(5);
 
         return $query_result;
     }

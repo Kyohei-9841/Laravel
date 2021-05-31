@@ -20,6 +20,7 @@
                     </p>
                 </div>
             @else
+                {{ $event_all_results->appends(request()->input())->links('pagination.pagination-custom') }}
                 @foreach ($event_all_results as $item)
                     <div class="div-border-event">
                         <table class="border-none" style="margin: 10px 0px">
@@ -40,7 +41,7 @@
                                 </td>
                             </tr>
                             <tr class="border-none">
-                                <td class="border-none text-center" rowspan="3" style="padding:0px 30px 0px 5px">
+                                <td class="border-none text-center" rowspan="4" style="padding:0px 30px 0px 5px">
                                     @if (!empty($item->enc_img) and !empty($item->imginfo))
                                         @php
                                             $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
@@ -77,8 +78,12 @@
                                 <td class="border-none font-size-14">対象魚：{{print_r($item->fish_name, true)}}</td>
                             </tr>
                         </table>
+                        <div class="font-size-14 point-leader-line-specification-3">
+                            {!! nl2br(e($item->note)) !!}
+                        </div>
                     </div>
                 @endforeach
+                {{ $event_all_results->appends(request()->input())->links('pagination.pagination-custom') }}
             @endif
         </div>
     </div>

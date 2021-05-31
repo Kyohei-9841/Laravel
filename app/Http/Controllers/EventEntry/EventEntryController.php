@@ -123,7 +123,6 @@ class EventEntryController extends Controller
                         \DB::raw('users.name as user_name'),
                         // \DB::raw('im2.image_data as user_image_data'),
                         \DB::raw('NOW() as now_date'),
-
                         \DB::raw('case
                             when event.start_at > NOW() then 0
                             when event.start_at <= NOW() and NOW() <= event.end_at then 1

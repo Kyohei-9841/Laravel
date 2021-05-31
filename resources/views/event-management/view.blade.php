@@ -77,6 +77,9 @@
                                         <td class="border-none font-size-14">対象魚：{{print_r($item->fish_name, true)}}</td>
                                     </tr>
                                 </table>
+                                <div class="font-size-14 point-leader-line-specification-3">
+                                    {!! nl2br(e($item->note)) !!}
+                                </div>
                             </div>
                         @endforeach
                     @else
@@ -141,6 +144,9 @@
                                         <td class="border-none font-size-14">対象魚：{{print_r($item->fish_name, true)}}</td>
                                     </tr>
                                 </table>
+                                <div class="font-size-14 point-leader-line-specification-3">
+                                    {!! nl2br(e($item->note)) !!}
+                                </div>
                             </div>
                         @endforeach
                     @else
@@ -204,6 +210,9 @@
                                         <td class="border-none font-size-14">対象魚：{{print_r($item->fish_name, true)}}</td>
                                     </tr>
                                 </table>
+                                <div class="font-size-14 point-leader-line-specification-3">
+                                    {!! nl2br(e($item->note)) !!}
+                                </div>
                             </div>
                         @endforeach
                     @else
@@ -268,6 +277,9 @@
                                         <td class="border-none font-size-14">対象魚：{{print_r($item->fish_name, true)}}</td>
                                     </tr>
                                 </table>
+                                <div class="font-size-14 point-leader-line-specification-3">
+                                    {!! nl2br(e($item->note)) !!}
+                                </div>
                             </div>
                         @endforeach
                     @else

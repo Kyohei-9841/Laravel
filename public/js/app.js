@@ -51384,7 +51384,7 @@ __webpack_require__(/*! ./pages/fixmenu_pagetop */ "./resources/assets/js/pages/
 
 __webpack_require__(/*! ./pages/openclose */ "./resources/assets/js/pages/openclose.js");
 
-__webpack_require__(/*! ./pages/camera */ "./resources/assets/js/pages/camera.js");
+__webpack_require__(/*! ./pages/form_submit */ "./resources/assets/js/pages/form_submit.js");
 
 __webpack_require__(/*! ./pages/other */ "./resources/assets/js/pages/other.js");
 
@@ -51530,10 +51530,64 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/assets/js/pages/camera.js":
-/*!*********************************************!*\
-  !*** ./resources/assets/js/pages/camera.js ***!
-  \*********************************************/
+/***/ "./resources/assets/js/pages/fixmenu_pagetop.js":
+/*!******************************************************!*\
+  !*** ./resources/assets/js/pages/fixmenu_pagetop.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*
+ fix menu
+ 2017/01/26 crytus corporation.
+*/
+function fm_hasClass(e, c) {
+  var classes = e.className;
+  if (!classes) return false;
+  if (classes === c) return true;
+  return classes.search("\\b" + c + "\\b") != -1;
+}
+
+function fm_addClass(e, c) {
+  if (fm_hasClass(e, c)) return;
+  var classes = e.className;
+  if (classes && classes[classes.length - 1] != " ") c = " " + c;
+  e.className += c;
+}
+
+function fm_removeClass(e, c) {
+  var pattern = new RegExp("\\b" + c + "\\b\\s*", "g");
+  e.className = e.className.replace(pattern, "");
+}
+
+function fm_addEvent(elm, listener, fn) {
+  try {
+    elm.addEventListener(listener, fn, false);
+  } catch (e) {
+    elm.attachEvent("on" + listener, fn);
+  }
+}
+
+fm_addEvent(window, 'load', function () {
+  var offsettop;
+  offsettop = 350;
+  fm_addEvent(window, 'scroll', function () {
+    if (offsettop < Math.max(document.body.scrollTop, document.documentElement.scrollTop)) {
+      fm_addClass(document.body, 'is-fixed-pagetop');
+    }
+
+    if (offsettop - 50 > Math.max(document.body.scrollTop, document.documentElement.scrollTop)) {
+      fm_removeClass(document.body, 'is-fixed-pagetop');
+    }
+  });
+});
+
+/***/ }),
+
+/***/ "./resources/assets/js/pages/form_submit.js":
+/*!**************************************************!*\
+  !*** ./resources/assets/js/pages/form_submit.js ***!
+  \**************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -51547,16 +51601,16 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+var file = null; // 選択されるファイル
+
+var blob = null; // 画像(BLOBデータ)
+
+var THUMBNAIL_WIDTH = 1200; // 画像リサイズ後の横の長さの最大値
+
+var THUMBNAIL_HEIGHT = 1200; // 画像リサイズ後の縦の長さの最大値
+
 $(function () {
-  var file = null; // 選択されるファイル
-
-  var blob = null; // 画像(BLOBデータ)
-
-  var THUMBNAIL_WIDTH = 1200; // 画像リサイズ後の横の長さの最大値
-
-  var THUMBNAIL_HEIGHT = 1200; // 画像リサイズ後の縦の長さの最大値
   // ファイルが選択されたら
-
   $('#pic').change(function () {
     // ファイルを取得
     file = $(this).prop('files')[0]; // 選択されたファイルが画像かどうか判定
@@ -51622,10 +51676,12 @@ $(function () {
     };
 
     reader.readAsDataURL(file);
-  }); // アップロード開始ボタンがクリックされたら
+  });
+});
 
-  $('#form-submit').click( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-    var id, event_id, measurement, fish_species, measurement_result, name, fd;
+window.onload = function () {
+  document.getElementById("form-submit") != undefined ? document.getElementById("form-submit").onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+    var id, event_id, measurement, fish_species, measurement_result, fd;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -51641,121 +51697,38 @@ $(function () {
             throw new Error('message : ファイル指定されてません');
 
           case 4:
-            id = $('#id').val();
-            event_id = $('#event-id').val();
-            measurement = $('#measurement').val();
-            fish_species = $('#fish-species').val();
-            measurement_result = $('#measurement_result').val();
+            id = document.getElementById("id").value;
+            event_id = document.getElementById("event-id").value;
+            measurement = document.getElementById("measurement").value;
+            fish_species = document.getElementById("fish-species").value;
+            measurement_result = document.getElementById("measurement_result").value;
             fd = new FormData();
             fd.append('id', id);
             fd.append('event_id', event_id);
             fd.append('measurement', measurement);
             fd.append('fish_species', fish_species);
             fd.append('measurement_result', measurement_result);
-            fd.append('pic', blob); // fd.append('latitude', latitude);
-            // fd.append('longitude', longitude);
-            // fd.append('_token', "{{ csrf_token() }}");
-
-            $.ajaxSetup({
-              async: false
-            });
-            $.ajax({
-              url: "/upload-submit",
-              // 送信先
-              type: 'POST',
-              data: fd,
+            fd.append('pic', blob);
+            _context.next = 18;
+            return fetch("/upload-submit", {
+              method: "POST",
+              headers: {
+                'X-CSRF-Token': document.getElementsByName("csrf-token").item(0).content
+              },
               processData: false,
               contentType: false,
-              headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-              },
-              success: function success(data, textStatus, jqXHR) {
-                //通信が成功した場合の処理
-                console.log("送信成功");
-                func_loard_hide();
-                location.href = "/event-entry/" + event_id;
-              },
-              error: function error(_error) {
-                //通信が失敗した場合の処理
-                func_loard_hide();
-                alert("message : 通信に失敗しました");
-                throw new Error('message : 通信に失敗しました');
-              }
-            }); // var wOptions = {
-            //     "enableHighAccuracy": true,                       // true : 高精度
-            //     "timeout": 10000,                                 // タイムアウト : ミリ秒
-            //     "maximumAge": 0,                                  // データをキャッシュ時間 : ミリ秒
-            // };
-            // // 現在地を取得
-            // await navigator.geolocation.getCurrentPosition(
-            //     // 取得成功した場合
-            //     async function(position) {
-            //         alert("取得OK");
-            //         var latitude = position.coords.latitude;
-            //         var longitude = position.coords.longitude;
-            //         console.log("緯度:"+position.coords.latitude+",経度"+position.coords.longitude);
-            //         alert("緯度:"+position.coords.latitude+",経度"+position.coords.longitude);
-            //         var id = $('#id').val();
-            //         var event_id = $('#event-id').val();
-            //         // var position = $('#position').val();
-            //         var fish_species = $('#fish-species').val();
-            //         var size = $('#size').val();
-            //         var name, fd = new FormData();
-            //         fd.append('id', id);
-            //         fd.append('event_id', event_id);
-            //         // fd.append('position', position);
-            //         fd.append('fish_species', fish_species);
-            //         fd.append('size', size);
-            //         fd.append('pic', blob);
-            //         fd.append('latitude', latitude);
-            //         fd.append('longitude', longitude);
-            //         // fd.append('_token', "{{ csrf_token() }}");
-            //         $.ajaxSetup({ async: false });
-            //         $.ajax({
-            //             url: "/upload-submit", // 送信先
-            //             type: 'POST',
-            //             data: fd,
-            //             processData: false,
-            //             contentType: false,
-            //             headers: {
-            //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //             },
-            //             success: function(data, textStatus, jqXHR){
-            //                 //通信が成功した場合の処理
-            //                 console.log("送信成功");
-            //                 location.href= "/event-entry/" + event_id;
-            //             },
-            //             error: function(error){
-            //                 //通信が失敗した場合の処理
-            //                 console.log(error);
-            //                 console.log("送信失敗");
-            //             }
-            //         });        
-            //     },
-            //     // 取得失敗した場合
-            //     async function(error) {
-            //         switch(error.code) {
-            //         case 1: //PERMISSION_DENIED
-            //             alert("位置情報の利用が許可されていません");
-            //             console.log("位置情報の利用が許可されていません");
-            //             break;
-            //         case 2: //POSITION_UNAVAILABLE
-            //             alert("現在位置が取得できませんでした");
-            //             console.log("現在位置が取得できませんでした");
-            //             break;
-            //         case 3: //TIMEOUT
-            //             alert("タイムアウトになりました");
-            //             console.log("タイムアウトになりました");
-            //             break;
-            //         default:
-            //             alert("その他のエラー(エラーコード:"+error.code+")");
-            //             console.log("その他のエラー(エラーコード:"+error.code+")");
-            //             break;
-            //         }
-            //     },
-            //     wOptions
-            // );    
+              body: fd
+            }).then(function (response) {
+              console.log("成功しました");
+              func_loard_hide();
+              location.href = "/event-entry/" + event_id;
+            })["catch"](function (error) {
+              console.log(error);
+              console.log("失敗しました");
+              throw error;
+            });
 
+          case 18:
             _context.next = 24;
             break;
 
@@ -51771,125 +51744,150 @@ $(function () {
         }
       }
     }, _callee, null, [[0, 20]]);
-  }))); // イベント登録のサブミット
+  })) : null;
+  document.getElementById("event-form-submit") != undefined ? document.getElementById("event-form-submit").onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+    var id, event_name, start_at, start_at_time, end_at, end_at_time, entry_fee_flg, note, evaluation_criteria, fish_species, fd;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.prev = 0;
+            func_loard_display("通信中..."); // ファイルが指定されていなければ何も起こらない
 
-  $('#event-form-submit').click(function () {
-    try {
-      func_loard_display("通信中..."); // ファイルが指定されていなければ何も起こらない
+            if (!(!file || !blob)) {
+              _context2.next = 4;
+              break;
+            }
 
-      if (!file || !blob) {
-        throw new Error('message : ファイル指定されてません');
-      }
+            throw new Error('message : ファイル指定されてません');
 
-      var id = $('#id').val();
-      var event_name = $('#event-name').val();
-      var start_at = $('#start-at').val();
-      var start_at_time = $('#start-at-time').val();
-      var end_at = $('#end-at').val();
-      var end_at_time = $('#end-at-time').val();
-      var entry_fee_flg = $('#entry-fee-flg').val();
-      var note = $('#note').val();
-      var evaluation_criteria = $('#evaluation-criteria').val();
-      var fish_species = $('#fish-species').val();
-      var name,
-          fd = new FormData();
-      fd.append('id', id);
-      fd.append('event_name', event_name);
-      fd.append('start_at', start_at);
-      fd.append('start_at_time', start_at_time);
-      fd.append('end_at', end_at);
-      fd.append('end_at_time', end_at_time);
-      fd.append('entry_fee_flg', entry_fee_flg);
-      fd.append('note', note);
-      fd.append('evaluation_criteria', evaluation_criteria);
-      fd.append('fish_species', fish_species);
-      fd.append('pic', blob); // fd.append('_token', "{{ csrf_token() }}");
+          case 4:
+            id = document.getElementById("id").value;
+            event_name = document.getElementById("event-name").value;
+            start_at = document.getElementById("start-at").value;
+            start_at_time = document.getElementById("start-at-time").value;
+            end_at = document.getElementById("end-at").value;
+            end_at_time = document.getElementById("end-at-time").value;
+            entry_fee_flg = document.getElementById("entry-fee-flg").value;
+            note = document.getElementById("note").value;
+            evaluation_criteria = document.getElementById("evaluation-criteria").value;
+            fish_species = document.getElementById("fish-species").value;
+            fd = new FormData();
+            fd.append('id', id);
+            fd.append('event_name', event_name);
+            fd.append('start_at', start_at);
+            fd.append('start_at_time', start_at_time);
+            fd.append('end_at', end_at);
+            fd.append('end_at_time', end_at_time);
+            fd.append('entry_fee_flg', entry_fee_flg);
+            fd.append('note', note);
+            fd.append('evaluation_criteria', evaluation_criteria);
+            fd.append('fish_species', fish_species);
+            fd.append('pic', blob);
+            _context2.next = 28;
+            return fetch("/event-submit", {
+              method: "POST",
+              headers: {
+                'X-CSRF-Token': document.getElementsByName("csrf-token").item(0).content
+              },
+              processData: false,
+              contentType: false,
+              body: fd
+            }).then(function (response) {
+              console.log("成功しました");
+              func_loard_hide();
+              location.href = "/event-management/" + id;
+            })["catch"](function (error) {
+              console.log(error);
+              console.log("失敗しました");
+              throw error;
+            });
 
-      $.ajaxSetup({
-        async: false
-      });
-      $.ajax({
-        url: "/event-submit",
-        // 送信先
-        type: 'POST',
-        data: fd,
-        processData: false,
-        contentType: false,
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function success(data, textStatus, jqXHR) {
-          //通信が成功した場合の処理
-          console.log("送信成功");
-          func_loard_hide();
-          location.href = "/event-management/" + id;
-        },
-        error: function error() {
-          //通信が失敗した場合の処理
-          func_loard_hide();
-          alert("message : 通信に失敗しました");
-          throw new Error('message : 通信に失敗しました');
+          case 28:
+            _context2.next = 34;
+            break;
+
+          case 30:
+            _context2.prev = 30;
+            _context2.t0 = _context2["catch"](0);
+            func_loard_hide();
+            alert(_context2.t0);
+
+          case 34:
+          case "end":
+            return _context2.stop();
         }
-      });
-    } catch (e) {
-      func_loard_hide();
-      alert(e);
-    }
-  });
-  $('#profile-image-submit').click(function () {
-    try {
-      func_loard_display("通信中..."); // ファイルが指定されていなければ何も起こらない
-
-      if (!file || !blob) {
-        throw new Error('message : ファイル指定されてません');
       }
+    }, _callee2, null, [[0, 30]]);
+  })) : null;
+  document.getElementById("profile-image-submit") != undefined ? document.getElementById("profile-image-submit").onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+    var id, image_id, fd;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            func_loard_display("通信中..."); // ファイルが指定されていなければ何も起こらない
 
-      var id = $('#id').val();
-      var image_id = $('#image_id').val();
-      var name,
-          fd = new FormData();
-      fd.append('id', id);
-      fd.append('image_id', image_id);
-      fd.append('pic', blob); // fd.append('_token', "{{ csrf_token() }}");
+            if (!(!file || !blob)) {
+              _context3.next = 4;
+              break;
+            }
 
-      $.ajaxSetup({
-        async: false
-      });
-      $.ajax({
-        url: "/profile-update-image",
-        // 送信先
-        type: 'POST',
-        data: fd,
-        processData: false,
-        contentType: false,
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function success(data, textStatus, jqXHR) {
-          //通信が成功した場合の処理
-          console.log("送信成功");
-          func_loard_hide();
-          location.href = "/profile/" + id;
-        },
-        error: function error() {
-          //通信が失敗した場合の処理
-          func_loard_hide();
-          alert("message : 通信に失敗しました");
-          throw new Error('message : 通信に失敗しました');
+            throw new Error('message : ファイル指定されてません');
+
+          case 4:
+            id = document.getElementById("id").value;
+            image_id = document.getElementById("image_id").value;
+            fd = new FormData();
+            fd.append('id', id);
+            fd.append('image_id', image_id);
+            fd.append('pic', blob);
+            _context3.next = 12;
+            return fetch("/profile-update-image", {
+              method: "POST",
+              headers: {
+                'X-CSRF-Token': document.getElementsByName("csrf-token").item(0).content
+              },
+              processData: false,
+              contentType: false,
+              body: fd
+            }).then(function (response) {
+              console.log("成功しました");
+              func_loard_hide();
+              location.href = "/profile/" + id;
+            })["catch"](function (error) {
+              console.log(error);
+              console.log("失敗しました");
+              throw error;
+            });
+
+          case 12:
+            _context3.next = 18;
+            break;
+
+          case 14:
+            _context3.prev = 14;
+            _context3.t0 = _context3["catch"](0);
+            func_loard_hide();
+            alert(_context3.t0);
+
+          case 18:
+          case "end":
+            return _context3.stop();
         }
-      });
-    } catch (e) {
-      func_loard_hide();
-      alert(e);
-    }
-  });
+      }
+    }, _callee3, null, [[0, 14]]);
+  })) : null;
 
   function func_loard_display(text) {
     try {
-      $("#loader-text").text(text);
+      document.getElementById("loader-text").innerHTML = text;
       var h = $(window).height();
-      $('#container').css('display', 'none');
-      $('#loader-bg ,#loader').height(h).css('display', '');
+      document.getElementById('container').style.display = 'none';
+      var loader = document.getElementById('loader-bg', 'loader');
+      loader.style.height = h;
+      loader.style.display = '';
     } catch (e) {
       throw e;
     }
@@ -51897,68 +51895,28 @@ $(function () {
 
   function func_loard_hide() {
     try {
-      $('#loader-bg').delay(700).fadeOut(600);
-      $('#loader').delay(300).fadeOut(150);
-      $('#container').css('display', '');
+      window.setTimeout(function () {
+        document.getElementById('loader-bg').animate({
+          opacity: [0, 1]
+        }, {
+          direction: 'reverse',
+          duration: 600
+        });
+      }, 700);
+      window.setTimeout(function () {
+        document.getElementById('loader-bg', 'loader').animate({
+          opacity: [0, 1]
+        }, {
+          direction: 'reverse',
+          duration: 150
+        });
+      }, 300);
+      document.getElementById('container').style.display = '';
     } catch (e) {
       throw e;
     }
   }
-});
-
-/***/ }),
-
-/***/ "./resources/assets/js/pages/fixmenu_pagetop.js":
-/*!******************************************************!*\
-  !*** ./resources/assets/js/pages/fixmenu_pagetop.js ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/*
- fix menu
- 2017/01/26 crytus corporation.
-*/
-function fm_hasClass(e, c) {
-  var classes = e.className;
-  if (!classes) return false;
-  if (classes === c) return true;
-  return classes.search("\\b" + c + "\\b") != -1;
-}
-
-function fm_addClass(e, c) {
-  if (fm_hasClass(e, c)) return;
-  var classes = e.className;
-  if (classes && classes[classes.length - 1] != " ") c = " " + c;
-  e.className += c;
-}
-
-function fm_removeClass(e, c) {
-  var pattern = new RegExp("\\b" + c + "\\b\\s*", "g");
-  e.className = e.className.replace(pattern, "");
-}
-
-function fm_addEvent(elm, listener, fn) {
-  try {
-    elm.addEventListener(listener, fn, false);
-  } catch (e) {
-    elm.attachEvent("on" + listener, fn);
-  }
-}
-
-fm_addEvent(window, 'load', function () {
-  var offsettop;
-  offsettop = 350;
-  fm_addEvent(window, 'scroll', function () {
-    if (offsettop < Math.max(document.body.scrollTop, document.documentElement.scrollTop)) {
-      fm_addClass(document.body, 'is-fixed-pagetop');
-    }
-
-    if (offsettop - 50 > Math.max(document.body.scrollTop, document.documentElement.scrollTop)) {
-      fm_removeClass(document.body, 'is-fixed-pagetop');
-    }
-  });
-});
+};
 
 /***/ }),
 
@@ -52196,6 +52154,35 @@ $(function () {
         console.log("送信失敗");
       }
     });
+  });
+  $('#event-id').change(function () {
+    console.log("これきてる？");
+    var event_datas = $('#event-lists').data();
+    console.log(event_datas);
+
+    if (event_datas === undefined) {
+      return;
+    }
+
+    var event_lists = event_datas['name'];
+    var select_event_id = $(this).val();
+    var event_data = $.grep(event_lists, function (elem, index) {
+      return elem.id == select_event_id;
+    });
+    console.log(event_data[0]['fish_species']);
+    $('#fish-species').val(event_data[0]['fish_species']);
+    var measurement_data = event_data[0]['measurement'];
+    var measurement = "";
+
+    if (measurement_data == 1) {
+      measurement = "★サイズ";
+    } else if (measurement_data == 2) {
+      measurement = "★匹数";
+    } else if (measurement_data == 3) {
+      measurement = "★重さ";
+    }
+
+    $("#measurement-label").text(measurement);
   });
 });
 

@@ -28,16 +28,17 @@ class UploadController extends Controller
         \Log::debug($request->input('measurement'));
 
         $event_id = $request->input('event_id');
-        $measurement = $request->input('measurement');
 
         $event_model = new Event();
-        $event_data = $event_model->find($event_id);
+        $event_list = $this->get_event_all();
+        $search_event_id = empty($event_id) ? $event_list[0]->id : $event_id;
+        $event_data = $event_model->find($search_event_id);
 
         // 対象魚
         $fish_species_model = new FishSpecies();
-        $fish_species_data = $fish_species_model->get();        
-
-        return view("upload.view")->with(compact('id', 'event_id', 'event_data', 'fish_species_data', 'measurement'));
+        $fish_species_data = $fish_species_model->get();
+   
+        return view("upload.view")->with(compact('id', 'event_id', 'event_data', 'fish_species_data', 'event_list'));
     }
 
     public function store(Request $request)
@@ -147,4 +148,21 @@ class UploadController extends Controller
         return redirect()->route('fishing-results', ['id' => $id]);
     }
 
+    /**
+     * イベント情報を取得する
+     */
+    public function get_event_all()
+    {
+        $query_result = \DB::table('event')
+                ->select(\DB::raw('event.*'))
+                ->join('entry_list', function ($join) {
+                    $join->on('event.id', '=', 'entry_list.event_id')
+                        ->where('entry_list.user_id', '=', \Auth::user()->id);
+                })
+                ->whereRaw('event.start_at <= NOW()')
+                ->whereRaw('event.end_at >= NOW()')
+                ->get();
+
+        return $query_result;
+    }
 }

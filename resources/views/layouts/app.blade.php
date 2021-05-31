@@ -60,9 +60,8 @@
                                 <a class="dropdown-item" href="{{ url('/') }}">{{ __('企画イベント') }}</a>
                             </div>
                         </li> --}}
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">{{ __('釣果一覧') }}</a>
+                        <li class="nav-item {{ strpos($url, "upload") ? "active" : "" }}">
+                            <a class="nav-link" href="{{ route('upload-top', ['id' => Auth::user()->id]) }}">{{ __('釣果アップロード') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}">{{ __('友達一覧') }}</a>

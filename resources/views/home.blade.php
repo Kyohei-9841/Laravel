@@ -16,33 +16,33 @@
         <p class="ml-2">コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明コンテンツ説明</p>
         <h2>開催中のイベント</h2>
             @if (count($event_all) > 0)
-                @foreach ($event_all as $item)
+                @for ($i = 0; $i < count($event_all) && $i < 3; $i++)
                     <hr>
                     <div class="ml-2">
                         <div class="my-1">
                             @if (Auth::check())
-                                <a href="{{ route('event-info', ['id' => $item->id]) }}">{{print_r($item->event_name, true)}}</a>
+                                <a href="{{ route('event-info', ['id' => $event_all[$i]->id]) }}">{{print_r($event_all[$i]->event_name, true)}}</a>
                             @else
-                                <a href="{{ route('event-info-general', ['id' => $item->id]) }}">{{print_r($item->event_name, true)}}</a>
+                                <a href="{{ route('event-info-general', ['id' => $event_all[$i]->id]) }}">{{print_r($event_all[$i]->event_name, true)}}</a>
                             @endif
                         </div>
                         <table style="width:100%">
                             <tr>
                                 <td rowspan="4" style="width:100px">
-                                    @if (!empty($item->enc_img) and !empty($item->imginfo))
+                                    @if (!empty($event_all[$i]->enc_img) and !empty($event_all[$i]->imginfo))
                                         @php
-                                            $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
+                                            $src = "data:" . $event_all[$i]->imginfo . ";base64," . $event_all[$i]->enc_img;
                                         @endphp
-                                        <a href="{{ route('event-info-general', ['id' => $item->id]) }}">
+                                        <a href="{{ route('event-info-general', ['id' => $event_all[$i]->id]) }}">
                                             <img class="round-frame-top-event" src="{{print_r($src, true)}}" width="192" height="130">
                                         </a>
                                     @endif
                                 </td>
                                 <td>
                                     <div class="top-table-span">
-                                        @if (!empty($item->user_enc_img) and !empty($item->user_imginfo))
+                                        @if (!empty($event_all[$i]->user_enc_img) and !empty($event_all[$i]->user_imginfo))
                                             @php
-                                                $src = "data:" . $item->user_imginfo . ";base64," . $item->user_enc_img;
+                                                $src = "data:" . $event_all[$i]->user_imginfo . ";base64," . $event_all[$i]->user_enc_img;
                                             @endphp
                                             <img class="round-frame-user-image" src="{{print_r($src, true)}}" width="192" height="130">
                                         @else
@@ -50,32 +50,38 @@
                                         @endif
                                         @if (Auth::check())
                                             <a href="{{ route('profile', [
-                                                'id' => $item->user_id // ユーザーID
+                                                'id' => $event_all[$i]->user_id // ユーザーID
                                                 , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
                                                 ]) }}">
-                                                <span class="font-size-12">{{ $item->user_name }}</span>
+                                                <span class="font-size-12">{{ $event_all[$i]->user_name }}</span>
                                             </a>
                                         @else
-                                            <span class="font-size-12">{{ $item->user_name }}</span>
+                                            <span class="font-size-12">{{ $event_all[$i]->user_name }}</span>
                                         @endif
                                     </div>
                                 </td>
                             </tr>
                             <tr>
-                                <td><div class="top-table-span">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d H:i'), true)}}</div></td>
+                                <td><div class="top-table-span">{{print_r(Carbon\Carbon::parse($event_all[$i]->start_at)->format('Y/m/d H:i'), true)}}</div></td>
                             </tr>
                             <tr>
-                                <td class="font-size-11"><div class="top-table-span">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;〜{{print_r(Carbon\Carbon::parse($item->end_at)->format('Y/m/d H:i'), true)}}</div></td>
+                                <td class="font-size-11"><div class="top-table-span">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;〜{{print_r(Carbon\Carbon::parse($event_all[$i]->end_at)->format('Y/m/d H:i'), true)}}</div></td>
                             </tr>
                             <tr>
-                                <td class="font-size-14"><div class="top-table-span">🐟&nbsp;&nbsp;{{print_r($item->fish_name, true)}}</div></td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" class="font-size-14">{{print_r($item->note, true)}}</td>
+                                <td class="font-size-14"><div class="top-table-span">🐟&nbsp;&nbsp;{{print_r($event_all[$i]->fish_name, true)}}</div></td>
                             </tr>
                         </table>
+                        <div class="font-size-14 point-leader-line-specification-3">
+                            {!! nl2br(e($event_all[$i]->note)) !!}
+                        </div>
                     </div>
-                @endforeach
+                @endfor
+                <hr>
+                @if (count($event_all) > 2)
+                    <div class="my-2 text-right">
+                        <a href="{{ route('event-search-submit') }}">もっと見る</a>
+                    </div>    
+                @endif
             @else
                 <div class="my-2 text-center">
                     <span class="font-size-10">まだイベントありません。</span>
@@ -83,33 +89,33 @@
             @endif
         <h2>過去のイベント</h2>
         @if (count($event_finish) > 0)
-            @foreach ($event_finish as $item)
+            @for ($j = 0; $j < count($event_finish) && $j < 3; $j++)
                 <hr>
                 <div class="ml-2">
                     <div class="my-1">
                         @if (Auth::check())
-                            <a href="{{ route('event-info', ['id' => $item->id]) }}">{{print_r($item->event_name, true)}}</a>
+                            <a href="{{ route('event-info', ['id' => $event_finish[$j]->id]) }}">{{print_r($event_finish[$j]->event_name, true)}}</a>
                         @else
-                            <a href="{{ route('event-info-general', ['id' => $item->id]) }}">{{print_r($item->event_name, true)}}</a>
+                            <a href="{{ route('event-info-general', ['id' => $event_finish[$j]->id]) }}">{{print_r($event_finish[$j]->event_name, true)}}</a>
                         @endif
                     </div>
                     <table style="width:100%">
                         <tr>
                             <td rowspan="4" style="width:100px">
-                                @if (!empty($item->enc_img) and !empty($item->imginfo))
+                                @if (!empty($event_finish[$j]->enc_img) and !empty($event_finish[$j]->imginfo))
                                     @php
-                                        $src = "data:" . $item->imginfo . ";base64," . $item->enc_img;
+                                        $src = "data:" . $event_finish[$j]->imginfo . ";base64," . $event_finish[$j]->enc_img;
                                     @endphp
-                                    <a href="{{ route('event-info-general', ['id' => $item->id]) }}">
+                                    <a href="{{ route('event-info-general', ['id' => $event_finish[$j]->id]) }}">
                                         <img class="round-frame-top-event" src="{{print_r($src, true)}}" width="192" height="130">
                                     </a>
                                 @endif
                             </td>
                             <td>
                                 <div class="top-table-span">
-                                    @if (!empty($item->user_enc_img) and !empty($item->user_imginfo))
+                                    @if (!empty($event_finish[$j]->user_enc_img) and !empty($event_finish[$j]->user_imginfo))
                                         @php
-                                            $src = "data:" . $item->user_imginfo . ";base64," . $item->user_enc_img;
+                                            $src = "data:" . $event_finish[$j]->user_imginfo . ";base64," . $event_finish[$j]->user_enc_img;
                                         @endphp
                                         <img class="round-frame-user-image" src="{{print_r($src, true)}}" width="192" height="130">
                                     @else
@@ -117,33 +123,39 @@
                                     @endif
                                     @if (Auth::check())
                                         <a href="{{ route('profile', [
-                                            'id' => $item->user_id // ユーザーID
+                                            'id' => $event_finish[$j]->user_id // ユーザーID
                                             , 'back_btn_flg' => 1 // 戻るボタンの表示フラグ
                                             ]) }}">
-                                            <span class="font-size-12">{{ $item->user_name }}</span>
+                                            <span class="font-size-12">{{ $event_finish[$j]->user_name }}</span>
                                         </a>
                                     @else
-                                        <span class="font-size-12">{{ $item->user_name }}</span>
+                                        <span class="font-size-12">{{ $event_finish[$j]->user_name }}</span>
                                     @endif
                                 </div>
                             </td>
                         </tr>
                         <tr>
-                            <td><div class="top-table-span">{{print_r(Carbon\Carbon::parse($item->start_at)->format('Y/m/d H:i'), true)}}</div></td>
+                            <td><div class="top-table-span">{{print_r(Carbon\Carbon::parse($event_finish[$j]->start_at)->format('Y/m/d H:i'), true)}}</div></td>
                         </tr>
 
                         <tr>
-                            <td class="font-size-11"><div class="top-table-span">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;〜{{print_r(Carbon\Carbon::parse($item->end_at)->format('Y/m/d H:i'), true)}}</div></td>
+                            <td class="font-size-11"><div class="top-table-span">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;〜{{print_r(Carbon\Carbon::parse($event_finish[$j]->end_at)->format('Y/m/d H:i'), true)}}</div></td>
                         </tr>
                         <tr>
-                            <td class="font-size-14"><div class="top-table-span">🐟&nbsp;&nbsp;{{print_r($item->fish_name, true)}}</div></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" class="font-size-14">{{print_r($item->note, true)}}</td>
+                            <td class="font-size-14"><div class="top-table-span">🐟&nbsp;&nbsp;{{print_r($event_finish[$j]->fish_name, true)}}</div></td>
                         </tr>
                     </table>
+                    <div class="font-size-14 point-leader-line-specification-3">
+                        {!! nl2br(e($event_finish[$j]->note)) !!}
+                    </div>
                 </div>
-            @endforeach
+            @endfor
+            <hr>
+            @if (count($event_finish) > 3)
+                <div class="my-2 text-right">
+                    もっと見る
+                </div>    
+            @endif
         @else
             <div class="my-2 text-center">
                 <span class="font-size-10">まだイベントありません。</span>

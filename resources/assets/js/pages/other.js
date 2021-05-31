@@ -49,4 +49,36 @@ $(function() {
             }
         });
     })
+
+    $('#event-id').change(function() {
+        console.log("これきてる？");
+        let event_datas = $('#event-lists').data();
+        console.log(event_datas);
+        if (event_datas === undefined) {
+            return;
+        }
+        let event_lists = event_datas['name'];
+        var select_event_id = $(this).val();
+
+        var event_data = $.grep(event_lists,
+            function(elem, index) {
+              return (elem.id == select_event_id);
+            }
+        );
+        console.log(event_data[0]['fish_species']);
+        
+        $('#fish-species').val(event_data[0]['fish_species']);
+
+        var measurement_data = event_data[0]['measurement'];
+        var measurement = "";
+        if (measurement_data == 1) {
+            measurement = "★サイズ";
+        } else if (measurement_data == 2) {
+            measurement = "★匹数";
+        } else if (measurement_data == 3) {
+            measurement = "★重さ";
+        }
+
+        $("#measurement-label").text(measurement);
+    })
 });

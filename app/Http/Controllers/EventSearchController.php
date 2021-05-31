@@ -127,7 +127,7 @@ class EventSearchController extends Controller
                 $start_at_datetime = $start_at . ' ' . $start_at_time . ':00';
 
             } else {
-                $start_at_datetime = $start_at . '00:00:00';
+                $start_at_datetime = $start_at . ' 00:00:00';
             }
         }
 
@@ -135,10 +135,10 @@ class EventSearchController extends Controller
             if (!empty($end_at_time)) {
                 $end_at_datetime = $end_at . ' ' . $end_at_time . ':00';
             } else {
-                $end_at_datetime = $end_at . '00:00:00';
+                $end_at_datetime = $end_at . ' 00:00:00';
             }
         }
-
+        \Log::debug(print_r($start_at_datetime, true));
         $query = \DB::table('event')
                 ->select(
                         \DB::raw('event.*'),
@@ -153,7 +153,7 @@ class EventSearchController extends Controller
                             when event.end_at < NOW() then 2
                             end as event_status'),
                 )
-                ->join('images', 'event.image_id', '=', 'images.id')
+                ->leftJoin('images', 'event.image_id', '=', 'images.id')
                 ->join('fish_species', 'event.fish_species', '=', 'fish_species.id')
                 ->join('evaluation_criteria', 'event.measurement', '=', 'evaluation_criteria.id')
                 ->join('users', 'event.user_id', '=', 'users.id')
@@ -180,7 +180,7 @@ class EventSearchController extends Controller
             $query->where('event.fish_species', '=', $fish_species);
         }
 
-        $query_result = $query->orderBy('event.start_at', 'desc')->get();
+        $query_result = $query->orderBy('event.start_at', 'desc')->paginate(5);
 
         return $query_result;
     }

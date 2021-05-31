@@ -24,8 +24,10 @@ class EventEntryController extends Controller
         \Log::debug($id);
 
         $entry_list = $this->get_entry_list($id);
+        $event_info = $this->get_event($id);
+        $measurement_flg = $event_info->measurement;
 
-        $ranking = $this->get_ranking($id, $entry_list[0]->measurement);
+        $ranking = $this->get_ranking($id, $measurement_flg);
 
         if (count($ranking) != 0) {
             foreach($ranking as $result) {
@@ -118,4 +120,35 @@ class EventEntryController extends Controller
         return $query_result;
     }
 
+    /**
+     * イベント情報を取得する
+     */
+    public function get_event($id)
+    {
+        $query_result = \DB::table('event')
+                ->select(
+                        \DB::raw('event.*'),
+                        \DB::raw('images.image_data as image_data'),
+                        \DB::raw('fish_species.fish_name as fish_name'),
+                        \DB::raw('evaluation_criteria.criteria_name as criteria_name'),
+                        \DB::raw('users.name as user_name'),
+                        // \DB::raw('im2.image_data as user_image_data'),
+                        \DB::raw('NOW() as now_date'),
+                        \DB::raw('case
+                            when event.start_at > NOW() then 0
+                            when event.start_at <= NOW() and NOW() <= event.end_at then 1
+                            when event.end_at < NOW() then 2
+                            end as event_status'),
+                )
+                ->join('images', 'event.image_id', '=', 'images.id')
+                ->join('fish_species', 'event.fish_species', '=', 'fish_species.id')
+                ->join('evaluation_criteria', 'event.measurement', '=', 'evaluation_criteria.id')
+                ->join('users', 'event.user_id', '=', 'users.id')
+                // ->join('images as im2', 'users.image_id', '=', 'im2.id')
+                ->where('event.id', '=', $id)
+                ->get()
+                ->first();
+
+        return $query_result;
+    }
 }

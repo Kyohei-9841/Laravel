@@ -7,7 +7,7 @@
 require('./bootstrap');
 require('./pages/fixmenu_pagetop');
 require('./pages/openclose');
-require('./pages/camera');
+require('./pages/form_submit');
 require('./pages/other');
 require('./pages/loader');
 require('jquery-ui');

@@ -96,7 +96,7 @@
                         {{-- アップロードボタンはイベント中のみ表示 --}}
                         @if ($event_info->event_status == 1)
                             <div class="text-center my-2">
-                                <a class="btn btn-primary" href="{{ route('upload-top', ['id' => Auth::user()->id, 'event_id' => $id, 'measurement' => $event_info->measurement]) }}">{{ __('アップロード') }}</a>
+                                <a class="btn btn-primary" href="{{ route('upload-top', ['id' => Auth::user()->id, 'event_id' => $id]) }}">{{ __('アップロード') }}</a>
                             </div>
                         @endif
                         @if (count($fishing_results) > 0)

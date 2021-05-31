@@ -42,6 +42,7 @@ Route::get('/event-registration/{id}', [EventRegistrationController::class, 'vie
 Route::post('/event-submit', [EventRegistrationController::class, 'store'])->name('event-submit');
 
 Route::get('/event-search', [EventSearchController::class, 'view'])->name('event-search');
+Route::get('/event-search-submit', [EventSearchController::class, 'search'])->name('event-search-submit');
 Route::post('/event-search-submit', [EventSearchController::class, 'search'])->name('event-search-submit');
 
 Route::get('/event-info/{id}', [EventInfoController::class, 'view'])->name('event-info');

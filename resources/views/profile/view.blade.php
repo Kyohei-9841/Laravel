@@ -123,73 +123,67 @@
                 </div> --}}
             </div>
         </div>
-        <div class="mt-2">
-            <div class="card">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-4">{{ __('釣果一覧') }}</div>
-                        <div class="col-8">
-                            <form method="post">
-                                @method('POST')
-                                @csrf
-                                <input hidden class="form-input" type="text" id="pull_id" name="pull_id" value='{{ $user->id }}'>
-                                <input hidden class="form-input" type="text" id="back_btn_flg" name="back_btn_flg" value='{{ $back_btn_flg }}'>
-                                <select class="width-130" id="selected_id" name="selected_id" placeholder="イベント" autocomplete="no">
-                                    <option value="0" {{ $params['selected_id'] == 0 ? 'selected' : '' }}>全釣果</option>
-                                    @foreach($event_list as $event_list_data)
-                                        <option value="{{ $event_list_data->id }}" {{ $params['selected_id'] == $event_list_data->id ? 'selected' : '' }}>{{$event_list_data->event_name}}</option>
-                                    @endforeach
-                                </select>    
-                            </form>
-                        </div>    
+        <div class="mt-4">
+                <h2>{{ __('釣果一覧') }}</h2>
+                <div>
+                    <form method="post">
+                        @method('POST')
+                        @csrf
+                        <input hidden class="form-input" type="text" id="pull_id" name="pull_id" value='{{ $user->id }}'>
+                        <input hidden class="form-input" type="text" id="back_btn_flg" name="back_btn_flg" value='{{ $back_btn_flg }}'>
+                        <select class="width-80p" id="selected_id" name="selected_id" placeholder="イベント" autocomplete="no">
+                            <option value="0" {{ $params['selected_id'] == 0 ? 'selected' : '' }}>全釣果</option>
+                            @foreach($event_list as $event_list_data)
+                                <option value="{{ $event_list_data->id }}" {{ $params['selected_id'] == $event_list_data->id ? 'selected' : '' }}>{{$event_list_data->event_name}}</option>
+                            @endforeach
+                        </select>    
+                    </form>
+                </div>    
+            @if (count($fishing_results) > 0)
+                {{ $fishing_results->appends(request()->input())->links('pagination.pagination-custom') }}
+                @foreach ($fishing_results as $item)
+                    @php
+                        $measurement = "";
+                        if ($item->measurement == 1) {
+                            $measurement = "cm";
+                        } else if ($item->measurement == 2) {
+                            $measurement = "匹";
+                        } else if ($item->measurement == 3) {
+                            $measurement = "Kg";
+                        }
+                    @endphp
+                    <div class="div-border">
+                        <table class="border-none" style="margin: 10px 0px">
+                            <tr class="border-none">
+                                <td class="border-none text-center" rowspan="3" style="padding:0px 30px 0px 5px">
+                                    @if (!empty($item->img_url))
+                                        <a href="{{ asset('storage/' . $item->img_url)}}" target="_blank">
+                                            <img class="round-frame-rank" src="{{ asset('storage/' . $item->img_url)}}">
+                                        </a>
+                                    @endif
+                                </td>
+                                <td class="border-none">
+                                    <div class="point-leader-150">
+                                        {{print_r($item->event_name, true)}}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="border-none">
+                                <td class="border-none">{{print_r(Carbon\Carbon::parse($item->created_at)->format('Y年m月d日'), true)}}</td>
+                            </tr>
+                            <tr class="border-none">
+                                <td class="border-none">{{print_r($item->fish_name, true)}}&nbsp;&nbsp;<span class="font-size-14">{{print_r($item->measurement_result, true)}}</span>{{ $measurement }}</td>
+                            </tr>
+                            {{-- <tr class="border-none">
+                                <td class="border-none text-center">{{print_r($item->size, true)}}cm</td>
+                            </tr> --}}
+                        </table>
                     </div>
-                </div>
-                <div class="card-body" style="padding:5px !important">
-                    @if (count($fishing_results) > 0)
-                        @foreach ($fishing_results as $item)
-                            @php
-                                $measurement = "";
-                                if ($item->measurement == 1) {
-                                    $measurement = "cm";
-                                } else if ($item->measurement == 2) {
-                                    $measurement = "匹";
-                                } else if ($item->measurement == 3) {
-                                    $measurement = "Kg";
-                                }
-                            @endphp
-                            <div class="div-border">
-                                <table class="border-none" style="margin: 10px 0px">
-                                    <tr class="border-none">
-                                        <td class="border-none text-center" rowspan="3" style="padding:0px 30px 0px 5px">
-                                            @if (!empty($item->img_url))
-                                                <a href="{{ asset('storage/' . $item->img_url)}}" target="_blank">
-                                                    <img class="round-frame-rank" src="{{ asset('storage/' . $item->img_url)}}">
-                                                </a>
-                                            @endif
-                                        </td>
-                                        <td class="border-none">
-                                            <div class="point-leader-150">
-                                                {{print_r($item->event_name, true)}}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="border-none">
-                                        <td class="border-none">{{print_r(Carbon\Carbon::parse($item->created_at)->format('Y年m月d日'), true)}}</td>
-                                    </tr>
-                                    <tr class="border-none">
-                                        <td class="border-none">{{print_r($item->fish_name, true)}}&nbsp;&nbsp;<span class="font-size-14">{{print_r($item->measurement_result, true)}}</span>{{ $measurement }}</td>
-                                    </tr>
-                                    {{-- <tr class="border-none">
-                                        <td class="border-none text-center">{{print_r($item->size, true)}}cm</td>
-                                    </tr> --}}
-                                </table>
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="my-4 text-center"><span>釣果は登録されておりません</span></div>
-                    @endif
-                </div>
-            </div>
+                @endforeach
+                {{ $fishing_results->appends(request()->input())->links('pagination.pagination-custom') }}
+            @else
+                <div class="my-4 text-center"><span>釣果は登録されておりません</span></div>
+            @endif
         </div>
         @include('profile.modal-profile')
         @include('profile.modal-profile-image')

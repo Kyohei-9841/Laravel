@@ -128,6 +128,14 @@ textarea {
     text-overflow: ellipsis;
 }
 
+.point-leader-line-specification-3 {
+    width: 95%;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    margin: 5px auto;
+}
 .width-10 { width: 10px; }
 .width-30 { width: 30px; }
 .width-50 { width: 50px; }
@@ -135,6 +143,10 @@ textarea {
 .width-100 { width: 100px; }
 .width-110 { width: 110px; }
 .width-130 { width: 130px; }
+.width-100p { width: 130%; }
+.width-80p { width: 80%; }
+.width-50p { width: 50%; }
+.width-30p { width: 30%; }
 
 .font-size-5 {font-size: 5px;}
 .font-size-6 {font-size: 6px;}
@@ -215,4 +227,9 @@ textarea {
 
 .top-table-span {
     margin-left: 10%;
+}
+
+.pagination {
+    justify-content: center;
+    margin-top: 15px;
 }
