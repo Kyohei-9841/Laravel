@@ -10,5 +10,5 @@ class FishingResults extends Model
     protected $table = 'fishing_results';
 
     // 更新可能カラム
-    protected $fillable = ['user_id', 'position', 'fish_species', 'size', 'pic', 'latitude', 'longitude'];
+    protected $fillable = ['user_id', 'position', 'fish_species', 'size', 'pic', 'latitude', 'longitude', 'meaningful_flg'];
 }

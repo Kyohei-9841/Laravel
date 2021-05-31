@@ -69,6 +69,7 @@ class ApprovalController extends Controller
         $fishing_results_model = new FishingResults();
         $fishing_results = $fishing_results_model->find($result_id);
         $fishing_results->approval_status = $update_flg;
+        $fishing_results->meaningful_flg = 0;
         $fishing_results->save();
 
         return redirect()->route('approval', ['id' => $id]);

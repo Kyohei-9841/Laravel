@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Utils\Utility;
 use Illuminate\Support\Facades\Auth;
 use App\Event;
+use App\EntryList;
 use App\Images;
 use App\FishSpecies;
 use App\EvaluationCriteria;
@@ -67,6 +68,24 @@ class EventInfoController extends Controller
         $event_info = Utility::isDirectDisplayImages($event_info);
 
         return view("event-info.general-page.view")->with(compact('event_info'));
+    }
+
+    public function delete(Request $request, $id)
+    {
+        $entry_list_model = new EntryList();
+        $entry_list = $entry_list_model->where('event_id', '=', $id);
+        $entry_list->delete();
+
+        $event_model = new Event();
+        $event = $event_model->find($id);
+
+        $images_model = new Images();
+        $images = $images_model->find($event->image_id);
+        $images->delete();
+
+        $event->delete();
+
+        return redirect()->route('event-management', ['id' => \Auth::user()->id]);
     }
 
     /**

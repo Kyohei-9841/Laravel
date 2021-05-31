@@ -182,6 +182,48 @@ class ProfileController extends Controller
         return redirect()->route('profile', ['id' => $id]);
     }
 
+    public function meaningful(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $user_id = $request->input('user_id');
+        $selected_id = $request->input('selected_id');
+        $back_btn_flg = $request->input('back_btn_flg');
+
+        $update_data = [
+            'meaningful_flg' => 1,
+        ];
+
+        $fishing_results_model = new FishingResults();
+        $fishing_results = $fishing_results_model->find($id);
+        $fishing_results->update($update_data);
+
+        return redirect()->route('profile', ['id' => $user_id, 'selected_id' => $selected_id, 'back_btn_flg' => $back_btn_flg]);
+    }
+
+    public function meaningfulRelease(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $user_id = $request->input('user_id');
+        $selected_id = $request->input('selected_id');
+        $back_btn_flg = $request->input('back_btn_flg');
+
+        $update_data = [
+            'meaningful_flg' => 0,
+        ];
+
+        $fishing_results_model = new FishingResults();
+        $fishing_results = $fishing_results_model->find($id);
+        $fishing_results->update($update_data);
+
+        return redirect()->route('profile', ['id' => $user_id, 'selected_id' => $selected_id, 'back_btn_flg' => $back_btn_flg]);
+    }
+
     /**
      * ユーザーの釣果を取得する
      */

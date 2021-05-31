@@ -126,6 +126,11 @@
                 <span class="font-size-11 font-color-red">測定の方法です。<br>釣果をアップロードする際は測定基準にそった画像をアップロードしてください。</span>
             </div> --}}
         </div>
+        @if ($event_info->event_status == 0)
+            <div class="my-3 text-right">
+                <a href="{{route('event-info-delete', ['id' => $event_info->id])}}" class="btn btn-danger mr-3" style="font-size:10px;box-shadow: 3px 3px 4px -2px black;">イベント削除&中止</a>
+            </div>
+        @endif
         @include('event-info.modal-event-info')
     </div>
     <!--/#container-->

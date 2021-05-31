@@ -174,9 +174,23 @@
                             <tr class="border-none">
                                 <td class="border-none">{{print_r($item->fish_name, true)}}&nbsp;&nbsp;<span class="font-size-14">{{print_r($item->measurement_result, true)}}</span>{{ $measurement }}</td>
                             </tr>
-                            {{-- <tr class="border-none">
-                                <td class="border-none text-center">{{print_r($item->size, true)}}cm</td>
-                            </tr> --}}
+                            @if ($user->id != Auth::user()->id && $item->approval_status == 1)
+                                <tr class="border-none">
+                                    <td class="border-none text-right" colspan="2">
+                                        @if ($item->meaningful_flg == 0)
+                                            <a href="{{route('meaningful', ['id' => $item->id, 'user_id' => $user->id, 'back_btn_flg' => $back_btn_flg, 'selected_id' => $params['selected_id']])}}"
+                                                class="background-color-lightcoral font-color-white round-frame-meaningful">
+                                                <span class="font-size-10 mt-1 mb-3 mx-3">意義あーり✋</span>
+                                            </a>
+                                        @else
+                                            <a href="{{route('meaningful-release', ['id' => $item->id, 'user_id' => $user->id, 'back_btn_flg' => $back_btn_flg, 'selected_id' => $params['selected_id']])}}"
+                                                class="background-color-lightgreen font-color-white round-frame-meaningful">
+                                                <span class="font-size-10 mt-1 mb-3 mx-3">意義解除✋</span>
+                                            </a>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endif
                         </table>
                     </div>
                 @endforeach

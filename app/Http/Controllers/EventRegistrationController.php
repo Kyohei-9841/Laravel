@@ -8,6 +8,7 @@ use App\EvaluationCriteria;
 use App\FishSpecies;
 use App\Images;
 use App\Event;
+use App\EntryList;
 
 class EventRegistrationController extends Controller
 {
@@ -123,6 +124,16 @@ class EventRegistrationController extends Controller
         $event->note = $note;
         $event->save();
 
+        $event_id = $event->id;
+
+        // エントリー
+        $event_list_model = new EntryList();
+        $event_list_model->user_id = \Auth::user()->id;
+        $event_list_model->event_id = $event_id;
+        $event_list_model->cancel_flg = 0;
+        $event_list_model->cancel_date = null;
+        $event_list_model->save();
+        
         return redirect()->route('event-management', ['id' => $id]);
     }
 

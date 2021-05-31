@@ -82,7 +82,8 @@ window.onload = function() {
             var measurement = document.getElementById("measurement").value;
             var fish_species = document.getElementById("fish-species").value;
             var measurement_result = document.getElementById("measurement_result").value;
-    
+            var admin_flg = document.getElementById("admin-flg").value;
+
             var fd = new FormData();
             fd.append('id', id);
             fd.append('event_id', event_id);
@@ -90,26 +91,15 @@ window.onload = function() {
             fd.append('fish_species', fish_species);
             fd.append('measurement_result', measurement_result);
             fd.append('pic', blob);
-    
-            await fetch("/upload-submit", {
-                method: "POST",
-                headers: {
-                    'X-CSRF-Token': document.getElementsByName("csrf-token").item(0).content
-                },
-                processData: false,
-                contentType: false,
-                body: fd
-            })
-            .then(response => {
-                console.log("成功しました");
-                func_loard_hide();
-                location.href= "/event-entry/" + event_id;
-            })
-            .catch(error => {
-                console.log(error);
-                console.log("失敗しました");
-                throw error;
-            });    
+
+            if (admin_flg == 0) {
+                var url = "/upload-submit";
+                var redirect_url = "/event-entry/" + event_id;    
+            } else {
+                var url = "/upload-submit-admin";
+                var redirect_url = "/event-entry-admin/" + event_id;
+            }
+            await httpcConnect(fd, url, redirect_url);
         }catch(e) {
             func_loard_hide();
             alert(e);
@@ -147,26 +137,11 @@ window.onload = function() {
             fd.append('evaluation_criteria', evaluation_criteria);
             fd.append('fish_species', fish_species);
             fd.append('pic', blob);
-    
-            await fetch("/event-submit", {
-                method: "POST",
-                headers: {
-                    'X-CSRF-Token': document.getElementsByName("csrf-token").item(0).content
-                },
-                processData: false,
-                contentType: false,
-                body: fd
-            })
-            .then(response => {
-                console.log("成功しました");
-                func_loard_hide();
-                location.href= "/event-management/" + id;
-            })
-            .catch(error => {
-                console.log(error);
-                console.log("失敗しました");
-                throw error;
-            });    
+
+            var url = "/event-submit";
+            var redirect_url = "/event-management/" + id;
+
+            await httpcConnect(fd, url, redirect_url);
         }catch(e) {
             func_loard_hide();
             alert(e);
@@ -188,8 +163,20 @@ window.onload = function() {
             fd.append('id', id);
             fd.append('image_id', image_id);
             fd.append('pic', blob);
-    
-            await fetch("/profile-update-image", {
+
+            var url = "/profile-update-image";
+            var redirect_url = "/profile/" + id;
+
+            await httpcConnect(fd, url, redirect_url);
+        }catch(e) {
+            func_loard_hide();
+            alert(e);
+        }
+    } : null;
+
+    async function httpcConnect(fd, url, redirect_url) {
+        try{
+            await fetch(url, {
                 method: "POST",
                 headers: {
                     'X-CSRF-Token': document.getElementsByName("csrf-token").item(0).content
@@ -201,19 +188,18 @@ window.onload = function() {
             .then(response => {
                 console.log("成功しました");
                 func_loard_hide();
-                location.href= "/profile/" + id;
+                location.href = redirect_url;
             })
             .catch(error => {
                 console.log(error);
                 console.log("失敗しました");
                 throw error;
             });    
-        }catch(e) {
-            func_loard_hide();
-            alert(e);
+        } catch(e) {
+            throw e;
         }
-    } : null;
-
+    }
+    
     function func_loard_display(text) {
         try{
             document.getElementById("loader-text").innerHTML=text;
@@ -249,6 +235,6 @@ window.onload = function() {
         } catch(e) {
             throw e;
         }
-    }
+    }    
 }
 

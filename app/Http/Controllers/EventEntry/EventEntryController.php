@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Utils\Utility;
 use App\EntryList;
+use App\FishingResults;
 use App\Http\Controllers\Controller;
 
 class EventEntryController extends Controller
@@ -78,6 +79,16 @@ class EventEntryController extends Controller
         return redirect()->route('event-entry', ['id' => $id]);
     }
 
+    public function delete(Request $request, $id)
+    {
+        $event_id = $request->input('event_id');
+
+        $fishing_results_model = new FishingResults();
+        $fishing_results = $fishing_results_model->find($id);
+        $fishing_results->delete();
+
+        return redirect()->route('event-entry', ['id' => $event_id]);
+    }
 
     /**
      * エントリーリストとエントリーされてるかを取得する

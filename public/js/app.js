@@ -51681,7 +51681,7 @@ $(function () {
 
 window.onload = function () {
   document.getElementById("form-submit") != undefined ? document.getElementById("form-submit").onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-    var id, event_id, measurement, fish_species, measurement_result, fd;
+    var id, event_id, measurement, fish_species, measurement_result, admin_flg, fd, url, redirect_url;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -51702,6 +51702,7 @@ window.onload = function () {
             measurement = document.getElementById("measurement").value;
             fish_species = document.getElementById("fish-species").value;
             measurement_result = document.getElementById("measurement_result").value;
+            admin_flg = document.getElementById("admin-flg").value;
             fd = new FormData();
             fd.append('id', id);
             fd.append('event_id', event_id);
@@ -51709,44 +51710,37 @@ window.onload = function () {
             fd.append('fish_species', fish_species);
             fd.append('measurement_result', measurement_result);
             fd.append('pic', blob);
-            _context.next = 18;
-            return fetch("/upload-submit", {
-              method: "POST",
-              headers: {
-                'X-CSRF-Token': document.getElementsByName("csrf-token").item(0).content
-              },
-              processData: false,
-              contentType: false,
-              body: fd
-            }).then(function (response) {
-              console.log("成功しました");
-              func_loard_hide();
-              location.href = "/event-entry/" + event_id;
-            })["catch"](function (error) {
-              console.log(error);
-              console.log("失敗しました");
-              throw error;
-            });
 
-          case 18:
-            _context.next = 24;
-            break;
+            if (admin_flg == 0) {
+              url = "/upload-submit";
+              redirect_url = "/event-entry/" + event_id;
+            } else {
+              url = "/upload-submit-admin";
+              redirect_url = "/event-entry-admin/" + event_id;
+            }
+
+            _context.next = 20;
+            return httpcConnect(fd, url, redirect_url);
 
           case 20:
-            _context.prev = 20;
+            _context.next = 26;
+            break;
+
+          case 22:
+            _context.prev = 22;
             _context.t0 = _context["catch"](0);
             func_loard_hide();
             alert(_context.t0);
 
-          case 24:
+          case 26:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 20]]);
+    }, _callee, null, [[0, 22]]);
   })) : null;
   document.getElementById("event-form-submit") != undefined ? document.getElementById("event-form-submit").onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-    var id, event_name, start_at, start_at_time, end_at, end_at_time, entry_fee_flg, note, evaluation_criteria, fish_species, fd;
+    var id, event_name, start_at, start_at_time, end_at, end_at_time, entry_fee_flg, note, evaluation_criteria, fish_species, fd, url, redirect_url;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -51784,44 +51778,30 @@ window.onload = function () {
             fd.append('evaluation_criteria', evaluation_criteria);
             fd.append('fish_species', fish_species);
             fd.append('pic', blob);
-            _context2.next = 28;
-            return fetch("/event-submit", {
-              method: "POST",
-              headers: {
-                'X-CSRF-Token': document.getElementsByName("csrf-token").item(0).content
-              },
-              processData: false,
-              contentType: false,
-              body: fd
-            }).then(function (response) {
-              console.log("成功しました");
-              func_loard_hide();
-              location.href = "/event-management/" + id;
-            })["catch"](function (error) {
-              console.log(error);
-              console.log("失敗しました");
-              throw error;
-            });
-
-          case 28:
-            _context2.next = 34;
-            break;
+            url = "/event-submit";
+            redirect_url = "/event-management/" + id;
+            _context2.next = 30;
+            return httpcConnect(fd, url, redirect_url);
 
           case 30:
-            _context2.prev = 30;
+            _context2.next = 36;
+            break;
+
+          case 32:
+            _context2.prev = 32;
             _context2.t0 = _context2["catch"](0);
             func_loard_hide();
             alert(_context2.t0);
 
-          case 34:
+          case 36:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 30]]);
+    }, _callee2, null, [[0, 32]]);
   })) : null;
   document.getElementById("profile-image-submit") != undefined ? document.getElementById("profile-image-submit").onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-    var id, image_id, fd;
+    var id, image_id, fd, url, redirect_url;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
@@ -51843,42 +51823,77 @@ window.onload = function () {
             fd.append('id', id);
             fd.append('image_id', image_id);
             fd.append('pic', blob);
-            _context3.next = 12;
-            return fetch("/profile-update-image", {
-              method: "POST",
-              headers: {
-                'X-CSRF-Token': document.getElementsByName("csrf-token").item(0).content
-              },
-              processData: false,
-              contentType: false,
-              body: fd
-            }).then(function (response) {
-              console.log("成功しました");
-              func_loard_hide();
-              location.href = "/profile/" + id;
-            })["catch"](function (error) {
-              console.log(error);
-              console.log("失敗しました");
-              throw error;
-            });
-
-          case 12:
-            _context3.next = 18;
-            break;
+            url = "/profile-update-image";
+            redirect_url = "/profile/" + id;
+            _context3.next = 14;
+            return httpcConnect(fd, url, redirect_url);
 
           case 14:
-            _context3.prev = 14;
+            _context3.next = 20;
+            break;
+
+          case 16:
+            _context3.prev = 16;
             _context3.t0 = _context3["catch"](0);
             func_loard_hide();
             alert(_context3.t0);
 
-          case 18:
+          case 20:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, null, [[0, 14]]);
+    }, _callee3, null, [[0, 16]]);
   })) : null;
+
+  function httpcConnect(_x, _x2, _x3) {
+    return _httpcConnect.apply(this, arguments);
+  }
+
+  function _httpcConnect() {
+    _httpcConnect = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(fd, url, redirect_url) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              _context4.next = 3;
+              return fetch(url, {
+                method: "POST",
+                headers: {
+                  'X-CSRF-Token': document.getElementsByName("csrf-token").item(0).content
+                },
+                processData: false,
+                contentType: false,
+                body: fd
+              }).then(function (response) {
+                console.log("成功しました");
+                func_loard_hide();
+                location.href = redirect_url;
+              })["catch"](function (error) {
+                console.log(error);
+                console.log("失敗しました");
+                throw error;
+              });
+
+            case 3:
+              _context4.next = 8;
+              break;
+
+            case 5:
+              _context4.prev = 5;
+              _context4.t0 = _context4["catch"](0);
+              throw _context4.t0;
+
+            case 8:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[0, 5]]);
+    }));
+    return _httpcConnect.apply(this, arguments);
+  }
 
   function func_loard_display(text) {
     try {

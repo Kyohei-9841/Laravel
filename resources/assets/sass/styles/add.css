@@ -12,6 +12,10 @@
     object-fit:cover;
 }
 
+.round-frame-meaningful{
+    border-radius: 8px;
+}
+
 .round-frame-event{
     width:  70px;
     height: 70px;
@@ -148,6 +152,11 @@ textarea {
 .width-50p { width: 50%; }
 .width-30p { width: 30%; }
 
+.height-10 { height: 10px; }
+.height-30 { height: 30px; }
+.height-50 { height: 50px; }
+.height-80 { height: 80px; }
+
 .font-size-5 {font-size: 5px;}
 .font-size-6 {font-size: 6px;}
 .font-size-7 {font-size: 7px;}
@@ -183,6 +192,7 @@ textarea {
 .background-color-lightcoral {background-color: lightcoral;}
 .background-color-lightgreen {background-color: lightgreen;}
 .background-color-lightslategray {background-color: lightslategray;}
+.background-color-dodgerblue {background-color: dodgerblue;}
 
 .clear-decoration {
     border: none;  /* 枠線を消す */

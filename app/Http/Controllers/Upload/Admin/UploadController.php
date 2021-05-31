@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Upload\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -8,6 +8,7 @@ use App\FishingResults;
 use App\Images;
 use App\Event;
 use App\FishSpecies;
+use App\Http\Controllers\Controller;
 
 class UploadController extends Controller
 {
@@ -38,7 +39,7 @@ class UploadController extends Controller
         $fish_species_model = new FishSpecies();
         $fish_species_data = $fish_species_model->get();
    
-        return view("upload.view")->with(compact('id', 'event_id', 'event_data', 'fish_species_data', 'event_list'));
+        return view("upload.admin.view")->with(compact('id', 'event_id', 'event_data', 'fish_species_data', 'event_list'));
     }
 
     public function store(Request $request)
@@ -119,33 +120,6 @@ class UploadController extends Controller
         $fishing_results->save();
 
         return redirect()->route('profile', ['id' => $id]);
-    }
-
-    public function delete(Request $request)
-    {
-        $id = $request->input('id');
-
-        \Log::debug('アップロード：削除');
-
-        $target_data = FishingResults::find($id);
-
-        $file_full_dir = $target_data->pic;
-
-        $arr_file_dir = explode("/", $file_full_dir);
-
-        $dir = $arr_file_dir[0] . "/" . $arr_file_dir[1] . "/" . $arr_file_dir[2];
-
-        $arr_files = \Storage::files($dir);
-
-        if (count($arr_files) == 1) {
-            \Storage::deleteDirectory($dir);
-        } else {
-            \Storage::delete($target_data->pic);
-        }
-
-        $target_data->delete();
-
-        return redirect()->route('fishing-results', ['id' => $id]);
     }
 
     /**

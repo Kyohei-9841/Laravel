@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UploadController;
+use App\Http\Controllers\Upload\UploadController;
+use App\Http\Controllers\Upload\Admin\UploadController as UploadAdminController;
+
 use App\Http\Controllers\EventManagementController;
 use App\Http\Controllers\EventRegistrationController;
 use App\Http\Controllers\EventSearchController;
@@ -32,9 +34,13 @@ Route::get('/profile/{id}', [ProfileController::class, 'view'])->name('profile')
 Route::post('/profile-search-pull/{id}', [ProfileController::class, 'searchPull'])->name('profile-search-pull');
 Route::post('/profile-update/{id}', [ProfileController::class, 'update'])->name('profile-update');
 Route::post('/profile-update-image', [ProfileController::class, 'updateImage'])->name('profile-update-image');
+Route::get('/meaningful/{id}', [ProfileController::class, 'meaningful'])->name('meaningful');
+Route::get('/meaningful-release/{id}', [ProfileController::class, 'meaningfulRelease'])->name('meaningful-release');
 
 Route::get('/upload-top/{id}', [UploadController::class, 'view'])->name('upload-top');
 Route::post('/upload-submit', [UploadController::class, 'store'])->name('upload-submit');
+Route::get('/upload-top-admin/{id}', [UploadAdminController::class, 'view'])->name('upload-top-admin');
+Route::post('/upload-submit-admin', [UploadAdminController::class, 'store'])->name('upload-submit-admin');
 
 Route::get('/event-management/{id}', [EventManagementController::class, 'view'])->name('event-management');
 
@@ -47,9 +53,12 @@ Route::post('/event-search-submit', [EventSearchController::class, 'search'])->n
 
 Route::get('/event-info/{id}', [EventInfoController::class, 'view'])->name('event-info');
 Route::get('/event-info-general/{id}', [EventInfoController::class, 'viewGeneral'])->name('event-info-general');
+Route::get('/event-info-delete/{id}', [EventInfoController::class, 'delete'])->name('event-info-delete');
 
 Route::get('/event-entry/{id}', [EventEntryController::class, 'view'])->name('event-entry');
+Route::get('/event-result-delete/{id}', [EventEntryController::class, 'delete'])->name('event-result-delete');
 Route::get('/event-entry-admin/{id}', [EventEntryAdminController::class, 'view'])->name('event-entry-admin');
+Route::get('/event-result-delete-admin/{id}', [EventEntryAdminController::class, 'delete'])->name('event-result-delete-admin');
 Route::get('/entry/{id}', [EventEntryController::class, 'entry'])->name('entry');
 
 Route::get('/approval/{id}', [ApprovalController::class, 'view'])->name('approval');

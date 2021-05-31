@@ -27,15 +27,36 @@ class EventEntryController extends Controller
         $event_info = $this->get_event($id);
         $measurement_flg = $event_info->measurement;
 
+        $fishing_results = $this->get_fishing_results($id);
+
+        if (count($fishing_results) != 0) {
+            $fishing_results = Utility::isProcessingImagesArr($fishing_results);
+        }
+
         $ranking = $this->get_ranking($id, $measurement_flg);
 
+        $rank = 0;
         if (count($ranking) != 0) {
             foreach($ranking as $result) {
+                if ($result->user_id == \Auth::user()->id) {
+                    $rank = $result->rank;
+                }
                 $result = Utility::isDirectDisplayImages($result);
             }
         }
 
-        return view("event-entry.admin.view")->with(compact('id', 'ranking'));
+        return view("event-entry.admin.view")->with(compact('id', 'ranking', 'entry_list', 'rank', 'fishing_results', 'measurement_flg', 'event_info'));
+    }
+
+    public function delete(Request $request, $id)
+    {
+        $event_id = $request->input('event_id');
+
+        $fishing_results_model = new FishingResults();
+        $fishing_results = $fishing_results_model->find($id);
+        $fishing_results->delete();
+
+        return redirect()->route('event-entry-admin', ['id' => $event_id]);
     }
 
     /**
@@ -148,6 +169,33 @@ class EventEntryController extends Controller
                 ->where('event.id', '=', $id)
                 ->get()
                 ->first();
+
+        return $query_result;
+    }
+
+    /**
+     * ユーザーの釣果を取得する
+     */
+    public function get_fishing_results($id)
+    {
+        $query_result = \DB::table('fishing_results')
+                ->select(
+                        \DB::raw('images.image_data as image_data'),
+                        \DB::raw('fish_species.fish_name as fish_name'),
+                        \DB::raw('event.measurement as measurement'),
+                        \DB::raw('case
+                        when event.measurement = 1 then fishing_results.size
+                        when event.measurement = 2 then fishing_results.amount
+                        when event.measurement = 3 then fishing_results.weight
+                        end as measurement_result'),
+                        \DB::raw('fishing_results.*')
+                )
+                ->join('images', 'fishing_results.image_id', '=', 'images.id')
+                ->join('fish_species', 'fishing_results.fish_species', '=', 'fish_species.id')
+                ->join('event', 'fishing_results.event_id', '=', 'event.id')
+                ->where('fishing_results.user_id', '=', \Auth::user()->id)
+                ->where('event.id', '=', $id)
+                ->get();
 
         return $query_result;
     }

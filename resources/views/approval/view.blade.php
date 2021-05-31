@@ -67,6 +67,9 @@
                         @if ($event->event_status == 1)
                             {{-- 承認のボタン表示 --}}
                             @if ($item->approval_status == 1)
+                                @if ($item->meaningful_flg == 1)
+                                    <a href="{{route('approval-update', ['id' => $id, 'result_id' => $item->id, 'update_flg' => 1])}}" class="btn btn-danger mr-3" style="font-size:10px;box-shadow: 3px 3px 4px -2px black;">意義取消</a>
+                                @endif
                                 <a href="{{route('approval-update', ['id' => $id, 'result_id' => $item->id, 'update_flg' => 0])}}" class="btn btn-warning mr-3" style="font-size:10px;box-shadow: 3px 3px 4px -2px black;">承認取消</a>
                             {{-- 非承認のボタン表示 --}}
                             @elseIf ($item->approval_status == 2)

@@ -16,7 +16,6 @@
                     $measurement = "Kg";
                 }
             @endphp
-
             <div class="view-entry-ranking mb-4 mr-4 ml-4 text-center">
                 <div>
                     <span>現順位</span>
@@ -137,15 +136,14 @@
                                             <td class="border-none text-center">{{print_r(Carbon\Carbon::parse($item->created_at)->format('Y年m月d日'), true)}}</td>
                                         </tr>
                                         <tr class="border-none">
-                                            <td class="border-none text-center">{{print_r($item->fish_name, true)}}</td>
+                                            <td class="border-none text-center">{{print_r($item->fish_name, true)}}&nbsp;&nbsp;{{print_r($item->measurement_result, true)}}{{ $measurement }}</td>
                                         </tr>
                                         <tr class="border-none">
-                                            <td class="border-none text-center">{{print_r($item->measurement_result, true)}}{{ $measurement }}</td>
+                                            <td class="border-none text-center">
+                                                <a href="{{route('event-result-delete', ['id' => $item->id, 'event_id' => $id])}}" class="btn btn-danger mr-3" style="font-size:10px;box-shadow: 3px 3px 4px -2px black;">削除</a>
+                                            </td>
                                         </tr>
                                     </table>
-                                    {{-- <div class="text-right">
-                                        <a href="{{route('delete', ['id' => $item->id])}}" class="btn btn-danger mr-3" style="font-size:10px;box-shadow: 3px 3px 4px -2px black;">削除</a>
-                                    </div> --}}
                                 </div>
                             @endforeach
                         @else

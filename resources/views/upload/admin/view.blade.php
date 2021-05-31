@@ -18,7 +18,7 @@
                 <div id="focus"></div>
                 <input hidden class="form-input" type="text" id="id" name="id" value='{{ Auth::user()->id }}'>
                 <input hidden class="form-input" type="text" id="measurement" name="measurement" value='{{ $event_data->measurement }}'>
-                <input hidden class="form-input" type="text" id="admin-flg" name="admin-flg" value='0'>
+                <input hidden class="form-input" type="text" id="admin-flg" name="admin-flg" value='1'>
                 <input type="hidden" id="event-lists" data-name="{{ $event_list }}">
                 <div class="row">
                     <div class="col-sm-12 col-md-4 my-3">

@@ -105,6 +105,7 @@ class EventManagementController extends Controller
                 ->join('users', 'event.user_id', '=', 'users.id')
                 ->join('images as user_images', 'users.image_id', '=', 'user_images.id')
                 ->where('entry_list.user_id', '=', \Auth::user()->id)
+                ->where('event.user_id', '<>', \Auth::user()->id)
                 ->whereRaw('event.end_at >= NOW()')
                 ->get();
 
