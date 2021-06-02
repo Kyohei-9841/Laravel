@@ -32,8 +32,12 @@ class UploadController extends Controller
 
         $event_model = new Event();
         $event_list = $this->get_event_all();
-        $search_event_id = empty($event_id) ? $event_list[0]->id : $event_id;
-        $event_data = $event_model->find($search_event_id);
+        $event_data = null;
+
+        if (count($event_list) != 0) {
+            $search_event_id = empty($event_id) ? $event_list[0]->id : $event_id;
+            $event_data = $event_model->find($search_event_id);
+        }
 
         // 対象魚
         $fish_species_model = new FishSpecies();

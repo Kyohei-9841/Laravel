@@ -5,19 +5,21 @@
     <div id="container">
         <div class="mb-4">
             @php
-                $measurement_name = "";
-                if ($event_data->measurement == 1) {
-                    $measurement_name = "サイズ";
-                } else if ($event_data->measurement == 2) {
-                    $measurement_name = "匹数";
-                } else if ($event_data->measurement == 3) {
-                    $measurement_name = "重さ";
+                if (!empty($event_data)) {
+                    $measurement_name = "";
+                    if ($event_data->measurement == 1) {
+                        $measurement_name = "サイズ";
+                    } else if ($event_data->measurement == 2) {
+                        $measurement_name = "匹数";
+                    } else if ($event_data->measurement == 3) {
+                        $measurement_name = "重さ";
+                    }
                 }
             @endphp
             <form id="uplord-form" autocomplete="off">
                 <div id="focus"></div>
                 <input hidden class="form-input" type="text" id="id" name="id" value='{{ Auth::user()->id }}'>
-                <input hidden class="form-input" type="text" id="measurement" name="measurement" value='{{ $event_data->measurement }}'>
+                <input hidden class="form-input" type="text" id="measurement" name="measurement" value='{{ !empty($event_data) ? $event_data->measurement : null }}'>
                 <input hidden class="form-input" type="text" id="admin-flg" name="admin-flg" value='0'>
                 <input type="hidden" id="event-lists" data-name="{{ $event_list }}">
                 <div class="row">
@@ -29,10 +31,14 @@
                             <span class="font-size-11">※対象イベントを選択してください</span>
                         </div>
                         <div>
-                            <select id="event-id" name="event-id" placeholder="イベント" autocomplete="no" {{ !empty($event_id) ? 'disabled' : ''}} style="width:70%">
-                                @foreach($event_list as $event)
-                                    <option value="{{ $event->id }}" {{ !empty($event_id) && $event->id == $event_id ? 'selected' : '' }}>{{$event->event_name}}</option>
-                                @endforeach
+                            <select id="event-id" name="event-id" placeholder="イベント" autocomplete="no" {{ empty($event_data) || !empty($event_id) ? 'disabled' : ''}} style="width:70%">
+                                @if (!empty($event_data))
+                                    @foreach($event_list as $event)
+                                        <option value="{{ $event->id }}" {{ !empty($event_id) && $event->id == $event_id ? 'selected' : '' }}>{{$event->event_name}}</option>
+                                    @endforeach
+                                @else
+                                    <option>参加イベントがありません</option>
+                                @endif
                             </select>
                         </div>
                     </div>
@@ -45,6 +51,13 @@
                         </div>
                         <div>
                             <select id="fish-species" name="fish-species" placeholder="対象魚" autocomplete="no" disabled>
+                                @if (!empty($event_data))
+                                    @foreach($fish_species_data as $fish_species)
+                                        <option value="{{ $fish_species->id }}" {{$fish_species->id == $event_data->fish_species ? 'selected' : ''}}>{{$fish_species->fish_name}}</option>
+                                    @endforeach
+                                @else
+                                    <option>参加イベントがありません</option>
+                                @endif
                                 @foreach($fish_species_data as $fish_species)
                                     <option value="{{ $fish_species->id }}" {{$fish_species->id == $event_data->fish_species ? 'selected' : ''}}>{{$fish_species->fish_name}}</option>
                                 @endforeach
@@ -60,7 +73,7 @@
                             <span class="font-size-11">※単位は入力せず、数値(半角数値)のみ入力してください。</span>
                         </div>
                         <div>
-                            <input class="form-input" type="text" id="measurement_result" name="measurement_result" autocomplete="no" style="width:50%;">
+                            <input class="form-input" type="text" id="measurement_result" name="measurement_result" autocomplete="no" style="width:50%;" {{ empty($event_data) ? 'disabled' : ''}}>
                         </div>
                     </div>
                 </div>
