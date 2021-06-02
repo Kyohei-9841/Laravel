@@ -61,18 +61,20 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-4 my-3">
-                        <div>
-                            <label id="measurement-label">★{{ $measurement_name }}</label>
+                    @if (!empty($event_data))
+                        <div class="col-sm-12 col-md-4 my-3">
+                            <div>
+                                <label id="measurement-label">★{{ $measurement_name }}</label>
+                            </div>
+                            <div>
+                                <span class="font-size-11">※アップロードした画像と同じサイズを詳細に記載してください。</span>
+                                <span class="font-size-11">※単位は入力せず、数値(半角数値)のみ入力してください。</span>
+                            </div>
+                            <div>
+                                <input class="form-input" type="text" id="measurement_result" name="measurement_result" autocomplete="no" style="width:50%;">
+                            </div>
                         </div>
-                        <div>
-                            <span class="font-size-11">※アップロードした画像と同じサイズを詳細に記載してください。</span>
-                            <span class="font-size-11">※単位は入力せず、数値(半角数値)のみ入力してください。</span>
-                        </div>
-                        <div>
-                            <input class="form-input" type="text" id="measurement_result" name="measurement_result" autocomplete="no" style="width:50%;" {{ empty($event_data) ? 'disabled' : ''}}>
-                        </div>
-                    </div>
+                    @endif
                 </div>
                 <div class="row my-3">
                     <div class="col-12">
