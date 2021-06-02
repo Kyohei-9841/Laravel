@@ -58,9 +58,6 @@
                                 @else
                                     <option>参加イベントがありません</option>
                                 @endif
-                                @foreach($fish_species_data as $fish_species)
-                                    <option value="{{ $fish_species->id }}" {{$fish_species->id == $event_data->fish_species ? 'selected' : ''}}>{{$fish_species->fish_name}}</option>
-                                @endforeach
                             </select>
                         </div>
                     </div>
