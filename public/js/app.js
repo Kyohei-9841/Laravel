@@ -51926,8 +51926,7 @@ window.onload = function () {
                 contentType: false,
                 body: fd
               }).then(function (response) {
-                console.log("成功しました");
-                alert(response); // func_loard_hide();
+                console.log("成功しました"); // func_loard_hide();
 
                 location.href = redirect_url;
               })["catch"](function (error) {

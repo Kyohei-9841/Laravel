@@ -205,7 +205,6 @@ window.onload = function() {
             })
             .then(response => {
                 console.log("成功しました");
-                alert(response);
                 // func_loard_hide();
                 location.href = redirect_url;
             })
