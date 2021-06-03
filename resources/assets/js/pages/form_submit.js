@@ -76,30 +76,48 @@ window.onload = function() {
             if(!file || !blob) {
                 throw new Error('message : ファイル指定されてません');
             }
+
+            await navigator.geolocation.getCurrentPosition(
+                async function success(position) {
+                    try {
+                        console.log("位置情報取得");
+                        var id = document.getElementById("id").value;
+                        var event_id = document.getElementById("event-id").value;
+                        var measurement = document.getElementById("measurement").value;
+                        var fish_species = document.getElementById("fish-species").value;
+                        var measurement_result = document.getElementById("measurement_result").value;
+                        var admin_flg = document.getElementById("admin-flg").value;
+                        var latitude = position.coords.latitude;
+                        var longitude = position.coords.longitude;
     
-            var id = document.getElementById("id").value;
-            var event_id = document.getElementById("event-id").value;
-            var measurement = document.getElementById("measurement").value;
-            var fish_species = document.getElementById("fish-species").value;
-            var measurement_result = document.getElementById("measurement_result").value;
-            var admin_flg = document.getElementById("admin-flg").value;
-
-            var fd = new FormData();
-            fd.append('id', id);
-            fd.append('event_id', event_id);
-            fd.append('measurement', measurement);
-            fd.append('fish_species', fish_species);
-            fd.append('measurement_result', measurement_result);
-            fd.append('pic', blob);
-
-            if (admin_flg == 0) {
-                var url = "/upload-submit";
-                var redirect_url = "/event-entry/" + event_id;    
-            } else {
-                var url = "/upload-submit-admin";
-                var redirect_url = "/event-entry-admin/" + event_id;
-            }
-            await httpcConnect(fd, url, redirect_url);
+                        var fd = new FormData();
+                        fd.append('id', id);
+                        fd.append('event_id', event_id);
+                        fd.append('measurement', measurement);
+                        fd.append('fish_species', fish_species);
+                        fd.append('measurement_result', measurement_result);
+                        fd.append('pic', blob);
+                        fd.append('latitude', latitude);
+                        fd.append('longitude', longitude);
+    
+                        if (admin_flg == 0) {
+                            var url = "/upload-submit";
+                            var redirect_url = "/event-entry/" + event_id;    
+                        } else {
+                            var url = "/upload-submit-admin";
+                            var redirect_url = "/event-entry-admin/" + event_id;
+                        }
+    
+                        await httpcConnect(fd, url, redirect_url);    
+                    }catch(e) {
+                        throw e;
+                    }
+                },
+                async function error(err) {
+                    console.warn(`ERROR(${err.code}): ${err.message}`);
+                    throw err;
+                }            
+            );
         }catch(e) {
             func_loard_hide();
             alert(e);
@@ -187,7 +205,8 @@ window.onload = function() {
             })
             .then(response => {
                 console.log("成功しました");
-                func_loard_hide();
+                alert(response);
+                // func_loard_hide();
                 location.href = redirect_url;
             })
             .catch(error => {

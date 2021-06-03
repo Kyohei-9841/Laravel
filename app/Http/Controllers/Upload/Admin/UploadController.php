@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Upload;
+namespace App\Http\Controllers\Upload\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,18 +32,14 @@ class UploadController extends Controller
 
         $event_model = new Event();
         $event_list = $this->get_event_all();
-        $event_data = null;
-
-        if (count($event_list) != 0) {
-            $search_event_id = empty($event_id) ? $event_list[0]->id : $event_id;
-            $event_data = $event_model->find($search_event_id);
-        }
+        $search_event_id = empty($event_id) ? $event_list[0]->id : $event_id;
+        $event_data = $event_model->find($search_event_id);
 
         // 対象魚
         $fish_species_model = new FishSpecies();
         $fish_species_data = $fish_species_model->get();
-   
-        return view("upload.view")->with(compact('id', 'event_id', 'event_data', 'fish_species_data', 'event_list'));
+
+        return view("upload.admin.view")->with(compact('id', 'event_id', 'event_data', 'fish_species_data', 'event_list'));
     }
 
     public function store(Request $request)
@@ -51,7 +47,7 @@ class UploadController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
-        
+
         \Log::debug('アップロード：保存');
         \Log::debug($request->input('id'));
         \Log::debug($request->input('measurement'));
@@ -131,7 +127,7 @@ class UploadController extends Controller
         return response()->json($result, '200', ['Content-Type' => 'application/json'], JSON_UNESCAPED_SLASHES);
     }
 
-    /**
+     /**
      * イベント情報を取得する
      */
     public function get_event_all()

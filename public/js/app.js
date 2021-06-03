@@ -51680,76 +51680,135 @@ $(function () {
 });
 
 window.onload = function () {
-  document.getElementById("form-submit") != undefined ? document.getElementById("form-submit").onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-    var id, event_id, measurement, fish_species, measurement_result, admin_flg, fd, url, redirect_url;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+  document.getElementById("form-submit") != undefined ? document.getElementById("form-submit").onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context.prev = _context.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
-            _context.prev = 0;
+            _context3.prev = 0;
             func_loard_display("通信中..."); // ファイルが指定されていなければ何も起こらない
 
             if (!(!file || !blob)) {
-              _context.next = 4;
+              _context3.next = 4;
               break;
             }
 
             throw new Error('message : ファイル指定されてません');
 
           case 4:
-            id = document.getElementById("id").value;
-            event_id = document.getElementById("event-id").value;
-            measurement = document.getElementById("measurement").value;
-            fish_species = document.getElementById("fish-species").value;
-            measurement_result = document.getElementById("measurement_result").value;
-            admin_flg = document.getElementById("admin-flg").value;
-            fd = new FormData();
-            fd.append('id', id);
-            fd.append('event_id', event_id);
-            fd.append('measurement', measurement);
-            fd.append('fish_species', fish_species);
-            fd.append('measurement_result', measurement_result);
-            fd.append('pic', blob);
+            _context3.next = 6;
+            return navigator.geolocation.getCurrentPosition( /*#__PURE__*/function () {
+              var _success = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(position) {
+                var id, event_id, measurement, fish_species, measurement_result, admin_flg, latitude, longitude, fd, url, redirect_url;
+                return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+                  while (1) {
+                    switch (_context.prev = _context.next) {
+                      case 0:
+                        _context.prev = 0;
+                        console.log("位置情報取得");
+                        id = document.getElementById("id").value;
+                        event_id = document.getElementById("event-id").value;
+                        measurement = document.getElementById("measurement").value;
+                        fish_species = document.getElementById("fish-species").value;
+                        measurement_result = document.getElementById("measurement_result").value;
+                        admin_flg = document.getElementById("admin-flg").value;
+                        latitude = position.coords.latitude;
+                        longitude = position.coords.longitude;
+                        fd = new FormData();
+                        fd.append('id', id);
+                        fd.append('event_id', event_id);
+                        fd.append('measurement', measurement);
+                        fd.append('fish_species', fish_species);
+                        fd.append('measurement_result', measurement_result);
+                        fd.append('pic', blob);
+                        fd.append('latitude', latitude);
+                        fd.append('longitude', longitude);
 
-            if (admin_flg == 0) {
-              url = "/upload-submit";
-              redirect_url = "/event-entry/" + event_id;
-            } else {
-              url = "/upload-submit-admin";
-              redirect_url = "/event-entry-admin/" + event_id;
-            }
+                        if (admin_flg == 0) {
+                          url = "/upload-submit";
+                          redirect_url = "/event-entry/" + event_id;
+                        } else {
+                          url = "/upload-submit-admin";
+                          redirect_url = "/event-entry-admin/" + event_id;
+                        }
 
-            _context.next = 20;
-            return httpcConnect(fd, url, redirect_url);
+                        _context.next = 22;
+                        return httpcConnect(fd, url, redirect_url);
 
-          case 20:
-            _context.next = 26;
+                      case 22:
+                        _context.next = 27;
+                        break;
+
+                      case 24:
+                        _context.prev = 24;
+                        _context.t0 = _context["catch"](0);
+                        throw _context.t0;
+
+                      case 27:
+                      case "end":
+                        return _context.stop();
+                    }
+                  }
+                }, _callee, null, [[0, 24]]);
+              }));
+
+              function success(_x) {
+                return _success.apply(this, arguments);
+              }
+
+              return success;
+            }(), /*#__PURE__*/function () {
+              var _error = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(err) {
+                return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+                  while (1) {
+                    switch (_context2.prev = _context2.next) {
+                      case 0:
+                        console.warn("ERROR(".concat(err.code, "): ").concat(err.message));
+                        throw err;
+
+                      case 2:
+                      case "end":
+                        return _context2.stop();
+                    }
+                  }
+                }, _callee2);
+              }));
+
+              function error(_x2) {
+                return _error.apply(this, arguments);
+              }
+
+              return error;
+            }());
+
+          case 6:
+            _context3.next = 12;
             break;
 
-          case 22:
-            _context.prev = 22;
-            _context.t0 = _context["catch"](0);
+          case 8:
+            _context3.prev = 8;
+            _context3.t0 = _context3["catch"](0);
             func_loard_hide();
-            alert(_context.t0);
+            alert(_context3.t0);
 
-          case 26:
+          case 12:
           case "end":
-            return _context.stop();
+            return _context3.stop();
         }
       }
-    }, _callee, null, [[0, 22]]);
+    }, _callee3, null, [[0, 8]]);
   })) : null;
-  document.getElementById("event-form-submit") != undefined ? document.getElementById("event-form-submit").onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+  document.getElementById("event-form-submit") != undefined ? document.getElementById("event-form-submit").onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
     var id, event_name, start_at, start_at_time, end_at, end_at_time, entry_fee_flg, note, evaluation_criteria, fish_species, fd, url, redirect_url;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
-            _context2.prev = 0;
+            _context4.prev = 0;
             func_loard_display("通信中..."); // ファイルが指定されていなければ何も起こらない
 
             if (!(!file || !blob)) {
-              _context2.next = 4;
+              _context4.next = 4;
               break;
             }
 
@@ -51780,37 +51839,37 @@ window.onload = function () {
             fd.append('pic', blob);
             url = "/event-submit";
             redirect_url = "/event-management/" + id;
-            _context2.next = 30;
+            _context4.next = 30;
             return httpcConnect(fd, url, redirect_url);
 
           case 30:
-            _context2.next = 36;
+            _context4.next = 36;
             break;
 
           case 32:
-            _context2.prev = 32;
-            _context2.t0 = _context2["catch"](0);
+            _context4.prev = 32;
+            _context4.t0 = _context4["catch"](0);
             func_loard_hide();
-            alert(_context2.t0);
+            alert(_context4.t0);
 
           case 36:
           case "end":
-            return _context2.stop();
+            return _context4.stop();
         }
       }
-    }, _callee2, null, [[0, 32]]);
+    }, _callee4, null, [[0, 32]]);
   })) : null;
-  document.getElementById("profile-image-submit") != undefined ? document.getElementById("profile-image-submit").onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+  document.getElementById("profile-image-submit") != undefined ? document.getElementById("profile-image-submit").onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
     var id, image_id, fd, url, redirect_url;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context5.prev = _context5.next) {
           case 0:
-            _context3.prev = 0;
+            _context5.prev = 0;
             func_loard_display("通信中..."); // ファイルが指定されていなければ何も起こらない
 
             if (!(!file || !blob)) {
-              _context3.next = 4;
+              _context5.next = 4;
               break;
             }
 
@@ -51825,39 +51884,39 @@ window.onload = function () {
             fd.append('pic', blob);
             url = "/profile-update-image";
             redirect_url = "/profile/" + id;
-            _context3.next = 14;
+            _context5.next = 14;
             return httpcConnect(fd, url, redirect_url);
 
           case 14:
-            _context3.next = 20;
+            _context5.next = 20;
             break;
 
           case 16:
-            _context3.prev = 16;
-            _context3.t0 = _context3["catch"](0);
+            _context5.prev = 16;
+            _context5.t0 = _context5["catch"](0);
             func_loard_hide();
-            alert(_context3.t0);
+            alert(_context5.t0);
 
           case 20:
           case "end":
-            return _context3.stop();
+            return _context5.stop();
         }
       }
-    }, _callee3, null, [[0, 16]]);
+    }, _callee5, null, [[0, 16]]);
   })) : null;
 
-  function httpcConnect(_x, _x2, _x3) {
+  function httpcConnect(_x3, _x4, _x5) {
     return _httpcConnect.apply(this, arguments);
   }
 
   function _httpcConnect() {
-    _httpcConnect = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(fd, url, redirect_url) {
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+    _httpcConnect = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6(fd, url, redirect_url) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
-              _context4.prev = 0;
-              _context4.next = 3;
+              _context6.prev = 0;
+              _context6.next = 3;
               return fetch(url, {
                 method: "POST",
                 headers: {
@@ -51868,7 +51927,8 @@ window.onload = function () {
                 body: fd
               }).then(function (response) {
                 console.log("成功しました");
-                func_loard_hide();
+                alert(response); // func_loard_hide();
+
                 location.href = redirect_url;
               })["catch"](function (error) {
                 console.log(error);
@@ -51877,20 +51937,20 @@ window.onload = function () {
               });
 
             case 3:
-              _context4.next = 8;
+              _context6.next = 8;
               break;
 
             case 5:
-              _context4.prev = 5;
-              _context4.t0 = _context4["catch"](0);
-              throw _context4.t0;
+              _context6.prev = 5;
+              _context6.t0 = _context6["catch"](0);
+              throw _context6.t0;
 
             case 8:
             case "end":
-              return _context4.stop();
+              return _context6.stop();
           }
         }
-      }, _callee4, null, [[0, 5]]);
+      }, _callee6, null, [[0, 5]]);
     }));
     return _httpcConnect.apply(this, arguments);
   }

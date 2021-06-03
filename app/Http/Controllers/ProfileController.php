@@ -18,10 +18,6 @@ class ProfileController extends Controller
      */
     public function view(Request $request, $id)
     {
-        \Log::debug(print_r("プロフィール", true));
-
-        \Log::debug(print_r(Auth::check(), true));
-
         if (!Auth::check()) {
             return redirect()->route('login');
         }
@@ -30,9 +26,6 @@ class ProfileController extends Controller
 
         $selected_id = $request->input('selected_id');
         $back_btn_flg = $request->input('back_btn_flg');
-        \Log::debug(print_r("イベントID", true));
-        \Log::debug(print_r($selected_id, true));
-        \Log::debug(print_r($back_btn_flg, true));
 
         $user = $this->get_user($id);
 
@@ -69,36 +62,12 @@ class ProfileController extends Controller
         $address = $request->input('address');
         $profile = $request->input('profile');
 
-        \Log::debug('アップロード：1');
-        \Log::debug("name");
-        \Log::debug($name);
-        \Log::debug("last_name");
-        \Log::debug($last_name);
-        \Log::debug("first_name");
-        \Log::debug($first_name);
-        \Log::debug("age");
-        \Log::debug($age);
-        \Log::debug("gender");
-        \Log::debug($gender);
-        \Log::debug("prefectures");
-        \Log::debug($prefectures);
-        \Log::debug("address");
-        \Log::debug($address);
-        \Log::debug("profile");
-        \Log::debug($profile);
-
-        // $request->validate([
-        //     'pic' => 'file|image|mimes:jpeg,png,jpg|max:2048',
-        //     'event_name' => 'required|string|max:255',
-        //     'start_at' => 'required|string|max:255',
-        //     'end_at' => 'required|string|max:255',
-        //     'entry_fee_flg' => 'required|string|max:255',
-        //     'note' => 'required|string|max:255',
-        //     'evaluation_criteria' => 'required|string|max:255',
-        //     'fish_species' => 'required|string|max:255',
-        // ]);
-
-        \Log::debug('ここ通ってるか');
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'address' => 'string|max:255',
+        ]);
 
         $update_data = [
             'name' => $name,
@@ -139,17 +108,9 @@ class ProfileController extends Controller
         $id = $request->input('id');
         $image_id = $request->input('image_id');
 
-        \Log::debug('アップロード：1');
-        \Log::debug("id");
-        \Log::debug($id);
-        \Log::debug("image_id");
-        \Log::debug($image_id);
-
         $request->validate([
             'pic' => 'file|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-
-        \Log::debug('ここ通ってるか');
 
         if (empty($image_id)) {
             $images = new Images();
