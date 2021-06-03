@@ -31,15 +31,13 @@ class UploadController extends Controller
         $event_id = $request->input('event_id');
 
         $event_model = new Event();
-        $event_list = $this->get_event_all();
-        $search_event_id = empty($event_id) ? $event_list[0]->id : $event_id;
-        $event_data = $event_model->find($search_event_id);
+        $event_data = $event_model->find($event_id);
 
         // 対象魚
         $fish_species_model = new FishSpecies();
         $fish_species_data = $fish_species_model->get();
 
-        return view("upload.admin.view")->with(compact('id', 'event_id', 'event_data', 'fish_species_data', 'event_list'));
+        return view("upload.admin.view")->with(compact('id', 'event_id', 'event_data', 'fish_species_data'));
     }
 
     public function store(Request $request)

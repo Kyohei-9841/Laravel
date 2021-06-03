@@ -19,7 +19,6 @@
                 <input hidden class="form-input" type="text" id="id" name="id" value='{{ Auth::user()->id }}'>
                 <input hidden class="form-input" type="text" id="measurement" name="measurement" value='{{ $event_data->measurement }}'>
                 <input hidden class="form-input" type="text" id="admin-flg" name="admin-flg" value='1'>
-                <input type="hidden" id="event-lists" data-name="{{ $event_list }}">
                 <div class="row">
                     <div class="col-sm-12 col-md-4 my-3">
                         <div>
@@ -29,10 +28,8 @@
                             <span class="font-size-11">※対象イベントを選択してください</span>
                         </div>
                         <div>
-                            <select id="event-id" name="event-id" placeholder="イベント" autocomplete="no" {{ !empty($event_id) ? 'disabled' : ''}} style="width:70%">
-                                @foreach($event_list as $event)
-                                    <option value="{{ $event->id }}" {{ !empty($event_id) && $event->id == $event_id ? 'selected' : '' }}>{{$event->event_name}}</option>
-                                @endforeach
+                            <select id="event-id" name="event-id" placeholder="イベント" autocomplete="no" style="width:70%" disabled>
+                                <option value="{{ $event_data->id }}" selected>{{$event_data->event_name}}</option>
                             </select>
                         </div>
                     </div>
