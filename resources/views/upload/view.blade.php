@@ -11,12 +11,16 @@
             <div class="mb-4">
                 @php
                     $measurement_name = "";
+                    $unit = null;
                     if ($event_data->measurement == 1) {
                         $measurement_name = "サイズ";
+                        $unit = "センチ";
                     } else if ($event_data->measurement == 2) {
                         $measurement_name = "匹数";
+                        $unit = "匹";
                     } else if ($event_data->measurement == 3) {
                         $measurement_name = "重さ";
+                        $unit = "キログラム";
                     }
                 @endphp
                 <form id="uplord-form" autocomplete="off">
@@ -66,6 +70,9 @@
                             </div>
                             <div>
                                 <input class="form-input" type="text" id="measurement_result" name="measurement_result" autocomplete="no" style="width:50%;">
+                                @if(!empty($unit))
+                                    <span class="font-color-red">{{ $unit }}</span>
+                                @endif
                             </div>
                         </div>
                     </div>

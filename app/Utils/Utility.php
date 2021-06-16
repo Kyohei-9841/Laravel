@@ -35,7 +35,7 @@ class Utility
      */
     public static function isPresenceOrAbsenceOfFolder() {
         $dir = \Config::get('app.base_dir') . 'storage/app/public/upload/' . \Auth::user()->id;
-        \Log::debug(print_r('しれくとりの確認のところ！！', true));
+        \Log::debug(print_r($dir, true));
 
         if (!file_exists($dir)) {
             mkdir($dir);
@@ -71,13 +71,13 @@ class Utility
         }
         if (!empty($data->image_data)) {
             $now_date = date("H_i_s");
-    
+
             $base64_encode_data = base64_encode($data->image_data);
-    
+
             $img_url = 'upload/' . \Auth::user()->id . '/' . $now_date . rand() . '.jpg';
-    
+
             file_put_contents(\Config::get('app.base_dir') . 'storage/app/public/' . $img_url, base64_decode($base64_encode_data));
-    
+
             $data->img_url = $img_url;
         }
 
@@ -94,17 +94,17 @@ class Utility
         }
 
         $now_date = date("H_i_s");
-    
+
         for ($i = 0; $i < count($data); $i++) {
             if (!empty($data[$i]->image_data)) {
                 $base64_encode_data = base64_encode($data[$i]->image_data);
 
                 $img_url = 'upload/' . \Auth::user()->id . '/' . $now_date . '_' . $i . '_' . rand() . '.jpg';
-    
+
                 file_put_contents(\Config::get('app.base_dir') . 'storage/app/public/' . $img_url, base64_decode($base64_encode_data));
-    
+
                 $data[$i]->img_url = $img_url;
-    
+
             }
         }
 
