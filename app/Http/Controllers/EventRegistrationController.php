@@ -4,14 +4,40 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\EvaluationCriteria;
-use App\FishSpecies;
-use App\Images;
-use App\Event;
-use App\EntryList;
+use App\Repositories\FishSpeciesRepositoryInterface;
+use App\Repositories\EvaluationCriteriaRepositoryInterface;
+use App\Repositories\ImagesRepositoryInterface;
+use App\Repositories\EventRepositoryInterface;
+use App\Repositories\EntryListRepositoryInterface;
 
 class EventRegistrationController extends Controller
 {
+    protected FishSpeciesRepositoryInterface $fishSpeciesRepository;
+    protected EvaluationCriteriaRepositoryInterface $evaluationCriteriaRepository;
+    protected ImagesRepositoryInterface $imagesRepository;
+    protected EventRepositoryInterface $EventRepository;
+    protected EntryListRepositoryInterface $EntryListRepository;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(
+        FishSpeciesRepositoryInterface $fishSpeciesRepository
+        , EvaluationCriteriaRepositoryInterface $evaluationCriteriaRepository
+        , ImagesRepositoryInterface $imagesRepository
+        , EventRepositoryInterface $EventRepository
+        , EntryListRepositoryInterface $EntryListRepository
+        )
+    {
+        $this->fishSpeciesRepository = $fishSpeciesRepository;
+        $this->evaluationCriteriaRepository = $evaluationCriteriaRepository;
+        $this->imagesRepository = $imagesRepository;
+        $this->EventRepository = $EventRepository;
+        $this->EntryListRepository = $EntryListRepository;
+    }
+
     /**
      * イベント登録画面表示
      * @return \Illuminate\Http\Response
@@ -23,16 +49,13 @@ class EventRegistrationController extends Controller
         }
     
         \Log::debug('イベント管理');
-        // $user = User::find($id);
 
         // 測定基準
-        $evaluation_criteria = new EvaluationCriteria();
-        $evaluation_criteria_result = $evaluation_criteria->get();
+        $evaluation_criteria_result = $this->evaluationCriteriaRepository->getEvaluationCriteriaAll();
 
         // 対象魚
-        $fish_species = new FishSpecies();
-        $fish_species_result = $fish_species->get();
-
+        $fish_species_result = $this->fishSpeciesRepository->getFishSpeciesAll();
+        
         return view("event-registration.view")->with(compact('evaluation_criteria_result', 'fish_species_result'));
     }
 
@@ -42,9 +65,6 @@ class EventRegistrationController extends Controller
             return redirect()->route('login');
         }
         
-        \Log::debug('イベント：保存');
-        \Log::debug($request->input('pic'));
-
         $id = $request->input('id');
         $event_name = $request->input('event_name');
         $start_at = $request->input('start_at');
@@ -56,32 +76,8 @@ class EventRegistrationController extends Controller
         $evaluation_criteria = $request->input('evaluation_criteria');
         $fish_species = $request->input('fish_species');
 
-        \Log::debug('アップロード：1');
-        \Log::debug("id");
-        \Log::debug($id);
-        \Log::debug("event_name");
-        \Log::debug($event_name);
-        \Log::debug("start_at");
-        \Log::debug($start_at);
-        \Log::debug("start_at_time");
-        \Log::debug($start_at_time);
-        \Log::debug("end_at");
-        \Log::debug($end_at);
-        \Log::debug("end_at_time");
-        \Log::debug($end_at_time);
-        \Log::debug("entry_fee_flg");
-        \Log::debug($entry_fee_flg);
-        \Log::debug("note");
-        \Log::debug($note);
-        \Log::debug("evaluation_criteria");
-        \Log::debug($evaluation_criteria);
-        \Log::debug("fish_species");
-        \Log::debug($fish_species);
-
         $start_at_datetime = $start_at . ' ' . $start_at_time . ':00';
         $end_at_datetime = $end_at . ' ' . $end_at_time . ':00';
-        \Log::debug($start_at_datetime);
-        \Log::debug($end_at_datetime);
 
         $request->validate([
             'pic' => 'file|image|mimes:jpeg,png,jpg|max:2048',
@@ -93,46 +89,29 @@ class EventRegistrationController extends Controller
             // 'evaluation_criteria' => 'required|string|max:255',
             // 'fish_species' => 'required|string|max:255',
         ]);
-        \Log::debug('アップロード：2');
 
-        // $now_date_ymd = date("Y_m_d");
-        // $now_date_his = date("H_i_s");
-        // \Log::debug($request->pic);
+        $image_id = $this->imagesRepository->saveImage($id, $request->pic, 2);
 
-        // $img_url = $request->pic->storeAs('public/upload/' . $id . $now_date_ymd, $id . '_' . $now_date_his . '.jpg');
-        // \Log::debug($img_url);
+        $params = array(
+            'id' => $id,
+            'event_name' => $event_name,
+            'start_at_datetime' => $start_at_datetime,
+            'end_at_datetime' => $end_at_datetime,
+            'evaluation_criteria' => $evaluation_criteria,
+            'entry_fee_flg' => $entry_fee_flg,
+            'image_id' => $image_id,
+            'fish_species' => $fish_species,
+            'note' => $note,
+        );
 
-        $images = new Images();
-        $images->user_id = $id;
-        $images->registration_flg = 2;
-        $images->image_data = file_get_contents($request->pic);
-        $images->save();
+        $event_id = $this->EventRepository->addEvent($params);
 
-        $image_id = $images->id;
+        $params = array(
+            'id' => \Auth::user()->id,
+            'event_id' => $event_id,
+        );
 
-        \Log::debug('ここ通ってるか');
-
-        $event = new Event();
-        $event->user_id = $id;
-        $event->event_name = $event_name;
-        $event->start_at = $start_at_datetime;
-        $event->end_at = $end_at_datetime;
-        $event->measurement = $evaluation_criteria;
-        $event->entry_fee_flg = $entry_fee_flg;
-        $event->image_id = $image_id;
-        $event->fish_species = $fish_species;
-        $event->note = $note;
-        $event->save();
-
-        $event_id = $event->id;
-
-        // エントリー
-        $event_list_model = new EntryList();
-        $event_list_model->user_id = \Auth::user()->id;
-        $event_list_model->event_id = $event_id;
-        $event_list_model->cancel_flg = 0;
-        $event_list_model->cancel_date = null;
-        $event_list_model->save();
+        $this->EntryListRepository->addEntryList($params);
         
         return redirect()->route('event-management', ['id' => $id]);
     }

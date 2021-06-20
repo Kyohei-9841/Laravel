@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Upload;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\FishingResults;
-use App\Images;
-use App\Event;
-use App\FishSpecies;
+use App\Models\FishingResults;
+use App\Models\Images;
+use App\Models\Event;
+use App\Models\FishSpecies;
 use App\Http\Controllers\Controller;
 
 class UploadController extends Controller

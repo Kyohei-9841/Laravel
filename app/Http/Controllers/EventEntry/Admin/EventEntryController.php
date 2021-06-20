@@ -5,8 +5,8 @@ namespace App\Http\Controllers\EventEntry\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Utils\Utility;
-use App\EntryList;
-use App\Images;
+use App\Models\EntryList;
+use App\Models\Images;
 use App\Http\Controllers\Controller;
 
 class EventEntryController extends Controller

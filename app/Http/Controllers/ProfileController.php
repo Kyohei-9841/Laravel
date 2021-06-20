@@ -5,12 +5,36 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Utils\Utility;
-use App\User;
-use App\FishingResults;
-use App\Images;
+use App\Repositories\EventRepositoryInterface;
+use App\Repositories\FishingResultsRepositoryInterface;
+use App\Repositories\UserRepositoryInterface;
+use App\Repositories\ImagesRepositoryInterface;
 
 class ProfileController extends Controller
 {
+
+    protected EventRepositoryInterface $eventRepository;
+    protected FishingResultsRepositoryInterface $fishingResultsRepository;
+    protected UserRepositoryInterface $userRepository;
+    protected ImagesRepositoryInterface $imagesRepository;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(
+        EventRepositoryInterface $eventRepository
+        , FishingResultsRepositoryInterface $fishingResultsRepository
+        , UserRepositoryInterface $userRepository
+        , ImagesRepositoryInterface $imagesRepository)
+    {
+        $this->eventRepository = $eventRepository;
+        $this->fishingResultsRepository = $fishingResultsRepository;
+        $this->userRepository = $userRepository;
+        $this->imagesRepository = $imagesRepository;
+
+    }
 
     /**
      * プロフィール画面表示
@@ -27,7 +51,7 @@ class ProfileController extends Controller
         $selected_id = $request->input('selected_id');
         $back_btn_flg = $request->input('back_btn_flg');
 
-        $user = $this->get_user($id);
+        $user = $this->userRepository->getUser($id);
 
         $user = Utility::isProcessingImages($user);
 
@@ -35,13 +59,13 @@ class ProfileController extends Controller
             'selected_id'=> empty($selected_id) ? '0' : $selected_id,
         );
 
-        $fishing_results = $this->get_result_all($id, $params);
+        $fishing_results = $this->fishingResultsRepository->searchResultForEvent($id, $params);
 
         if (count($fishing_results) != 0) {
             $fishing_results = Utility::isProcessingImagesArr($fishing_results);
         }
 
-        $event_list =  $this->get_event_all($id);
+        $event_list = $this->eventRepository->getEventAllUser($id);
 
         return view("profile.view")->with(compact('user', 'fishing_results', 'back_btn_flg', 'params', 'event_list'));
     }
@@ -69,7 +93,7 @@ class ProfileController extends Controller
             'address' => 'string|max:255',
         ]);
 
-        $update_data = [
+        $params = [
             'name' => $name,
             'last_name' => $last_name,
             'first_name' => $first_name,
@@ -80,9 +104,7 @@ class ProfileController extends Controller
             'profile' => $profile,
         ];
 
-        $user_model = new User();
-        $user = $user_model->find($id);
-        $user->update($update_data);
+        $this->userRepository->updateUser($params, $id);
 
         return redirect()->route('profile', ['id' => $id]);
     }
@@ -113,31 +135,21 @@ class ProfileController extends Controller
         ]);
 
         if (empty($image_id)) {
-            $images = new Images();
-            $images->user_id = $id;
-            $images->registration_flg = 3;
-            $images->image_data = file_get_contents($request->pic);
-            $images->save();
 
-            $image_id = $images->id;
+            $image_id = $this->imagesRepository->saveImage($id, $request->pic, 3);
 
-            $update_data = [
+            $params = [
                 'image_id' => $image_id,
             ];
     
-            $user_model = new User();
-            $user = $user_model->find($id);
-            $user->update($update_data);
+            $this->userRepository->updateUserImageId($params, $id);
     
         } else {
-            $update_data = [
+            $params = [
                 'image_data' => file_get_contents($request->pic)
             ];
     
-            $images_model = new Images();
-            $images = $images_model->find($image_id);
-            $images->update($update_data);
-    
+            $this->imagesRepository->updateImage($params, $image_id);    
         }
 
         return redirect()->route('profile', ['id' => $id]);
@@ -153,13 +165,11 @@ class ProfileController extends Controller
         $selected_id = $request->input('selected_id');
         $back_btn_flg = $request->input('back_btn_flg');
 
-        $update_data = [
+        $params = [
             'meaningful_flg' => 1,
         ];
 
-        $fishing_results_model = new FishingResults();
-        $fishing_results = $fishing_results_model->find($id);
-        $fishing_results->update($update_data);
+        $this->fishingResultsRepository->updateResultMeaningfulFlg($id, $params);    
 
         return redirect()->route('profile', ['id' => $user_id, 'selected_id' => $selected_id, 'back_btn_flg' => $back_btn_flg]);
     }
@@ -174,89 +184,12 @@ class ProfileController extends Controller
         $selected_id = $request->input('selected_id');
         $back_btn_flg = $request->input('back_btn_flg');
 
-        $update_data = [
+        $params = [
             'meaningful_flg' => 0,
         ];
 
-        $fishing_results_model = new FishingResults();
-        $fishing_results = $fishing_results_model->find($id);
-        $fishing_results->update($update_data);
+        $this->fishingResultsRepository->updateResultMeaningfulFlg($id, $params);    
 
         return redirect()->route('profile', ['id' => $user_id, 'selected_id' => $selected_id, 'back_btn_flg' => $back_btn_flg]);
-    }
-
-    /**
-     * ユーザーの釣果を取得する
-     */
-    public function get_result_all($id, $params)
-    {
-        $selected_id = $params['selected_id'];
-
-        $query = \DB::table('fishing_results')
-                ->select(
-                        \DB::raw('images.image_data as image_data'),
-                        \DB::raw('fish_species.fish_name as fish_name'),
-                        \DB::raw('event.event_name as event_name'),
-                        \DB::raw('event.measurement as measurement'),
-                        \DB::raw('case
-                        when event.measurement = 1 then fishing_results.size
-                        when event.measurement = 2 then fishing_results.amount
-                        when event.measurement = 3 then fishing_results.weight
-                        end as measurement_result'),
-                        \DB::raw('fishing_results.*')
-                )
-                ->join('images', function ($join) {
-                    $join->on('fishing_results.image_id', '=', 'images.id')
-                         ->where('images.registration_flg', '=', 2);
-                })
-                ->join('event', 'fishing_results.event_id', '=', 'event.id')
-                ->join('fish_species', 'fishing_results.fish_species', '=', 'fish_species.id')
-                ->where('fishing_results.user_id', '=', $id);
-
-        if ($selected_id != 0) {
-            $query->where('fishing_results.event_id', '=', $selected_id);
-        }
-        
-        $query_result = $query->orderBy('fishing_results.size', 'desc')->paginate(5);
-
-        return $query_result;
-    }
-
-    /**
-     * ユーザーを取得する
-     */
-    public function get_user($id)
-    {
-        $query_result = \DB::table('users')
-                ->select(
-                        \DB::raw('images.image_data as image_data'),
-                        \DB::raw('images.id as image_id'),
-                        \DB::raw('users.*')
-                )
-                ->leftJoin('images', function ($join) {
-                    $join->on('users.image_id', '=', 'images.id')
-                         ->where('images.registration_flg', '=', 3);
-                })
-                ->where('users.id', '=', $id)
-                ->get()
-                ->first();
-
-        return $query_result;
-    }
-
-    /**
-     * 参加してるイベントを取得する
-     */
-    public function get_event_all($id)
-    {
-        $query_result = \DB::table('event')
-                ->select(
-                        \DB::raw('event.*'),
-                )
-                ->join('entry_list', 'entry_list.event_id', '=', 'event.id')
-                ->where('entry_list.user_id', '=', $id)
-                ->get();
-
-        return $query_result;
     }
 }

@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Utils\Utility;
 use Illuminate\Support\Facades\Auth;
-use App\Event;
-use App\EntryList;
-use App\Images;
-use App\FishSpecies;
-use App\EvaluationCriteria;
+use App\Models\Event;
+use App\Models\EntryList;
+use App\Models\Images;
+use App\Models\FishSpecies;
+use App\Models\EvaluationCriteria;
 
 class EventInfoController extends Controller
 {

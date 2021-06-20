@@ -5,9 +5,9 @@ namespace App\Http\Controllers\EventEntry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Utils\Utility;
-use App\EntryList;
-use App\FishingResults;
-use App\Images;
+use App\Models\EntryList;
+use App\Models\FishingResults;
+use App\Models\Images;
 use App\Http\Controllers\Controller;
 
 class EventEntryController extends Controller

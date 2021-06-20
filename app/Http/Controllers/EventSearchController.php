@@ -5,13 +5,28 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Utils\Utility;
-use App\Event;
-use App\Images;
-use App\FishSpecies;
-use App\EvaluationCriteria;
+use App\Repositories\EventRepositoryInterface;
+use App\Repositories\FishSpeciesRepositoryInterface;
+use App\Repositories\EvaluationCriteriaRepositoryInterface;
 
 class EventSearchController extends Controller
 {
+    protected EventRepositoryInterface $eventRepository;
+    protected FishSpeciesRepositoryInterface $fishSpeciesRepository;
+    protected EvaluationCriteriaRepositoryInterface $evaluationCriteriaRepository;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(EventRepositoryInterface $eventRepository, FishSpeciesRepositoryInterface $fishSpeciesRepository, EvaluationCriteriaRepositoryInterface $evaluationCriteriaRepository)
+    {
+        $this->eventRepository = $eventRepository;
+        $this->fishSpeciesRepository = $fishSpeciesRepository;
+        $this->evaluationCriteriaRepository = $evaluationCriteriaRepository;
+    }
+
     /**
      * イベント登録画面表示
      * @return \Illuminate\Http\Response
@@ -25,12 +40,10 @@ class EventSearchController extends Controller
         \Log::debug('イベント検索');
 
         // 測定基準
-        $evaluation_criteria = new EvaluationCriteria();
-        $evaluation_criteria_result = $evaluation_criteria->get();
+        $evaluation_criteria_result = $this->evaluationCriteriaRepository->getEvaluationCriteriaAll();
 
         // 対象魚
-        $fish_species = new FishSpecies();
-        $fish_species_result = $fish_species->get();
+        $fish_species_result = $this->fishSpeciesRepository->getFishSpeciesAll();
 
         $params = array(
             'event_name'=> null,
@@ -42,7 +55,7 @@ class EventSearchController extends Controller
             'fish_species'=> null,
         );
 
-        $event_all_results = $this->search_event($params);
+        $event_all_results = $this->eventRepository->searchEvent($params);
 
         if (count($event_all_results) != 0) {
             foreach($event_all_results as $result) {
@@ -85,7 +98,7 @@ class EventSearchController extends Controller
             'fish_species'=> $fish_species,
         );
 
-        $event_all_results = $this->search_event($params);
+        $event_all_results = $this->eventRepository->searchEvent($params);
 
         if (count($event_all_results) != 0) {
             foreach($event_all_results as $result) {
@@ -94,94 +107,11 @@ class EventSearchController extends Controller
         }
 
         // 測定基準
-        $evaluation_criteria = new EvaluationCriteria();
-        $evaluation_criteria_result = $evaluation_criteria->get();
+        $evaluation_criteria_result = $this->evaluationCriteriaRepository->getEvaluationCriteriaAll();
 
         // 対象魚
-        $fish_species = new FishSpecies();
-        $fish_species_result = $fish_species->get();
+        $fish_species_result = $this->fishSpeciesRepository->getFishSpeciesAll();
 
         return view("event-search.view")->with(compact('event_all_results', 'evaluation_criteria_result', 'fish_species_result', 'params'));
-    }
-
-    /**
-     * イベントを検索する
-     */
-    public function search_event($params)
-    {
-        $event_name = $params['event_name'];
-        $start_at = $params['start_at'];
-        $start_at_time = $params['start_at_time'];
-        $end_at = $params['end_at'];
-        $end_at_time = $params['end_at_time'];
-        $evaluation_criteria = $params['evaluation_criteria'];
-        $fish_species = $params['fish_species'];
-
-        $event_name_search = '%' . $event_name . '%';
-        $start_at_datetime;
-        $end_at_datetime;
-        \Log::debug($event_name_search);
-
-        if (!empty($start_at)) {
-            if (!empty($start_at_time)) {
-                $start_at_datetime = $start_at . ' ' . $start_at_time . ':00';
-
-            } else {
-                $start_at_datetime = $start_at . ' 00:00:00';
-            }
-        }
-
-        if (!empty($end_at)) {
-            if (!empty($end_at_time)) {
-                $end_at_datetime = $end_at . ' ' . $end_at_time . ':00';
-            } else {
-                $end_at_datetime = $end_at . ' 00:00:00';
-            }
-        }
-        \Log::debug(print_r($start_at_datetime, true));
-        $query = \DB::table('event')
-                ->select(
-                        \DB::raw('event.*'),
-                        \DB::raw('images.image_data as image_data'),
-                        \DB::raw('fish_species.fish_name as fish_name'),
-                        \DB::raw('evaluation_criteria.criteria_name as criteria_name'),
-                        \DB::raw('user_images.image_data as user_image_data'),
-                        \DB::raw('users.name as user_name'),
-                        \DB::raw('case
-                            when event.start_at > NOW() then 0
-                            when event.start_at <= NOW() and NOW() <= event.end_at then 1
-                            when event.end_at < NOW() then 2
-                            end as event_status'),
-                )
-                ->leftJoin('images', 'event.image_id', '=', 'images.id')
-                ->join('fish_species', 'event.fish_species', '=', 'fish_species.id')
-                ->join('evaluation_criteria', 'event.measurement', '=', 'evaluation_criteria.id')
-                ->join('users', 'event.user_id', '=', 'users.id')
-                ->join('images as user_images', 'users.image_id', '=', 'user_images.id');
-
-        if (!empty($event_name)) {
-            $query->where('event.event_name', 'like', $event_name_search);
-        }
-
-        if (!empty($start_at_datetime) && !empty($end_at_datetime)) {
-            $query->where('event.start_at', '>=', $start_at_datetime);
-            $query->where('event.end_at', '<=', $end_at_datetime);
-        } else if (!empty($start_at_datetime)) {
-            $query->where('event.start_at', '>=', $start_at_datetime);
-        } else if (!empty($end_at_datetime)) {
-            $query->where('event.end_at', '<=', $end_at_datetime);
-        }
-
-        if ($evaluation_criteria != 0) {
-            $query->where('event.measurement', '=', $evaluation_criteria);
-        }
-
-        if ($fish_species != 0) {
-            $query->where('event.fish_species', '=', $fish_species);
-        }
-
-        $query_result = $query->orderBy('event.start_at', 'desc')->paginate(5);
-
-        return $query_result;
     }
 }
