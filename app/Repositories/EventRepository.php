@@ -3,17 +3,21 @@
 namespace App\Repositories;
 
 use App\Models\Event;
+use App\Models\Images;
 
-class EventRepository implements EventRepositoryInterface
+class eventRepository implements EventRepositoryInterface
 {
     protected $eventModel;
+    protected $imagesModel;
 
     /**
     * @param object $user
     */
-    public function __construct(Event $eventModel)
+    public function __construct(Event $eventModel, Images $imagesModel)
     {
         $this->eventModel = $eventModel;
+        $this->imagesModel = $imagesModel;
+
     }
 
     /**
@@ -39,7 +43,7 @@ class EventRepository implements EventRepositoryInterface
                 ->join('fish_species', 'event.fish_species', '=', 'fish_species.id')
                 ->join('evaluation_criteria', 'event.measurement', '=', 'evaluation_criteria.id')
                 ->join('users', 'event.user_id', '=', 'users.id')
-                ->join('images as user_images', 'users.image_id', '=', 'user_images.id')
+                ->LeftJoin('images as user_images', 'users.image_id', '=', 'user_images.id')
                 ->whereRaw('event.end_at >= NOW()')
                 ->get();
 
@@ -69,7 +73,7 @@ class EventRepository implements EventRepositoryInterface
                 ->join('fish_species', 'event.fish_species', '=', 'fish_species.id')
                 ->join('evaluation_criteria', 'event.measurement', '=', 'evaluation_criteria.id')
                 ->join('users', 'event.user_id', '=', 'users.id')
-                ->join('images as user_images', 'users.image_id', '=', 'user_images.id')
+                ->LeftJoin('images as user_images', 'users.image_id', '=', 'user_images.id')
                 ->whereRaw('event.end_at < NOW()')
                 ->get();
 
@@ -90,6 +94,25 @@ class EventRepository implements EventRepositoryInterface
                 ->get();
 
         return $result;
+    }
+
+    /**
+     * ユーザーが参加してるイベントを取得する(アップロード画面用)
+     */
+    public function getEventAllUserUpload()
+    {
+        $result = \DB::table('event')
+                ->select(\DB::raw('event.*'))
+                ->join('entry_list', function ($join) {
+                    $join->on('event.id', '=', 'entry_list.event_id')
+                        ->where('entry_list.user_id', '=', \Auth::user()->id);
+                })
+                ->whereRaw('event.start_at <= NOW()')
+                ->whereRaw('event.end_at >= NOW()')
+                ->get();
+
+        return $result;
+
     }
 
     /**
@@ -145,7 +168,7 @@ class EventRepository implements EventRepositoryInterface
                 ->join('fish_species', 'event.fish_species', '=', 'fish_species.id')
                 ->join('evaluation_criteria', 'event.measurement', '=', 'evaluation_criteria.id')
                 ->join('users', 'event.user_id', '=', 'users.id')
-                ->join('images as user_images', 'users.image_id', '=', 'user_images.id');
+                ->LeftJoin('images as user_images', 'users.image_id', '=', 'user_images.id');
 
         if (!empty($event_name)) {
             $query->where('event.event_name', 'like', $event_name_search);
@@ -309,5 +332,48 @@ class EventRepository implements EventRepositoryInterface
                 ->get();
 
         return $result;
+    }
+
+    /**
+     * イベント情報を取得
+     */
+    public function getEventInfo($id)
+    {
+        $result = \DB::table('event')
+                ->select(
+                        \DB::raw('event.*'),
+                        \DB::raw('images.image_data as image_data'),
+                        \DB::raw('fish_species.fish_name as fish_name'),
+                        \DB::raw('evaluation_criteria.criteria_name as criteria_name'),
+                        \DB::raw('user_images.image_data as user_image_data'),
+                        \DB::raw('users.name as user_name'),
+                        \DB::raw('NOW() as now_date'),
+                        \DB::raw('case
+                            when event.start_at > NOW() then 0
+                            when event.start_at <= NOW() and NOW() <= event.end_at then 1
+                            when event.end_at < NOW() then 2
+                            end as event_status'),
+                )
+                ->join('images', 'event.image_id', '=', 'images.id')
+                ->join('fish_species', 'event.fish_species', '=', 'fish_species.id')
+                ->join('evaluation_criteria', 'event.measurement', '=', 'evaluation_criteria.id')
+                ->join('users', 'event.user_id', '=', 'users.id')
+                ->LeftJoin('images as user_images', 'users.image_id', '=', 'user_images.id')
+                ->where('event.id', '=', $id)
+                ->get()
+                ->first();
+
+        return $result;
+    }
+
+    /**
+     * イベント情報を削除
+     */
+    public function deleteEvent($id)
+    {
+        $event = $eventModel->find($id);
+        $images = $imagesModel->find($event->image_id);
+        $images->delete();
+        $event->delete();
     }
 }

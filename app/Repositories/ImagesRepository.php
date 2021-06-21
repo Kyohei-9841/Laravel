@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Images;
 
-class ImagesRepository implements ImagesRepositoryInterface
+class imagesRepository implements ImagesRepositoryInterface
 {
     protected $imagesModel;
 

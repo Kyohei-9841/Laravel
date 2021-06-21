@@ -5,12 +5,27 @@ namespace App\Repositories;
 interface EntryListRepositoryInterface
 {
     /**
-     * 開催中のイベントを取得
+     * エントリーリストを取得
      */
-    public function getEventHeld();
+    public function getEntryList($id);
 
     /**
      * エントリーリストを登録する
      */
     public function addEntryList($params);
+
+    /**
+     * エントリーステータスを取得する
+     */
+    public function addEntryStatus($params);
+
+    /**
+     * エントリーを削除
+     */
+    public function deleteEntryList($id);
+
+    /**
+     * エントリーリストとエントリーされてるかを取得する
+     */
+    public function getEntryData($id);
 }

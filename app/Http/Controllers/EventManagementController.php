@@ -10,16 +10,16 @@ use App\Repositories\EventRepositoryInterface;
 class EventManagementController extends Controller
 {
 
-    protected EventRepositoryInterface $EventRepository;
+    protected EventRepositoryInterface $eventRepository;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(EventRepositoryInterface $EventRepository)
+    public function __construct(EventRepositoryInterface $eventRepository)
     {
-        $this->EventRepository = $EventRepository;
+        $this->eventRepository = $eventRepository;
     }
 
     /**
@@ -34,10 +34,10 @@ class EventManagementController extends Controller
         
         \Log::debug('イベント管理');
 
-        $planning_event_results = $this->EventRepository->getEventPlanning();
-        $event_all_results = $this->EventRepository->getEventEntry();
-        $planning_finish_event_results = $this->EventRepository->getEventPlanningFinish();
-        $event_finish_all_results = $this->EventRepository->getEventEntryFinish();
+        $planning_event_results = $this->eventRepository->getEventPlanning();
+        $event_all_results = $this->eventRepository->getEventEntry();
+        $planning_finish_event_results = $this->eventRepository->getEventPlanningFinish();
+        $event_finish_all_results = $this->eventRepository->getEventEntryFinish();
 
 
         if (count($planning_event_results) != 0) {

@@ -20,6 +20,11 @@ interface EventRepositoryInterface
     public function getEventAllUser($id);
 
     /**
+     * ユーザーが参加してるイベントを取得する(アップロード画面用)
+     */
+    public function getEventAllUserUpload();
+
+    /**
      * イベントを検索する
      */
     public function searchEvent($params);
@@ -49,4 +54,13 @@ interface EventRepositoryInterface
      */
     public function getEventPlanningFinish();
 
+    /**
+     * イベント情報を取得
+     */
+    public function getEventInfo($id);
+
+    /**
+     * イベント情報を削除
+     */
+    public function deleteEvent($id);
 }

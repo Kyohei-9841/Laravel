@@ -17,30 +17,24 @@ class EntryListRepository implements EntryListRepositoryInterface
     }
 
     /**
-     * 開催中のイベントを取得
+     * エントリーリストを取得
      */
-    public function getEventHeld()
+    public function getEntryList($id)
     {
-        $result = \DB::table('event')
+        $result = \DB::table('entry_list')
                 ->select(
-                        \DB::raw('event.*'),
-                        \DB::raw('images.image_data as image_data'),
-                        \DB::raw('fish_species.fish_name as fish_name'),
-                        \DB::raw('evaluation_criteria.criteria_name as criteria_name'),
-                        \DB::raw('user_images.image_data as user_image_data'),
+                        \DB::raw('entry_list.*'),
                         \DB::raw('users.name as user_name'),
-                        \DB::raw('case
-                            when event.start_at > NOW() then 0
-                            when event.start_at <= NOW() and NOW() <= event.end_at then 1
-                            when event.end_at < NOW() then 2
-                            end as event_status'),
+                        \DB::raw('images.image_data as image_data'),
                 )
-                ->join('images', 'event.image_id', '=', 'images.id')
-                ->join('fish_species', 'event.fish_species', '=', 'fish_species.id')
-                ->join('evaluation_criteria', 'event.measurement', '=', 'evaluation_criteria.id')
-                ->join('users', 'event.user_id', '=', 'users.id')
-                ->join('images as user_images', 'users.image_id', '=', 'user_images.id')
-                ->whereRaw('event.end_at >= NOW()')
+                ->join('event', 'entry_list.event_id', '=', 'event.id')
+                ->join('users', 'entry_list.user_id', '=', 'users.id')
+                ->leftJoin('images', function ($join) {
+                    $join->on('users.image_id', '=', 'images.id')
+                        ->whereRaw('images.registration_flg = 3');
+                })
+                ->where('event.id', '=', $id)
+                ->where('entry_list.cancel_flg', '=', 0)
                 ->get();
 
         return $result;
@@ -57,5 +51,62 @@ class EntryListRepository implements EntryListRepositoryInterface
         $entryList->cancel_flg = 0;
         $entryList->cancel_date = null;
         $entryList->save();
+    }
+
+    /**
+     * エントリーステータスを取得する
+     */
+    public function addEntryStatus($id)
+    {
+        $result = \DB::table('entry_list')
+                ->select(
+                        \DB::raw('count(entry_list.id) as entry_status'),
+                )
+                ->where('entry_list.event_id', '=', $id)
+                ->where('entry_list.user_id', '=', \Auth::user()->id)
+                ->get()
+                ->first();
+
+        return $result;
+    }
+
+    /**
+     * エントリーを削除
+     */
+    public function deleteEntryList($id)
+    {
+        $entry_list = $entryListModel->where('event_id', '=', $id);
+        $entry_list->delete();
+    }
+
+    /**
+     * エントリーリストとエントリーされてるかを取得する
+     */
+    public function getEntryData($id)
+    {
+        $base_query = 
+            \DB::table('entry_list')
+                    ->select(
+                            \DB::raw('entry_list.*'),
+                    )
+                    ->where('entry_list.event_id', '=', $id)
+                    ->where('entry_list.cancel_flg', '=', 0);
+        
+        $entry_list = $base_query->get();
+
+        $entry_flg = false;
+
+        $entry_user = $base_query->where('entry_list.user_id', '=', \Auth::user()->id)->get()->first();
+
+        if (!empty($entry_user)) {
+            $entry_flg = true;
+        }
+
+        $result = array(
+            "entry_list" => $entry_list,
+            "entry_flg" => $entry_flg
+        );
+        return $result;
+
     }
 }

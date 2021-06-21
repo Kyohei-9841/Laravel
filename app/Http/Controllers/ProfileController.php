@@ -90,7 +90,6 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'first_name' => 'required|string|max:255',
-            'address' => 'string|max:255',
         ]);
 
         $params = [

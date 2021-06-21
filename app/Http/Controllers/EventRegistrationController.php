@@ -15,7 +15,7 @@ class EventRegistrationController extends Controller
     protected FishSpeciesRepositoryInterface $fishSpeciesRepository;
     protected EvaluationCriteriaRepositoryInterface $evaluationCriteriaRepository;
     protected ImagesRepositoryInterface $imagesRepository;
-    protected EventRepositoryInterface $EventRepository;
+    protected EventRepositoryInterface $eventRepository;
     protected EntryListRepositoryInterface $EntryListRepository;
 
     /**
@@ -27,14 +27,14 @@ class EventRegistrationController extends Controller
         FishSpeciesRepositoryInterface $fishSpeciesRepository
         , EvaluationCriteriaRepositoryInterface $evaluationCriteriaRepository
         , ImagesRepositoryInterface $imagesRepository
-        , EventRepositoryInterface $EventRepository
+        , EventRepositoryInterface $eventRepository
         , EntryListRepositoryInterface $EntryListRepository
         )
     {
         $this->fishSpeciesRepository = $fishSpeciesRepository;
         $this->evaluationCriteriaRepository = $evaluationCriteriaRepository;
         $this->imagesRepository = $imagesRepository;
-        $this->EventRepository = $EventRepository;
+        $this->eventRepository = $eventRepository;
         $this->EntryListRepository = $EntryListRepository;
     }
 
@@ -104,7 +104,7 @@ class EventRegistrationController extends Controller
             'note' => $note,
         );
 
-        $event_id = $this->EventRepository->addEvent($params);
+        $event_id = $this->eventRepository->addEvent($params);
 
         $params = array(
             'id' => \Auth::user()->id,
