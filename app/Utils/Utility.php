@@ -110,4 +110,29 @@ class Utility
 
         return $data;
     }
+
+    /**
+     * DBからの画像を保存して表示できるように加工する
+     */
+    public static function isProcessingImagesArrChat($data)
+    {
+        if (empty($data)) {
+            return;
+        }
+
+        for ($i = 0; $i < count($data); $i++) {
+            if (!empty($data[$i]->image_data)) {
+                $base64_encode_data = base64_encode($data[$i]->image_data);
+
+                $img_url = 'upload/' . \Auth::user()->id . '/chat_' . $data[$i]->user_id . '_' . $data[$i]->image_id . '.jpg';
+
+                file_put_contents(\Config::get('app.base_dir') . 'storage/app/public/' . $img_url, base64_decode($base64_encode_data));
+
+                $data[$i]->img_url = $img_url;
+
+            }
+        }
+
+        return $data;
+    }
 }

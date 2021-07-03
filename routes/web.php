@@ -13,6 +13,7 @@ use App\Http\Controllers\EventInfoController;
 use App\Http\Controllers\EventEntry\EventEntryController;
 use App\Http\Controllers\EventEntry\Admin\EventEntryController as EventEntryAdminController;
 use App\Http\Controllers\ApprovalController;
+use App\Http\Controllers\ChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,3 +65,6 @@ Route::get('/entry/{id}', [EventEntryController::class, 'entry'])->name('entry')
 Route::get('/approval/{id}', [ApprovalController::class, 'view'])->name('approval');
 Route::post('/approval-search/{id}', [ApprovalController::class, 'search'])->name('approval-search');
 Route::get('/approval-update/{id}', [ApprovalController::class, 'update'])->name('approval-update');
+
+Route::get('/chat', [ChatController::class, 'view'])->name('chat');
+Route::post('/chat-send', [ChatController::class, 'send'])->name('chat-send');

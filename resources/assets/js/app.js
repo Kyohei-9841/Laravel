@@ -10,6 +10,7 @@ require('./pages/openclose');
 require('./pages/form_submit');
 require('./pages/other');
 require('./pages/loader');
+require('./pages/chat');
 require('jquery-ui');
 
 window.Vue = require('vue');

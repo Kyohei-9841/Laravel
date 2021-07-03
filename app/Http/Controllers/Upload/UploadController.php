@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Upload;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Utils\Utility;
 use App\Models\Event;
 use App\Http\Controllers\Controller;
 use App\Repositories\EventRepositoryInterface;
@@ -51,6 +52,8 @@ class UploadController extends Controller
 
         \Log::debug('アップロード');
         \Log::debug($request->input('measurement'));
+
+        Utility::isPresenceOrAbsenceOfFolder();
 
         $event_id = $request->input('event_id');
 

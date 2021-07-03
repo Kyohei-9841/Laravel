@@ -39,6 +39,8 @@ class EventSearchController extends Controller
         
         \Log::debug('イベント検索');
 
+        Utility::isPresenceOrAbsenceOfFolder();
+
         // 測定基準
         $evaluation_criteria_result = $this->evaluationCriteriaRepository->getEvaluationCriteriaAll();
 

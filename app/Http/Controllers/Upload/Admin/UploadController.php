@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Upload\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\FishingResults;
-use App\Models\Images;
+use App\Utils\Utility;
 use App\Models\Event;
-use App\Models\FishSpecies;
 use App\Http\Controllers\Controller;
 use App\Repositories\EventRepositoryInterface;
 use App\Repositories\ImagesRepositoryInterface;
@@ -54,6 +52,8 @@ class UploadController extends Controller
 
         \Log::debug('アップロード');
         \Log::debug($request->input('measurement'));
+
+        Utility::isPresenceOrAbsenceOfFolder();
 
         $event_id = $request->input('event_id');
 

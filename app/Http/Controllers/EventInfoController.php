@@ -38,6 +38,8 @@ class EventInfoController extends Controller
         \Log::debug('イベント詳細');
         \Log::debug($id);
 
+        Utility::isPresenceOrAbsenceOfFolder();
+
         $event_info = $this->eventRepository->getEventInfo($id);
 
         $event_info = Utility::isDirectDisplayImages($event_info);

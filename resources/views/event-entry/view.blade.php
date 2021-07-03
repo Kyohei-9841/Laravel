@@ -96,6 +96,7 @@
                         @if ($event_info->event_status == 1)
                             <div class="text-center my-2">
                                 <a class="btn btn-primary" href="{{ route('upload-top', ['id' => Auth::user()->id, 'event_id' => $id]) }}">{{ __('アップロード') }}</a>
+                                <a class="btn btn-primary" href="{{ route('chat', ['hostUserId' => $event_info->user_id, 'eventId' => $id]) }}">{{ __('チャット') }}</a>
                             </div>
                         @endif
                         @if (count($fishing_results) > 0)

@@ -46,6 +46,8 @@ class ProfileController extends Controller
             return redirect()->route('login');
         }
 
+        \Log::debug(print_r("ここは入っているか？", true));
+
         Utility::isPresenceOrAbsenceOfFolder();
 
         $selected_id = $request->input('selected_id');

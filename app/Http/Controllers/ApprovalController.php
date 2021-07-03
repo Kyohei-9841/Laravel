@@ -38,7 +38,9 @@ class ApprovalController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
-        
+
+        Utility::isPresenceOrAbsenceOfFolder();
+
         $params = array(
             'entry_user'=> 0,
             'approval'=> 0

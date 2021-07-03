@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\FishingResults;
+use App\Models\Images;
 
 class fishingResultsRepository implements FishingResultsRepositoryInterface
 {
@@ -106,7 +107,7 @@ class fishingResultsRepository implements FishingResultsRepositoryInterface
      */
     public function updateApprovalStatus($result_id, $update_flg)
     {
-        $fishing_results = $fishingResultsModel->find($result_id);
+        $fishing_results = $this->fishingResultsModel->find($result_id);
         $fishing_results->approval_status = $update_flg;
         $fishing_results->meaningful_flg = 0;
         $fishing_results->save();
@@ -173,8 +174,8 @@ class fishingResultsRepository implements FishingResultsRepositoryInterface
      */
     public function deleteFishingResults($id)
     {
-        $fishing_results = $fishingResultsModel->find($id);
-        $images = $imagesModel->find($fishing_results->image_id);
+        $fishing_results = $this->fishingResultsModel->find($id);
+        $images = $this->imagesModel->find($fishing_results->image_id);
         $images->delete();
         $fishing_results->delete();
     }

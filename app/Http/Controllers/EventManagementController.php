@@ -33,6 +33,8 @@ class EventManagementController extends Controller
         }
         
         \Log::debug('イベント管理');
+        
+        Utility::isPresenceOrAbsenceOfFolder();
 
         $planning_event_results = $this->eventRepository->getEventPlanning();
         $event_all_results = $this->eventRepository->getEventEntry();

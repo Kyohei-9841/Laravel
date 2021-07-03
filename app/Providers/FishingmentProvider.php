@@ -17,6 +17,8 @@ use App\Repositories\EvaluationCriteriaRepository;
 use App\Repositories\EvaluationCriteriaRepositoryInterface;
 use App\Repositories\EntryListRepository;
 use App\Repositories\EntryListRepositoryInterface;
+use App\Repositories\ChatsRepository;
+use App\Repositories\ChatsRepositoryInterface;
 
 class FishingmentProvider extends ServiceProvider
 {
@@ -33,6 +35,7 @@ class FishingmentProvider extends ServiceProvider
         FishSpeciesRepositoryInterface::class => fishSpeciesRepository::class,
         EvaluationCriteriaRepositoryInterface::class => EvaluationCriteriaRepository::class,
         EntryListRepositoryInterface::class => EntryListRepository::class,
+        ChatsRepositoryInterface::class => ChatsRepository::class,
     ];
 
     /**

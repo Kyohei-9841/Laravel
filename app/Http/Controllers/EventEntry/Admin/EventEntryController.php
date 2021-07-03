@@ -24,6 +24,8 @@ class EventEntryController extends Controller
         \Log::debug('エントリー');
         \Log::debug($id);
 
+        Utility::isPresenceOrAbsenceOfFolder();
+
         $entry_list = $this->get_entry_list($id);
         $event_info = $this->get_event($id);
         $measurement_flg = $event_info->measurement;

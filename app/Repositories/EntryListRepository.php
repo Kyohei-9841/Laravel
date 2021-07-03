@@ -24,7 +24,9 @@ class EntryListRepository implements EntryListRepositoryInterface
         $result = \DB::table('entry_list')
                 ->select(
                         \DB::raw('entry_list.*'),
+                        \DB::raw('users.id as user_id'),
                         \DB::raw('users.name as user_name'),
+                        \DB::raw('images.id as image_id'),
                         \DB::raw('images.image_data as image_data'),
                 )
                 ->join('event', 'entry_list.event_id', '=', 'event.id')

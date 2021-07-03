@@ -15,7 +15,8 @@
         "laravel/cashier": "^12.6",
         "laravel/framework": "^7.24",
         "laravel/tinker": "^2.0",
-        "laravel/ui": "2.5.0"
+        "laravel/ui": "2.5.0",
+        "pusher/pusher-php-server": "~3.0"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

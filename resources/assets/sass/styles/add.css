@@ -29,6 +29,13 @@
     object-fit:cover;
 }
 
+.round-frame-chat{
+    border-radius: 50%;
+    width:  20px;
+    height: 20px;
+    object-fit:cover;
+}
+
 .round-frame-account{
     border-radius: 50%;
     width:  30px;
@@ -175,6 +182,7 @@ textarea {
 .font-color-white {color: white;}
 .font-color-red {color: red;}
 .font-color-dodgerblue {color: dodgerblue;}
+.font-color-gray {color: gray;}
 
 .font-weight-bold {font-weight: bold;}
 .font-weight-lighter {font-weight: lighter;}
@@ -242,4 +250,31 @@ textarea {
 .pagination {
     justify-content: center;
     margin-top: 15px;
+}
+
+.wrapper{
+    min-height: 100vh;
+    position: relative;/*←相対位置*/
+    padding-bottom: 120px;/*←footerの高さ*/
+    box-sizing: border-box;/*←全て含めてmin-height:100vhに*/
+}
+
+.search-frame{
+    position: relative;
+    display: inline-block;
+    width: 90%;
+}
+  
+.search-frame .post-button{
+    position: absolute;
+    right: 2px;
+    top: 6px;
+    cursor: pointer;
+    color: #3490dc;	
+}
+
+.clear-decoration {
+    border: none;  /* 枠線を消す */
+    outline: none; /* クリックしたときに表示される枠線を消す */
+    background: transparent; /* 背景の灰色を消す */
 }
