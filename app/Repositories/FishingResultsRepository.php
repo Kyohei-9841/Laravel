@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Models\FishingResults;
 use App\Models\Images;
 
-class fishingResultsRepository implements FishingResultsRepositoryInterface
+class FishingResultsRepository implements FishingResultsRepositoryInterface
 {
     protected $fishingResultsModel;
     protected $imagesModel;

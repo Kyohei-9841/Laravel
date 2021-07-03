@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\FishSpecies;
 
-class fishSpeciesRepository implements FishSpeciesRepositoryInterface
+class FishSpeciesRepository implements FishSpeciesRepositoryInterface
 {
     protected $fishSpeciesModel;
 

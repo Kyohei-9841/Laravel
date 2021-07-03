@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Models\Event;
 use App\Models\Images;
 
-class eventRepository implements EventRepositoryInterface
+class EventRepository implements EventRepositoryInterface
 {
     protected $eventModel;
     protected $imagesModel;
