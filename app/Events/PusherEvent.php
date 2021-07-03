@@ -36,6 +36,8 @@ class PusherEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
+
+        \Log::debug(print_r('in PusherEvent', true));
         return new Channel('channelName');
     }
 }

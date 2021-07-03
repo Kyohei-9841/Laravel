@@ -96,9 +96,13 @@ class ChatController extends Controller
 
         $chatsModel = $this->chatsRepository->sendChats($params);
 
+        \Log::debug(print_r('befor in PusherEvent', true));
+
         event(new PusherEvent($chatsModel));
 
-        return response()->json(['message' => '投稿しました。']);
+        \Log::debug(print_r('after in PusherEvent', true));
+
+        return response()->json(['message' => 'send message']);
     }
 
 }
