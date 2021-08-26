@@ -7,7 +7,7 @@
 		{{-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
         <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
         <meta name="csrf-token" content="{{ csrf_token() }}" />
-
+        <meta name=”robots” content=”noindex”/>
 		<link rel="stylesheet" href="{{ asset('css/app.css') }}">
 		<script src="{{ asset('js/app.js') }}" defer></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
