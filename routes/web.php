@@ -14,6 +14,7 @@ use App\Http\Controllers\EventEntry\EventEntryController;
 use App\Http\Controllers\EventEntry\Admin\EventEntryController as EventEntryAdminController;
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,3 +70,7 @@ Route::get('/approval-update/{id}', [ApprovalController::class, 'update'])->name
 
 Route::get('/chat', [ChatController::class, 'view'])->name('chat');
 Route::post('/chat-send', [ChatController::class, 'send'])->name('chat-send');
+
+
+
+Route::get('/eventAll', [EventController::class, 'getEventAll'])->name('eventAll');

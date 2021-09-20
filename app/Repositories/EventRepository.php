@@ -21,6 +21,15 @@ class EventRepository implements EventRepositoryInterface
     }
 
     /**
+     * イベント全件取得
+     */
+    public function getEvent()
+    {
+        return $this->eventModel->all();
+    }
+
+
+    /**
      * 開催中のイベントを取得
      */
     public function getEventHeld()
