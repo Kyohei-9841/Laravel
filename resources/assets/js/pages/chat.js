@@ -45,6 +45,8 @@ $(document).ready(function() {
         return false;
     });
 
+    console.log(window.Echo);
+
     window.Echo.channel("channelName").listen("PusherEvent", e => {
 
         let message = e.chatsModel.message;

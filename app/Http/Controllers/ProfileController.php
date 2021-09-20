@@ -40,11 +40,13 @@ class ProfileController extends Controller
      * プロフィール画面表示
      * @return \Illuminate\Http\Response
      */
-    public function view(Request $request, $id)
+    public function view(Request $request, $id = null)
     {
         if (!Auth::check()) {
             return redirect()->route('login');
         }
+
+        $id = !empty($id) ? $id : \Auth::user()->id;
 
         \Log::debug(print_r("ここは入っているか？", true));
 
@@ -78,7 +80,7 @@ class ProfileController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
-        
+
         $name = $request->input('name');
         $last_name = $request->input('last_name');
         $first_name = $request->input('first_name');
@@ -115,7 +117,7 @@ class ProfileController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
-        
+
         $selected_id = $request->input('selected_id');
         $back_btn_flg = $request->input('back_btn_flg');
 
@@ -126,7 +128,7 @@ class ProfileController extends Controller
     {
         if (!Auth::check()) {
             return redirect()->route('login');
-        }    
+        }
 
         $id = $request->input('id');
         $image_id = $request->input('image_id');
@@ -142,15 +144,15 @@ class ProfileController extends Controller
             $params = [
                 'image_id' => $image_id,
             ];
-    
+
             $this->userRepository->updateUserImageId($params, $id);
-    
+
         } else {
             $params = [
                 'image_data' => file_get_contents($request->pic)
             ];
-    
-            $this->imagesRepository->updateImage($params, $image_id);    
+
+            $this->imagesRepository->updateImage($params, $image_id);
         }
 
         return redirect()->route('profile', ['id' => $id]);
@@ -170,7 +172,7 @@ class ProfileController extends Controller
             'meaningful_flg' => 1,
         ];
 
-        $this->fishingResultsRepository->updateResultMeaningfulFlg($id, $params);    
+        $this->fishingResultsRepository->updateResultMeaningfulFlg($id, $params);
 
         return redirect()->route('profile', ['id' => $user_id, 'selected_id' => $selected_id, 'back_btn_flg' => $back_btn_flg]);
     }
@@ -189,7 +191,7 @@ class ProfileController extends Controller
             'meaningful_flg' => 0,
         ];
 
-        $this->fishingResultsRepository->updateResultMeaningfulFlg($id, $params);    
+        $this->fishingResultsRepository->updateResultMeaningfulFlg($id, $params);
 
         return redirect()->route('profile', ['id' => $user_id, 'selected_id' => $selected_id, 'back_btn_flg' => $back_btn_flg]);
     }

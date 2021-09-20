@@ -32,6 +32,7 @@ Route::get('/', [HomeController::class, 'index']);
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/profile/{id}', [ProfileController::class, 'view'])->name('profile');
+Route::get('/profile', [ProfileController::class, 'view']);
 Route::post('/profile-search-pull/{id}', [ProfileController::class, 'searchPull'])->name('profile-search-pull');
 Route::post('/profile-update/{id}', [ProfileController::class, 'update'])->name('profile-update');
 Route::post('/profile-update-image', [ProfileController::class, 'updateImage'])->name('profile-update-image');

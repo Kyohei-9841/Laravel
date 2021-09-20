@@ -10,5 +10,32 @@ class FishingResults extends Model
     protected $table = 'fishing_results';
 
     // 更新可能カラム
-    protected $fillable = ['user_id', 'position', 'fish_species', 'size', 'pic', 'latitude', 'longitude', 'meaningful_flg'];
+    protected $fillable = [
+        'user_id',
+        'position',
+        'fish_species',
+        'size',
+        'pic',
+        'created_at',
+        'updated_at',
+        'approval_status',
+        'event_id',
+        'image_id',
+        'latitude',
+        'longitude',
+        'amount',
+        'weight',
+        'meaningful_flg'];
+
+    public function getUser(){
+        return $this->hasOne('App\User');
+    }
+
+    public function getFishSpecies(){
+        return $this->hasMany('App\Models\FishSpecies');
+    }
+
+    public function getEvent(){
+        return $this->hasOne('App\Models\Event');
+    }
 }

@@ -11,4 +11,16 @@ class Event extends Model
 
     // 更新可能カラム
     protected $fillable = ['user_id', 'event_name', 'start_at', 'end_at', 'measurement', 'entry_fee_flg', 'image_id', 'fish_species', 'note'];
+
+    public function getUser(){
+        return $this->hasOne('App\User');
+    }
+
+    public function getImages(){
+        return $this->hasOne('App\Models\Images');
+    }
+
+    public function getFishSpecies(){
+        return $this->hasMany('App\Models\FishSpecies');
+    }
 }
